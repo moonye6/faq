@@ -142,6 +142,8 @@ h2 { font-size: 1.4rem; font-weight: 600; margin: 2.5rem 0 0.75rem; }
 .related-schemas { margin-top: 3rem; }
 
 .cli-page section { margin-bottom: 2rem; }
+.cli-page .badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.5rem 0 1rem; }
+.cli-page .badges img { height: 20px; }
 .cli-page h3 { font-size: 1.05rem; margin: 1.25rem 0 0.5rem; }
 .cli-page ul li { margin: 0.4rem 0; }
 .cli-page p { max-width: 70ch; }
