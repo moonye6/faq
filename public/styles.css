@@ -144,6 +144,18 @@ h2 { font-size: 1.4rem; font-weight: 600; margin: 2.5rem 0 0.75rem; }
 .cli-page section { margin-bottom: 2rem; }
 .cli-page .badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.5rem 0 1rem; }
 .cli-page .badges img { height: 20px; }
+.cli-page h3 { font-size: 1.05rem; margin: 1.5rem 0 0.5rem; font-weight: 600; }
+
+/* Blog post */
+.blog-post { max-width: 720px; }
+.blog-post .post-meta { color: var(--muted); font-size: 0.85rem; margin: 0 0 0.5rem; }
+.blog-post h1 { margin-top: 0.5rem; }
+.blog-post p { max-width: 70ch; }
+.blog-post ol, .blog-post ul { max-width: 70ch; }
+.blog-post ol li, .blog-post ul li { margin: 0.4rem 0; }
+.blog-post h3 { font-size: 1.1rem; margin: 1.75rem 0 0.5rem; font-weight: 600; }
+.blog-post pre.install-block { max-width: 100%; }
+.schema-list .post-meta { color: var(--muted); font-size: 0.8rem; margin-top: 0.35rem; }
 .cli-page h3 { font-size: 1.05rem; margin: 1.25rem 0 0.5rem; }
 .cli-page ul li { margin: 0.4rem 0; }
 .cli-page p { max-width: 70ch; }

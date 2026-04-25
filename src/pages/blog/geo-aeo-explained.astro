@@ -1,0 +1,351 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'GEO and AEO Explained: SEO for the AI Search Era (2026)';
+const description =
+  'GEO (Generative Engine Optimization) and AEO (Answer Engine Optimization) are the new acronyms for getting cited in AI search. Here is what they mean, who consumes your content, and which schema types matter for which queries.';
+const slug = 'geo-aeo-explained';
+const datePublished = '2026-04-25';
+const dateModified = '2026-04-25';
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/blog/${slug}`;
+
+const articleJsonLd = jsonLdEnvelope({
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished,
+  dateModified,
+  url,
+  mainEntityOfPage: url,
+  author: {
+    '@type': 'Organization',
+    name: 'Schema for AI Search',
+    url: site,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Schema for AI Search',
+    url: site,
+    logo: { '@type': 'ImageObject', url: `${site}/favicon.svg` },
+  },
+});
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}/blog` },
+    { '@type': 'ListItem', position: 3, name: title, item: url },
+  ],
+});
+
+const postFaqs = [
+  {
+    q: 'Will GEO replace SEO?',
+    a: 'No. GEO is additive. Traditional SEO (rankings in Google\'s blue links) still drives the majority of search traffic for most sites. GEO is a parallel discipline focused on the new AI surfaces that did not exist three years ago. Treat it as a second optimization target, not a replacement.',
+  },
+  {
+    q: 'What is the difference between GEO and AEO?',
+    a: 'In practice they overlap heavily. GEO (Generative Engine Optimization) emphasizes large language models that generate answers (Perplexity, ChatGPT search, Gemini). AEO (Answer Engine Optimization) is the older term, broader, and includes voice assistants and Google\'s own answer features. Most practitioners use them interchangeably. Some firms have settled on GEO for AI-specific work and AEO as the umbrella.',
+  },
+  {
+    q: 'How do I measure GEO success?',
+    a: 'Three signals: (1) AI citation share — how often your domain gets linked in Perplexity / Google AI Overviews / ChatGPT search results for your target queries, (2) referral traffic from AI surfaces (now visible as separate sources in most analytics platforms), (3) brand mention frequency in AI answers even without citation. Tools like Profound, Otterly, and Peec AI track these.',
+  },
+  {
+    q: 'Do I need separate content for AI search?',
+    a: 'Mostly no, but the framing helps. Content optimized for GEO has structured Q&A blocks, clear author/date attribution, and self-contained answers (each paragraph stands alone). The same writing improves traditional SEO. The schema markup is the bigger lever — it costs near-zero to add and makes your content dramatically easier for AI to extract.',
+  },
+  {
+    q: 'Which AI engines should I prioritize?',
+    a: 'Google AI Overviews has the largest reach by far (it shows in standard Google SERPs). Perplexity has the highest engagement and best citation behavior. ChatGPT search is growing fastest. Gemini is bundled with Google Workspace and Android. Optimize for all four; they share most of the same input signals.',
+  },
+];
+
+const postFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: postFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(postFaqJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="/blog">Blog</a>
+    <span aria-hidden="true">›</span>
+    <span>GEO and AEO Explained</span>
+  </nav>
+
+  <article class="blog-post">
+    <header class="schema-hero">
+      <p class="post-meta">Published 2026-04-25 · ~8 min read</p>
+      <h1>GEO and AEO Explained: SEO for the AI Search Era</h1>
+      <p class="lede">
+        Two new acronyms are everywhere in 2026. Here is what they actually
+        mean, who consumes your content under each, which schema types
+        matter for which queries, and the workflow that ties it together.
+      </p>
+    </header>
+
+    <section>
+      <h2>Definitions, briefly</h2>
+      <p>
+        <strong>GEO</strong> = Generative Engine Optimization. Optimizing
+        for the surfaces where large language models <em>generate</em>
+        answers from your content: Perplexity, ChatGPT search, Gemini,
+        Google AI Overviews.
+      </p>
+      <p>
+        <strong>AEO</strong> = Answer Engine Optimization. Older, broader
+        term. Originally about Google's "People also ask" boxes and voice
+        assistants (Alexa, Siri, Google Assistant). Now often used
+        interchangeably with GEO.
+      </p>
+      <p>
+        Practical distinction: GEO is the AI-specific subset; AEO is the
+        umbrella that includes everything that produces an answer instead
+        of a list of links. Most teams use them interchangeably and pick
+        whichever sounds better in their internal documentation.
+      </p>
+    </section>
+
+    <section>
+      <h2>Who actually consumes your content now</h2>
+      <p>
+        The list of AI surfaces that read the open web for citations has
+        exploded since 2024. The big ones in 2026:
+      </p>
+      <ul>
+        <li>
+          <strong>Google AI Overviews</strong> (formerly SGE) — the
+          AI-summary block above standard Google SERPs. Highest reach by
+          a wide margin because it ships to default Google traffic.
+        </li>
+        <li>
+          <strong>Perplexity</strong> — the cleanest citation behavior of
+          any AI search engine. Each claim links to its source. Heavy
+          consumer of structured data.
+        </li>
+        <li>
+          <strong>ChatGPT search</strong> — the browsing-enabled mode of
+          ChatGPT. Fastest-growing AI search surface in 2025-2026.
+        </li>
+        <li>
+          <strong>Gemini</strong> — bundled with Google Workspace and
+          Android. Often answers from your structured data when the user
+          types a question instead of a search query.
+        </li>
+        <li>
+          <strong>Microsoft Copilot</strong> — primarily Bing-indexed but
+          a meaningful share of enterprise queries.
+        </li>
+        <li>
+          Smaller but growing: You.com, Phind (developers), Komo,
+          Brave Leo, and a long tail of vertical AI search startups.
+        </li>
+      </ul>
+      <p>
+        Citation share studies consistently show Wikipedia, Reddit,
+        YouTube, and a handful of large publishers dominating. But niche
+        sites with strong structured data routinely break into the
+        citation list for their specific topic queries.
+      </p>
+    </section>
+
+    <section>
+      <h2>How they actually consume your pages</h2>
+      <p>
+        AI search engines do not "rank" your page. They <em>extract</em>
+        from it. The pipeline:
+      </p>
+      <ol>
+        <li>Crawl + index the open web (similar to traditional search)</li>
+        <li>For a user query, retrieve a candidate set of pages</li>
+        <li>Parse each page: HTML, plus any structured data</li>
+        <li>Extract claim-level facts that answer the query</li>
+        <li>Generate a synthesized answer, citing sources</li>
+      </ol>
+      <p>
+        Steps 3 and 4 are where structured data wins. A page with explicit
+        FAQPage JSON-LD has its Q&amp;A blocks pre-segmented for the AI:
+        the question is the question, the answer is the answer, no
+        ambiguity, no parsing risk. The AI confidently extracts and cites.
+      </p>
+      <p>
+        A page with the same content as prose forces the AI to guess at
+        structure, which it does worse, less confidently, and less often.
+      </p>
+    </section>
+
+    <section>
+      <h2>Which schema types matter for which AI queries</h2>
+      <p>
+        Different AI surfaces favor different schema types depending on
+        what the user asked. The mapping that matters most in 2026:
+      </p>
+      <ul>
+        <li>
+          <strong>"What is X?" / "How does X work?" queries</strong> →
+          <a href="/faq-schema-generator">FAQPage</a>,
+          <a href="/article-schema-generator">Article</a>
+        </li>
+        <li>
+          <strong>"How do I X?" tutorial queries</strong> →
+          <a href="/howto-schema-generator">HowTo</a>,
+          <a href="/article-schema-generator">Article</a>
+        </li>
+        <li>
+          <strong>"Best X for $Y" / shopping queries</strong> →
+          <a href="/product-schema-generator">Product</a>,
+          <a href="/review-schema-generator">Review</a>
+        </li>
+        <li>
+          <strong>"Recipe for X" / cooking queries</strong> →
+          <a href="/recipe-schema-generator">Recipe</a>
+        </li>
+        <li>
+          <strong>"Best X near me" / "X in {`{city}`}" queries</strong> →
+          <a href="/local-business-schema-generator">LocalBusiness</a>
+        </li>
+        <li>
+          <strong>"What is happening this weekend?"</strong> →
+          <a href="/event-schema-generator">Event</a>
+        </li>
+        <li>
+          <strong>"Where can I learn X?"</strong> →
+          <a href="/course-schema-generator">Course</a>
+        </li>
+        <li>
+          <strong>"Hiring X / Y jobs paying $Z"</strong> →
+          <a href="/job-posting-schema-generator">JobPosting</a>
+        </li>
+        <li>
+          <strong>"What is {`{company}`}?"</strong> (brand attribution) →
+          <a href="/organization-schema-generator">Organization</a>
+        </li>
+        <li>
+          <strong>Site hierarchy attribution</strong> →
+          <a href="/breadcrumb-schema-generator">BreadcrumbList</a>
+        </li>
+      </ul>
+      <p>
+        Match the schema to the query type your content actually serves.
+        A blog post about a tutorial gets HowTo. A product review gets
+        Review (with itemReviewed.@type=Product). A company about-page
+        gets Organization. Stacking unrelated schema types on every page
+        does nothing useful.
+      </p>
+    </section>
+
+    <section>
+      <h2>The GEO/AEO workflow</h2>
+      <p>
+        The end-to-end loop in 2026:
+      </p>
+      <ol>
+        <li>
+          <strong>Generate</strong> clean JSON-LD for each page using
+          <a href="/">the 12 schema generators</a> (or any equivalent tool).
+          Match the schema type to the query type the page targets.
+        </li>
+        <li>
+          <strong>Publish</strong> the JSON-LD inside
+          <code>&lt;script type="application/ld+json"&gt;</code> tags in your
+          page <code>&lt;head&gt;</code>. Visible content on the page must match
+          the schema text — Google flags mismatches.
+        </li>
+        <li>
+          <strong>Validate</strong> in CI with
+          <a href="/cli">schemaguardian</a>. Schema regressions are silent;
+          the only protection is automated validation that fails the build:
+          <pre class="install-block"><code>npx @moonye/schemaguardian scan https://your-site.com --ci</code></pre>
+        </li>
+        <li>
+          <strong>Monitor</strong> AI citation share over time using
+          dedicated tools (Profound, Otterly, Peec AI) or by spot-checking
+          target queries in Perplexity / AI Overviews / ChatGPT search.
+        </li>
+        <li>
+          <strong>Iterate</strong> on the content gaps the monitoring
+          surfaces. If you are not getting cited for "best X under $Y",
+          add explicit Product schema with offers + aggregateRating to
+          the relevant pages.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>What changed vs. traditional SEO</h2>
+      <p>
+        The fundamentals did not change. Crawlable HTML, fast pages,
+        canonical URLs, internal linking, fresh content — all still matter.
+        The new layers on top:
+      </p>
+      <ul>
+        <li>
+          Structured data goes from "nice for rich snippets" to
+          "load-bearing for AI extraction"
+        </li>
+        <li>
+          Author + date + publisher attribution becomes critical
+          (no attribution = no citation)
+        </li>
+        <li>
+          Self-contained paragraphs win — AI extracts atomically, so
+          paragraph 4 cannot depend on paragraph 2 for context
+        </li>
+        <li>
+          Brand entity strength matters more — AI search confidence in
+          your domain factors heavily into citation decisions
+        </li>
+      </ul>
+      <p>
+        See <a href="/blog/google-faq-deprecation-2026">Google FAQ Schema
+        Deprecation in 2026</a> for the longer story on why FAQ schema
+        specifically migrated from SERP rendering to AI extraction. The
+        same pattern applies to HowTo and is starting to apply to Article.
+      </p>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions about GEO and AEO</h2>
+      <dl>
+        {postFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section>
+      <h2>Bottom line</h2>
+      <p>
+        GEO and AEO are not a different discipline from SEO. They are SEO
+        with a new consumer added to the list. The structured data work
+        was always worth doing; in 2026 it is mandatory because AI search
+        engines need it to cite you cleanly.
+      </p>
+      <p>
+        Start with the
+        <a href="/">12 schema generators</a>, validate with
+        <a href="/cli">schemaguardian</a> in CI, and check
+        <a href="/blog/google-faq-deprecation-2026">the FAQ deprecation
+        post</a> for how this all played out for one schema type.
+      </p>
+    </section>
+  </article>
+</BaseLayout>

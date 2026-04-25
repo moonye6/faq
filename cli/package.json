@@ -1,7 +1,7 @@
 {
   "name": "@moonye/schemaguardian",
-  "version": "0.1.0",
-  "description": "Validate JSON-LD structured data on URLs and HTML files. CI-friendly. Built for the AI search era.",
+  "version": "0.2.0",
+  "description": "Validate JSON-LD structured data on URLs, HTML files, or whole sites via sitemap. CI-friendly. Built for the AI search era.",
   "type": "module",
   "bin": {
     "schemaguardian": "dist/index.js"

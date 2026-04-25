@@ -1,0 +1,86 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'Blog — Schema for AI Search';
+const description =
+  'Long-form posts on structured data, GEO/AEO, AI search citation, and the 2026 reality of schema.org for SEO.';
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+
+const posts = [
+  {
+    slug: 'google-faq-deprecation-2026',
+    title: 'Google FAQ Schema Deprecation in 2026: What Happened and What to Do',
+    description:
+      'Google scaled back FAQ rich snippets in August 2023 and cut them by another ~50% in March 2026. Here is exactly what changed and what FAQ schema is actually for now.',
+    datePublished: '2026-04-25',
+    readMin: 7,
+  },
+  {
+    slug: 'geo-aeo-explained',
+    title: 'GEO and AEO Explained: SEO for the AI Search Era',
+    description:
+      'GEO and AEO are the new acronyms for getting cited in AI search. Here is what they mean, who consumes your content, and which schema types matter for which queries.',
+    datePublished: '2026-04-25',
+    readMin: 8,
+  },
+];
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}/blog` },
+  ],
+});
+
+const blogJsonLd = jsonLdEnvelope({
+  '@type': 'Blog',
+  name: 'Schema for AI Search Blog',
+  url: `${site}/blog`,
+  description,
+  blogPost: posts.map((p) => ({
+    '@type': 'BlogPosting',
+    headline: p.title,
+    description: p.description,
+    datePublished: p.datePublished,
+    url: `${site}/blog/${p.slug}`,
+  })),
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(blogJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <span>Blog</span>
+  </nav>
+
+  <article class="home">
+    <header class="home-hero">
+      <h1>Blog</h1>
+      <p class="lede">
+        Long-form posts on structured data, GEO/AEO, AI search citation,
+        and the 2026 reality of schema.org for SEO.
+      </p>
+    </header>
+
+    <section class="schema-grid">
+      <ul class="schema-list">
+        {posts.map((p) => (
+          <li>
+            <a href={`/blog/${p.slug}`}>
+              <strong>{p.title}</strong>
+              <span>{p.description}</span>
+              <span class="post-meta">{p.datePublished} · ~{p.readMin} min read</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </article>
+</BaseLayout>

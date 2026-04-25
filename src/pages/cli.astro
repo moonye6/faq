@@ -89,30 +89,61 @@ const pageFaqJsonLd = jsonLdEnvelope({
         </a>
       </p>
       <p class="lede">
-        Validate JSON-LD structured data on any URL or HTML file. CI-friendly.
-        Zero dependencies. Built for the AI search era.
+        Validate JSON-LD structured data on any URL, HTML file, or whole
+        site via sitemap. CI-friendly. Zero dependencies. Built for the
+        AI search era.
       </p>
-      <pre class="install-block"><code>npx @moonye/schemaguardian check https://your-site.com</code></pre>
+      <pre class="install-block"><code>npx @moonye/schemaguardian scan https://your-site.com --ci</code></pre>
     </header>
 
     <section>
-      <h2>What it does</h2>
+      <h2>Three commands</h2>
+      <h3><code>check &lt;url|file&gt;</code> — single page</h3>
+      <pre class="install-block"><code>npx @moonye/schemaguardian check https://my-site.com/some-page</code></pre>
+      <p>
+        Fetches the URL (or reads a local HTML file), extracts every
+        <code>&lt;script type="application/ld+json"&gt;</code> block, and validates
+        each one against schema.org rules plus 2026 Google rejection patterns.
+      </p>
+
+      <h3><code>scan &lt;site-url&gt;</code> — whole site via sitemap</h3>
+      <pre class="install-block"><code>npx @moonye/schemaguardian scan https://my-site.com --ci</code></pre>
+      <p>
+        Auto-discovers <code>/sitemap-index.xml</code>, follows child sitemaps,
+        and validates every URL in parallel. Reports per-page status, per-type
+        coverage across the site, and pages with no structured data at all.
+        Use <code>--limit</code>, <code>--concurrency</code>, and <code>--sitemap</code>
+        to tune the run.
+      </p>
+
+      <h3><code>init</code> — drop a CI workflow</h3>
+      <pre class="install-block"><code>npx @moonye/schemaguardian init --url https://my-site.com</code></pre>
+      <p>
+        Writes <code>.github/workflows/schemaguardian.yml</code> in your project,
+        wired up to run <code>scan</code> on every PR and push. One command, one
+        commit, your structured data is now CI-gated.
+      </p>
+    </section>
+
+    <section>
+      <h2>What it validates</h2>
       <ul>
-        <li>Fetches a URL or reads a local HTML file.</li>
-        <li>Extracts every <code>&lt;script type="application/ld+json"&gt;</code> block.</li>
         <li>
-          Validates the generic envelope (<code>@context</code>, <code>@type</code>) plus
-          per-type required fields for 12 schema types (FAQPage, HowTo, Product, Recipe,
-          Article, Review, LocalBusiness, Event, BreadcrumbList, Organization, Course,
-          JobPosting).
+          Generic envelope (<code>@context</code>, <code>@type</code>) plus per-type
+          required fields for 12 schema types: FAQPage, HowTo, Product, Recipe,
+          Article (and BlogPosting, NewsArticle), Review, LocalBusiness, Event,
+          BreadcrumbList, Organization, Course, JobPosting.
         </li>
         <li>
-          Emits 2026-specific warnings: FAQ rich result deprecation, HowTo removal,
-          JobPosting <code>validThrough</code> requirement, BreadcrumbList sequential
-          positions, and more.
+          2026-specific Google rejection patterns: FAQ rich result deprecation,
+          HowTo removal, JobPosting <code>validThrough</code> requirement,
+          BreadcrumbList sequential positions, Article publisher logo for Top
+          Stories, Product without offers or aggregateRating, and more.
         </li>
-        <li><code>--ci</code> flag: exits non-zero on errors so your pipeline fails.</li>
-        <li><code>--json</code> flag: machine-readable output for piping to <code>jq</code>.</li>
+        <li>
+          Honest warnings about which schema types still produce SERP rich
+          results in 2026 vs. which are now AI-citation-only.
+        </li>
       </ul>
     </section>
 
@@ -132,30 +163,39 @@ npm i -D @moonye/schemaguardian`}</code></pre>
 
     <section>
       <h2>CI integration</h2>
+      <p>
+        Easiest path: <code>npx @moonye/schemaguardian init</code> writes a
+        ready-to-commit workflow. Or wire it up by hand:
+      </p>
+
       <h3>GitHub Actions</h3>
-      <pre class="install-block"><code>{`# .github/workflows/schema.yml
-name: schema
-on: [pull_request]
+      <pre class="install-block"><code>{`# .github/workflows/schemaguardian.yml
+name: schemaguardian
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
 jobs:
-  validate:
+  schema-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-      - run: npx @moonye/schemaguardian check https://your-preview-url --ci`}</code></pre>
+      - run: npx --yes @moonye/schemaguardian@latest scan https://your-site.com --ci`}</code></pre>
 
       <h3>GitLab CI</h3>
       <pre class="install-block"><code>{`# .gitlab-ci.yml
 schema-check:
   image: node:20
   script:
-    - npx @moonye/schemaguardian check $CI_ENVIRONMENT_URL --ci`}</code></pre>
+    - npx --yes @moonye/schemaguardian@latest scan $CI_ENVIRONMENT_URL --ci`}</code></pre>
 
       <h3>package.json script</h3>
       <pre class="install-block"><code>{`{
   "scripts": {
-    "schema:check": "schemaguardian check https://faqjsonld.com --ci"
+    "schema:check": "schemaguardian check https://faqjsonld.com --ci",
+    "schema:scan":  "schemaguardian scan  https://faqjsonld.com --ci"
   }
 }`}</code></pre>
     </section>
@@ -163,9 +203,9 @@ schema-check:
     <section>
       <h2>Roadmap</h2>
       <ul>
-        <li><strong>v0.1 (now):</strong> <code>check</code> a single URL or file.</li>
-        <li><strong>v0.2:</strong> <code>scan</code> entire sites via sitemap, <code>generate</code> prompts.</li>
-        <li><strong>v0.3+ (paid Pro):</strong> multi-domain monitoring, auto-PR fix via GitHub API, team features, GitHub Action wrapper.</li>
+        <li><strong>v0.1:</strong> <code>check</code> a single URL or file.</li>
+        <li><strong>v0.2 (now):</strong> <code>scan</code> entire sites via sitemap, <code>init</code> for one-shot CI setup.</li>
+        <li><strong>v0.3+ (paid Pro, planned):</strong> multi-domain monitoring, auto-PR fix via GitHub API, team workflows, GitHub Action wrapper.</li>
       </ul>
       <p>The free CLI will always validate any site. Paid tiers add multi-domain operations and automation.</p>
     </section>

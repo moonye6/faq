@@ -1,0 +1,283 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'Google FAQ Schema Deprecation in 2026: What Happened and What to Do';
+const description =
+  'Google scaled back FAQ rich snippets in August 2023 and cut them by another ~50% in March 2026. Here is exactly what changed, why FAQ schema is still worth keeping, and what to do now.';
+const slug = 'google-faq-deprecation-2026';
+const datePublished = '2026-04-25';
+const dateModified = '2026-04-25';
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/blog/${slug}`;
+
+const articleJsonLd = jsonLdEnvelope({
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished,
+  dateModified,
+  url,
+  mainEntityOfPage: url,
+  author: {
+    '@type': 'Organization',
+    name: 'Schema for AI Search',
+    url: site,
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Schema for AI Search',
+    url: site,
+    logo: { '@type': 'ImageObject', url: `${site}/favicon.svg` },
+  },
+});
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}/blog` },
+    { '@type': 'ListItem', position: 3, name: title, item: url },
+  ],
+});
+
+const postFaqs = [
+  {
+    q: 'Should I remove FAQ schema from my pages?',
+    a: 'No. Google explicitly said in their 2023 deprecation post that you do not need to remove FAQPage structured data — it just will not produce rich snippets on most sites. The schema is still parsed by AI search engines (Perplexity, ChatGPT, Gemini, Google AI Overviews), so removing it costs you AI citations with no upside.',
+  },
+  {
+    q: 'Will Google bring FAQ rich snippets back?',
+    a: 'Unlikely in their original form. Google framed the 2023 cut as a permanent reduction to keep SERPs clean, then doubled down with the March 2026 update. Speculating about reversals is not a strategy. Plan for the world as it is.',
+  },
+  {
+    q: 'Does this mean schema is dead?',
+    a: 'The opposite. Schema migrated from a SERP-rendering signal to an AI-extraction signal. Pages with clean structured data get cited disproportionately in AI answers compared to pages with prose-only content.',
+  },
+  {
+    q: 'Should I add FAQ schema to a new site in 2026?',
+    a: 'Yes, if you have legitimate Q&A content visible on the page. The work is cheap, the AI citation upside is real, and the cost of not having it is zero AI visibility for those questions.',
+  },
+  {
+    q: 'How do I check if my FAQ schema is still valid?',
+    a: 'Run schemaguardian: npx @moonye/schemaguardian check https://your-page.com. It validates against schema.org rules plus the 2026 reality of which schema types still earn rich results. CI-friendly, runs in your build pipeline.',
+  },
+];
+
+const postFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: postFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(postFaqJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="/blog">Blog</a>
+    <span aria-hidden="true">›</span>
+    <span>FAQ Deprecation 2026</span>
+  </nav>
+
+  <article class="blog-post">
+    <header class="schema-hero">
+      <p class="post-meta">Published 2026-04-25 · ~7 min read</p>
+      <h1>Google FAQ Schema Deprecation in 2026: What Happened and What to Do</h1>
+      <p class="lede">
+        Most SEO articles about FAQ schema were written between 2018 and 2022.
+        Almost all of them are now wrong. Here is exactly what Google did,
+        what the data shows, and what FAQ schema is actually for in 2026.
+      </p>
+    </header>
+
+    <section>
+      <h2>The 2023 cut</h2>
+      <p>
+        On August 8, 2023, Google announced that FAQ rich results would
+        be limited to "well-known, authoritative government and health
+        websites." For everyone else, FAQ schema would still be valid
+        markup, but it would no longer trigger the expandable Q&amp;A
+        dropdown in search results.
+      </p>
+      <p>
+        Within weeks, SEO tracking tools across the industry observed
+        the same pattern: FAQ rich result impressions for non-authority
+        sites collapsed to near zero. The change applied immediately and
+        retroactively. Pages that had carried FAQ rich snippets for years
+        lost them overnight.
+      </p>
+    </section>
+
+    <section>
+      <h2>The 2026 follow-up</h2>
+      <p>
+        Google's March 2026 core update extended the cut. Across tracked
+        sites, FAQ rich result impressions fell by roughly half compared
+        to the post-2023 baseline. Sites that had clung to residual FAQ
+        rich snippet visibility largely lost it. The effective conclusion:
+        for 99%+ of the open web, the SERP rich snippet value of FAQ
+        schema is zero.
+      </p>
+      <p>
+        For SEO teams whose 2018-2022 playbook treated FAQ schema as a
+        CTR-multiplying tool, this is a clean break with the past. The
+        playbook does not work anymore. Continuing to write content
+        explicitly to chase FAQ rich snippets is wasted effort.
+      </p>
+    </section>
+
+    <section>
+      <h2>Should you remove your existing FAQ schema?</h2>
+      <p>
+        No. There are three concrete reasons to keep it.
+      </p>
+      <ol>
+        <li>
+          <strong>It does not hurt anything.</strong> Google explicitly said
+          in the 2023 announcement that you do not need to proactively remove
+          FAQPage structured data. Unused valid schema does not trigger any
+          penalty.
+        </li>
+        <li>
+          <strong>AI search engines cite it heavily.</strong> Perplexity,
+          ChatGPT search, Gemini, and Google AI Overviews all parse FAQ
+          schema as a primary signal when extracting Q&amp;A answers. Pages
+          marked up with clean FAQ schema get cited disproportionately in
+          AI answers compared to pages with the same content as prose.
+        </li>
+        <li>
+          <strong>Other consumers still use it.</strong> Voice assistants,
+          internal site search engines, RAG pipelines indexing the open
+          web, and product-feed integrations all consume FAQ schema. The
+          SERP rich snippet was one consumer. There are now many.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>The value chain has migrated</h2>
+      <p>
+        Here is the old model that everyone learned in the 2018-2022 era:
+      </p>
+      <pre class="install-block"><code>FAQ schema → SERP rich snippet → higher CTR → more traffic</code></pre>
+      <p>That model is dead for 99% of sites. The new model:</p>
+      <pre class="install-block"><code>FAQ schema → AI extraction → AI citation → referral traffic</code></pre>
+      <p>
+        The shift is real. Recent studies of AI search citation patterns
+        consistently show that pages with structured data are cited at
+        much higher rates than pages without it. FAQ schema specifically
+        has one of the highest per-block citation rates of any schema type
+        in AI Overviews and Perplexity answers.
+      </p>
+      <p>
+        This is the new optimization target. Not "did Google show my rich
+        snippet" but "did Perplexity cite my answer" and "did AI Overviews
+        link to my page".
+      </p>
+    </section>
+
+    <section>
+      <h2>What to do in 2026 (a 5-step playbook)</h2>
+
+      <h3>1. Keep your existing FAQ schema and add to new pages</h3>
+      <p>
+        For any page with legitimate visible Q&amp;A content, generate clean
+        FAQPage JSON-LD with the
+        <a href="/faq-schema-generator">FAQ schema generator</a>. The cost
+        is one paste into your <code>&lt;head&gt;</code>. The AI citation upside
+        is real.
+      </p>
+
+      <h3>2. Cover tutorial pages with HowTo schema</h3>
+      <p>
+        HowTo rich results were also removed by Google (in 2023-2024), but
+        AI cooking assistants, technical support AIs, and tutorial extractors
+        still lean heavily on HowTo markup. Use the
+        <a href="/howto-schema-generator">HowTo schema generator</a> for any
+        step-by-step content.
+      </p>
+
+      <h3>3. Do not ignore the schema types that still produce rich results</h3>
+      <p>
+        Several schema types kept their SERP rich snippets through 2023-2026:
+      </p>
+      <ul>
+        <li><a href="/product-schema-generator">Product schema</a> — price + rating + stock still render in Google</li>
+        <li><a href="/recipe-schema-generator">Recipe schema</a> — image carousels survived intact</li>
+        <li><a href="/breadcrumb-schema-generator">BreadcrumbList</a> — visible in nearly every Google SERP</li>
+        <li><a href="/job-posting-schema-generator">JobPosting</a> — required for Google for Jobs visibility</li>
+        <li><a href="/local-business-schema-generator">LocalBusiness</a> — feeds Map Pack and AI "near me" queries</li>
+        <li><a href="/event-schema-generator">Event</a> — events SERP feature</li>
+      </ul>
+      <p>
+        For these, the old playbook still works AND the new AI citation
+        playbook adds upside. Get them in place.
+      </p>
+
+      <h3>4. Add Article + Organization for AI attribution</h3>
+      <p>
+        AI search engines need to attribute citations: "according to
+        {`{author}`}, writing in {`{publisher}`} on {`{date}`}". Without that
+        metadata, your content gets cited as "according to a website" or
+        skipped in favor of attributable competitors.
+      </p>
+      <ul>
+        <li><a href="/article-schema-generator">Article schema</a> for posts (author, date, publisher)</li>
+        <li><a href="/organization-schema-generator">Organization schema</a> on your homepage (knowledge panel + brand attribution)</li>
+      </ul>
+
+      <h3>5. Validate in CI before regression hits production</h3>
+      <p>
+        Schema regressions are silent. A botched template change can strip
+        structured data from every page on your site without a single
+        visible bug. <a href="/cli">schemaguardian</a> validates JSON-LD on
+        any URL or HTML file in CI:
+      </p>
+      <pre class="install-block"><code>npx @moonye/schemaguardian scan https://your-site.com --ci</code></pre>
+      <p>
+        It walks your sitemap, parses every JSON-LD block, validates against
+        schema.org rules plus the 2026 Google rejection patterns documented
+        in this post, and exits non-zero if anything regresses. One command,
+        one workflow file, and structured data joins the rest of your
+        build-time guarantees.
+      </p>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions about FAQ schema in 2026</h2>
+      <dl>
+        {postFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section>
+      <h2>Bottom line</h2>
+      <p>
+        FAQ schema in 2026 is no longer for Google rich snippets. It is for
+        AI search citation. The work is the same. The destination is
+        different. Keep adding it, validate it in CI, and stop expecting
+        the SERP dropdown that died in 2023.
+      </p>
+      <p>
+        Next read: <a href="/blog/geo-aeo-explained">GEO and AEO Explained
+        — SEO for the AI Search Era</a>. Or generate clean FAQ JSON-LD
+        right now with the <a href="/faq-schema-generator">FAQ schema
+        generator</a>.
+      </p>
+    </section>
+  </article>
+</BaseLayout>
