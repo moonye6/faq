@@ -1,5 +1,9 @@
 # schemaguardian
 
+[![npm version](https://img.shields.io/npm/v/@moonye/schemaguardian?label=npm&color=0d4f3c)](https://www.npmjs.com/package/@moonye/schemaguardian)
+[![npm downloads](https://img.shields.io/npm/dm/@moonye/schemaguardian?color=0d4f3c)](https://www.npmjs.com/package/@moonye/schemaguardian)
+[![license](https://img.shields.io/npm/l/@moonye/schemaguardian)](https://github.com/moonye6/faq/blob/main/LICENSE)
+
 Validate JSON-LD structured data on any URL or HTML file. CI-friendly.
 Built for the AI search era.
 

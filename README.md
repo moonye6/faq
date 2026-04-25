@@ -1,5 +1,9 @@
 # Schema for AI Search
 
+[![npm version](https://img.shields.io/npm/v/@moonye/schemaguardian?label=npm%20%40moonye%2Fschemaguardian&color=0d4f3c)](https://www.npmjs.com/package/@moonye/schemaguardian)
+[![live site](https://img.shields.io/badge/site-faqjsonld.com-0d4f3c)](https://faqjsonld.com)
+[![license](https://img.shields.io/npm/l/@moonye/schemaguardian)](./LICENSE)
+
 Two products:
 
 1. **[faqjsonld.com](https://faqjsonld.com)** — 12 free schema generators
