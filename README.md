@@ -22,7 +22,7 @@ bun run dev               # localhost:4321
 bun run build             # → dist/
 bun run preview           # serve dist/
 bun run check             # astro + ts check
-SITE_URL=https://your.domain bun run build   # set canonical site URL
+SITE_URL=https://faqjsonld.com bun run build   # default site URL is faqjsonld.com; override here if needed
 ```
 
 ## Adding a new schema type
@@ -79,8 +79,8 @@ cherry-pick decisions pending the next round of outside voice review.
 
 ## Notes
 
-- The default `SITE_URL` is a placeholder. Override via the env var when
-  building for production so canonicals and sitemap URLs are correct.
+- Production domain: `https://faqjsonld.com`. Auto-deploys on push to
+  `main` via Vercel.
 - The favicon is the Astro default. Replace `public/favicon.svg`.
 - Each landing page is itself marked up with `FAQPage` JSON-LD using its
   own `pageFaqs` content. Eat your own dog food.
