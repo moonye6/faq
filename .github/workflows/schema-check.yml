@@ -1,4 +1,4 @@
-name: schemaguard self-check
+name: schemaguardian self-check
 
 on:
   pull_request:
@@ -20,7 +20,7 @@ jobs:
         with:
           bun-version: '1.3'
 
-      - name: Build schemaguard CLI
+      - name: Build schemaguardian CLI
         run: |
           cd cli
           bun install
@@ -48,7 +48,7 @@ jobs:
             echo "Checking production URL: https://faqjsonld.com"
           fi
 
-      - name: Run schemaguard against critical pages
+      - name: Run schemaguardian against critical pages
         run: |
           set -e
           BASE="${{ steps.url.outputs.url }}"
@@ -66,7 +66,7 @@ jobs:
           for p in "${PAGES[@]}"; do
             URL="$BASE$p"
             echo ""
-            echo "::group::schemaguard check $URL"
+            echo "::group::schemaguardian check $URL"
             node cli/dist/index.js check "$URL" --ci --no-color
             echo "::endgroup::"
           done

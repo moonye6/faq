@@ -25,7 +25,7 @@ const CYAN = '\x1b[36m';
 export function formatHuman(result: CheckResult, useColor = true): string {
   const c = (code: string, s: string) => (useColor ? `${code}${s}${RESET}` : s);
   const lines: string[] = [];
-  lines.push(c(BOLD, `schemaguard check ${result.target}`));
+  lines.push(c(BOLD, `schemaguardian check ${result.target}`));
   lines.push('');
 
   if (result.blocksFound === 0) {

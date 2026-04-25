@@ -2,7 +2,7 @@
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import { jsonLdEnvelope } from '~/lib/schema-types';
 
-const title = 'schemaguard — JSON-LD CLI for the AI Search Era';
+const title = 'schemaguardian — JSON-LD CLI for the AI Search Era';
 const description =
   'Validate JSON-LD structured data on any URL or HTML file from the command line. CI-friendly. Zero dependencies. Built for the AI search era.';
 
@@ -10,18 +10,18 @@ const breadcrumbJsonLd = jsonLdEnvelope({
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://faqjsonld.com/' },
-    { '@type': 'ListItem', position: 2, name: 'schemaguard CLI', item: 'https://faqjsonld.com/cli' },
+    { '@type': 'ListItem', position: 2, name: 'schemaguardian CLI', item: 'https://faqjsonld.com/cli' },
   ],
 });
 
 const softwareJsonLd = jsonLdEnvelope({
   '@type': 'SoftwareApplication',
-  name: 'schemaguard',
+  name: 'schemaguardian',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Cross-platform (Node.js 18+)',
   description,
   url: 'https://faqjsonld.com/cli',
-  downloadUrl: 'https://www.npmjs.com/package/schemaguard',
+  downloadUrl: 'https://www.npmjs.com/package/schemaguardian',
   softwareVersion: '0.1.0',
   offers: {
     '@type': 'Offer',
@@ -37,24 +37,24 @@ const softwareJsonLd = jsonLdEnvelope({
 
 const pageFaqs = [
   {
-    q: 'Is schemaguard free?',
+    q: 'Is schemaguardian free?',
     a: 'Yes. The CLI is open source under MIT and free to install via npm. Paid Pro features (multi-domain monitoring, auto-PR fix, team workflows) are planned but not yet built.',
   },
   {
     q: 'How is this different from Google Rich Results Test or schema.org Markup Validator?',
-    a: "Both Google's tool and schema.org's validator are web-only and not scriptable. schemaguard runs in your terminal and CI pipeline, so you can fail a build when structured data regresses. It also bakes in the 2026 reality of which schema types still produce rich results (FAQ + HowTo are largely deprecated; Product, Recipe, BreadcrumbList still work) and emits warnings accordingly.",
+    a: "Both Google's tool and schema.org's validator are web-only and not scriptable. schemaguardian runs in your terminal and CI pipeline, so you can fail a build when structured data regresses. It also bakes in the 2026 reality of which schema types still produce rich results (FAQ + HowTo are largely deprecated; Product, Recipe, BreadcrumbList still work) and emits warnings accordingly.",
   },
   {
-    q: 'Does schemaguard support Microdata or RDFa?',
+    q: 'Does schemaguardian support Microdata or RDFa?',
     a: 'Not in v0.1. Only JSON-LD <script> tags are extracted. Microdata and RDFa support are tracked for v0.3+ depending on user demand.',
   },
   {
     q: 'How do I add it to my CI pipeline?',
-    a: 'In GitHub Actions: `npx schemaguard check $PREVIEW_URL --ci`. The --ci flag exits non-zero on any error so the workflow fails. See the GitHub Actions example below for the full pattern with Vercel preview URLs.',
+    a: 'In GitHub Actions: `npx schemaguardian check $PREVIEW_URL --ci`. The --ci flag exits non-zero on any error so the workflow fails. See the GitHub Actions example below for the full pattern with Vercel preview URLs.',
   },
   {
     q: "Will it tell me if my schema content matches what's visible on the page?",
-    a: 'No, and no automated tool can. Google requires that structured data text match what users see, but verifying that requires rendering the page and comparing visible text to schema text — outside the scope of a static validator. schemaguard checks structural correctness; visible-content matching is a human review step.',
+    a: 'No, and no automated tool can. Google requires that structured data text match what users see, but verifying that requires rendering the page and comparing visible text to schema text — outside the scope of a static validator. schemaguardian checks structural correctness; visible-content matching is a human review step.',
   },
 ];
 
@@ -76,12 +76,12 @@ const pageFaqJsonLd = jsonLdEnvelope({
 
   <article class="cli-page">
     <header class="schema-hero">
-      <h1>schemaguard</h1>
+      <h1>schemaguardian</h1>
       <p class="lede">
         Validate JSON-LD structured data on any URL or HTML file. CI-friendly.
         Zero dependencies. Built for the AI search era.
       </p>
-      <pre class="install-block"><code>npx schemaguard check https://your-site.com</code></pre>
+      <pre class="install-block"><code>npx schemaguardian check https://your-site.com</code></pre>
     </header>
 
     <section>
@@ -108,14 +108,14 @@ const pageFaqJsonLd = jsonLdEnvelope({
     <section>
       <h2>Install</h2>
       <pre class="install-block"><code>{`# one-off
-npx schemaguard check https://example.com
+npx schemaguardian check https://example.com
 
 # global
-npm i -g schemaguard
-schemaguard check https://example.com
+npm i -g schemaguardian
+schemaguardian check https://example.com
 
 # project dev dependency
-npm i -D schemaguard`}</code></pre>
+npm i -D schemaguardian`}</code></pre>
       <p class="hint">Requires Node 18+. Bun and Deno also work.</p>
     </section>
 
@@ -132,19 +132,19 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-      - run: npx schemaguard check https://your-preview-url --ci`}</code></pre>
+      - run: npx schemaguardian check https://your-preview-url --ci`}</code></pre>
 
       <h3>GitLab CI</h3>
       <pre class="install-block"><code>{`# .gitlab-ci.yml
 schema-check:
   image: node:20
   script:
-    - npx schemaguard check $CI_ENVIRONMENT_URL --ci`}</code></pre>
+    - npx schemaguardian check $CI_ENVIRONMENT_URL --ci`}</code></pre>
 
       <h3>package.json script</h3>
       <pre class="install-block"><code>{`{
   "scripts": {
-    "schema:check": "schemaguard check https://faqjsonld.com --ci"
+    "schema:check": "schemaguardian check https://faqjsonld.com --ci"
   }
 }`}</code></pre>
     </section>

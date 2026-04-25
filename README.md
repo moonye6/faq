@@ -8,7 +8,7 @@ Two products:
    AI search era: structured data is now a primary signal for citation by
    Perplexity, ChatGPT, Gemini, and Google AI Overviews, even where Google
    stopped showing FAQ and HowTo rich snippets in 2023-2026.
-2. **[`schemaguard`](./cli/) CLI** — `npx schemaguard check <url>` validates
+2. **[`schemaguardian`](./cli/) CLI** — `npx schemaguardian check <url>` validates
    JSON-LD on any page or HTML file. CI-friendly. See [`cli/README.md`](./cli/README.md).
 
 ## Layout
@@ -21,7 +21,7 @@ faq/
 │   ├── components/         # SchemaGenerator Preact island
 │   ├── layouts/
 │   └── pages/              # /, /404, /[slug] (dynamic per schema type)
-├── cli/                    # the schemaguard CLI (separate npm package)
+├── cli/                    # the schemaguardian CLI (separate npm package)
 │   ├── src/
 │   │   ├── lib/            # extract, validators, report
 │   │   ├── commands/       # check (v0.1)
@@ -75,7 +75,7 @@ See `docs/` for the full strategic record:
 - `outside-voice-2026-04-25.md` — independent critique that invalidated v1's
   "AI citation monitoring SaaS" thesis
 - `keyword-research-2026-04-25.md` — SERP recon evidence
-- `phase2-schemaguard-cli-2026-04-25.md` — current Phase 2 plan (CLI route)
+- `phase2-schemaguardian-cli-2026-04-25.md` — current Phase 2 plan (CLI route)
 
 **Current strategic route:** OSS CLI distributes via GitHub stars + npm,
 with planned paid Pro tier for multi-domain monitoring + auto-PR fix.
@@ -90,7 +90,7 @@ The website is the SEO funnel top.
 
 - [x] Phase 1: 12-schema generator matrix + landing pages + SEO infra
 - [x] Phase 1A: GEO/AEO copy positioning per schema type
-- [x] Phase 2 v0.1: schemaguard CLI `check` command
+- [x] Phase 2 v0.1: schemaguardian CLI `check` command
 - [ ] Phase 2 v0.2: `scan` (sitemap-driven), `generate` (CLI prompts)
 - [ ] Phase 2 v0.3+: paid Pro features (planned)
 

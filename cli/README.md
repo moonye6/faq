@@ -1,10 +1,10 @@
-# schemaguard
+# schemaguardian
 
 Validate JSON-LD structured data on any URL or HTML file. CI-friendly.
 Built for the AI search era.
 
 ```sh
-npx schemaguard check https://your-site.com
+npx schemaguardian check https://your-site.com
 ```
 
 ## Why this exists
@@ -12,7 +12,7 @@ npx schemaguard check https://your-site.com
 Google scaled back FAQ and HowTo rich results in 2023 and cut them
 further in the March 2026 core update. But structured data is now a
 primary signal for citation in AI search engines (Perplexity, ChatGPT,
-Gemini, Google AI Overviews). `schemaguard` validates your JSON-LD
+Gemini, Google AI Overviews). `schemaguardian` validates your JSON-LD
 against schema.org rules **plus** the documented Google rejection
 patterns and the 2026 reality of which schema types still produce
 rich results.
@@ -23,14 +23,14 @@ It runs in CI. It exits non-zero on real problems. It tells you why.
 
 ```sh
 # one-off
-npx schemaguard check https://example.com
+npx schemaguardian check https://example.com
 
 # global
-npm i -g schemaguard
-schemaguard check https://example.com
+npm i -g schemaguardian
+schemaguardian check https://example.com
 
 # project dev dependency
-npm i -D schemaguard
+npm i -D schemaguardian
 ```
 
 Requires Node 18+.
@@ -38,9 +38,9 @@ Requires Node 18+.
 ## Usage
 
 ```sh
-schemaguard check <url|file> [--ci] [--json] [--no-color]
-schemaguard help
-schemaguard version
+schemaguardian check <url|file> [--ci] [--json] [--no-color]
+schemaguardian help
+schemaguardian version
 ```
 
 ### Examples
@@ -48,25 +48,25 @@ schemaguard version
 Check a live URL:
 
 ```sh
-schemaguard check https://faqjsonld.com/faq-schema-generator
+schemaguardian check https://faqjsonld.com/faq-schema-generator
 ```
 
 Check a local HTML file:
 
 ```sh
-schemaguard check ./dist/index.html
+schemaguardian check ./dist/index.html
 ```
 
 Fail a CI build on any error:
 
 ```sh
-schemaguard check https://staging.example.com --ci
+schemaguardian check https://staging.example.com --ci
 ```
 
 Pipe machine-readable output to `jq`:
 
 ```sh
-schemaguard check https://example.com --json | jq '.blocks[].issues'
+schemaguardian check https://example.com --json | jq '.blocks[].issues'
 ```
 
 ## CI integration
@@ -84,7 +84,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-      - run: npx schemaguard check https://your-preview-url.example --ci
+      - run: npx schemaguardian check https://your-preview-url.example --ci
 ```
 
 ### GitLab CI
@@ -94,7 +94,7 @@ jobs:
 schema-check:
   image: node:20
   script:
-    - npx schemaguard check $CI_ENVIRONMENT_URL --ci
+    - npx schemaguardian check $CI_ENVIRONMENT_URL --ci
 ```
 
 ### package.json
@@ -102,7 +102,7 @@ schema-check:
 ```json
 {
   "scripts": {
-    "schema:check": "schemaguard check https://faqjsonld.com --ci"
+    "schema:check": "schemaguardian check https://faqjsonld.com --ci"
   }
 }
 ```

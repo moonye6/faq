@@ -42,7 +42,7 @@ export async function fetchHtml(target: string): Promise<string> {
       redirect: 'follow',
       headers: {
         'User-Agent':
-          'schemaguard/0.1 (+https://faqjsonld.com) JSON-LD validator',
+          'schemaguardian/0.1 (+https://faqjsonld.com) JSON-LD validator',
         Accept: 'text/html,application/xhtml+xml',
       },
     });

@@ -9,7 +9,7 @@ informed-by:
   - docs/keyword-research-2026-04-25.md
 ---
 
-# Phase 2: schemaguard CLI
+# Phase 2: schemaguardian CLI
 
 After outside voice + live 2026 data invalidated CEO plan v1's Approach C
 (AI citation monitoring SaaS), the new strategic route is OSS CLI + paid
@@ -26,22 +26,22 @@ CI plugin. This doc captures Phase 2 scope.
 - **Buyer ICP:** developer + SEO-aware engineering teams who want CI
   gating on structured data quality. NOT enterprise SEO directors.
 
-## What schemaguard does
+## What schemaguardian does
 
-`schemaguard <command>` — CLI for structured data validation and audit.
+`schemaguardian <command>` — CLI for structured data validation and audit.
 
 ### MVP commands (Phase 2 v0.1)
 
 | Command | What it does |
 |---|---|
-| `schemaguard check <url\|file>` | Fetches URL or reads HTML file, extracts all JSON-LD `<script>` tags, validates each against schema.org rules + common Google rejection conditions. Reports issues. `--ci` exits non-zero on any issue. |
+| `schemaguardian check <url\|file>` | Fetches URL or reads HTML file, extracts all JSON-LD `<script>` tags, validates each against schema.org rules + common Google rejection conditions. Reports issues. `--ci` exits non-zero on any issue. |
 
 ### v0.2 (next iteration)
 
 | Command | What it does |
 |---|---|
-| `schemaguard scan <site-url>` | Reads `sitemap.xml`, crawls all URLs, reports per-page schema coverage. Identifies gaps (e.g., product pages missing Product schema). |
-| `schemaguard generate <type>` | Interactive prompt to generate a specific schema type. Mirror of the web tools at faqjsonld.com but in the terminal. |
+| `schemaguardian scan <site-url>` | Reads `sitemap.xml`, crawls all URLs, reports per-page schema coverage. Identifies gaps (e.g., product pages missing Product schema). |
+| `schemaguardian generate <type>` | Interactive prompt to generate a specific schema type. Mirror of the web tools at faqjsonld.com but in the terminal. |
 
 ### v0.3+ (paid Pro features, planned)
 
@@ -60,7 +60,7 @@ CI plugin. This doc captures Phase 2 scope.
 - **Build**: `bun build cli/src/index.ts --target=node --outfile=cli/dist/index.js`
   to a single bundled JavaScript file.
 - **Distribution**: `npm publish` from `cli/` directory. Package name
-  `schemaguard`. Bin name `schemaguard`. Entry: `cli/dist/index.js`.
+  `schemaguardian`. Bin name `schemaguardian`. Entry: `cli/dist/index.js`.
 - **Validation engine**: hand-rolled per-schema-type validator using the
   same `SchemaTypeDef` definitions plus a small set of Google-specific
   rules (e.g., FAQ visible-answer requirement is documented but not
@@ -103,15 +103,15 @@ For each detected JSON-LD block:
 
 ## Success criteria for Phase 2 v0.1
 
-- [ ] `npx schemaguard check https://faqjsonld.com/faq-schema-generator` returns clean output (we eat our own dog food)
-- [ ] `npx schemaguard check ./test-fixtures/invalid.html --ci` exits non-zero
+- [ ] `npx schemaguardian check https://faqjsonld.com/faq-schema-generator` returns clean output (we eat our own dog food)
+- [ ] `npx schemaguardian check ./test-fixtures/invalid.html --ci` exits non-zero
 - [ ] README documents 3 CI integration examples (GitHub Actions, GitLab CI, generic shell)
-- [ ] Published to npm as `schemaguard`
+- [ ] Published to npm as `schemaguardian`
 - [ ] First 50 GitHub stars within 6 weeks (organic indicator)
 
 ## Decisions log
 
-- **Name**: `schemaguard` (no dash). `schema-guard` taken by unrelated package. `aeo-guard` available but user preferred preserving the brand.
+- **Name**: `schemaguardian` (no dash). `schema-guard` taken by unrelated package. `aeo-guard` available but user preferred preserving the brand.
 - **Repo**: monorepo (cli/ subdirectory) to ship faster. Extract later if needed.
 - **Initial command**: only `check` for v0.1. `scan` and `generate` deferred to v0.2.
 - **Pro tier**: planned, NOT built. v0.1 is purely OSS to validate distribution.

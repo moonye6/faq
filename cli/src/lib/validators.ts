@@ -111,7 +111,7 @@ function validateByType(t: string, node: Obj): Issue[] {
         {
           severity: 'info',
           code: 'unsupported-type',
-          message: `@type "${t}" is not in schemaguard's known type registry. Generic envelope checks passed; type-specific checks skipped.`,
+          message: `@type "${t}" is not in schemaguardian's known type registry. Generic envelope checks passed; type-specific checks skipped.`,
           path: '@type',
         },
       ];

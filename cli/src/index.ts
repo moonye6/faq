@@ -4,12 +4,12 @@ import { runCheck } from '~/commands/check';
 
 const VERSION = '0.1.0';
 
-const HELP = `schemaguard ${VERSION}
+const HELP = `schemaguardian ${VERSION}
 
 Validate JSON-LD structured data on URLs and HTML files.
 
 USAGE
-  schemaguard <command> [options] [target]
+  schemaguardian <command> [options] [target]
 
 COMMANDS
   check <url|file>     Fetch the URL or read the file, extract every JSON-LD
@@ -24,18 +24,18 @@ OPTIONS for check
   --no-color           Disable ANSI color codes.
 
 EXAMPLES
-  schemaguard check https://faqjsonld.com/faq-schema-generator
-  schemaguard check ./dist/index.html --ci
-  schemaguard check https://example.com --json | jq '.blocks[0].issues'
+  schemaguardian check https://faqjsonld.com/faq-schema-generator
+  schemaguardian check ./dist/index.html --ci
+  schemaguardian check https://example.com --json | jq '.blocks[0].issues'
 
 CI INTEGRATION
   In .github/workflows/seo.yml:
 
-    - run: npx schemaguard check \${{ env.PREVIEW_URL }} --ci
+    - run: npx schemaguardian check \${{ env.PREVIEW_URL }} --ci
 
   In package.json:
 
-    "scripts": { "schema:check": "schemaguard check https://faqjsonld.com --ci" }
+    "scripts": { "schema:check": "schemaguardian check https://faqjsonld.com --ci" }
 
 LEARN MORE
   https://faqjsonld.com — free schema generators built for the AI search era.
@@ -47,7 +47,7 @@ function showHelp(): void {
 }
 
 function showVersion(): void {
-  process.stdout.write(`schemaguard ${VERSION}\n`);
+  process.stdout.write(`schemaguardian ${VERSION}\n`);
 }
 
 async function main(): Promise<number> {
@@ -79,14 +79,14 @@ async function main(): Promise<number> {
       });
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
-      process.stderr.write(`schemaguard: ${msg}\n`);
-      process.stderr.write(`Run "schemaguard help" for usage.\n`);
+      process.stderr.write(`schemaguardian: ${msg}\n`);
+      process.stderr.write(`Run "schemaguardian help" for usage.\n`);
       return 2;
     }
     const target = parsed.positionals[0];
     if (!target) {
-      process.stderr.write('schemaguard: check requires a URL or file path.\n');
-      process.stderr.write('Example: schemaguard check https://faqjsonld.com\n');
+      process.stderr.write('schemaguardian: check requires a URL or file path.\n');
+      process.stderr.write('Example: schemaguardian check https://faqjsonld.com\n');
       return 2;
     }
     return await runCheck({
@@ -97,15 +97,15 @@ async function main(): Promise<number> {
     });
   }
 
-  process.stderr.write(`schemaguard: unknown command "${cmd}"\n`);
-  process.stderr.write(`Run "schemaguard help" for usage.\n`);
+  process.stderr.write(`schemaguardian: unknown command "${cmd}"\n`);
+  process.stderr.write(`Run "schemaguardian help" for usage.\n`);
   return 2;
 }
 
 main().then(
   (code) => process.exit(code),
   (e) => {
-    process.stderr.write(`schemaguard: unexpected error: ${e instanceof Error ? e.stack : String(e)}\n`);
+    process.stderr.write(`schemaguardian: unexpected error: ${e instanceof Error ? e.stack : String(e)}\n`);
     process.exit(1);
   },
 );

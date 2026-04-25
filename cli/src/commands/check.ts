@@ -32,7 +32,7 @@ export async function runCheck(opts: CheckOptions): Promise<number> {
     if (opts.json) {
       process.stdout.write(JSON.stringify({ error: msg }, null, 2) + '\n');
     } else {
-      process.stderr.write(`schemaguard: failed to fetch ${opts.target}: ${msg}\n`);
+      process.stderr.write(`schemaguardian: failed to fetch ${opts.target}: ${msg}\n`);
     }
     return 1;
   }

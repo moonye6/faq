@@ -5,7 +5,7 @@ import { jsonLdEnvelope } from '~/lib/schema-types';
 
 const title = 'Schema Generators for AI Search | FAQ, HowTo, Product, Recipe and 8 more';
 const description =
-  'Free JSON-LD schema generators built for the AI search era. 12 schema types optimized for citation by Perplexity, ChatGPT, Gemini, and Google AI Overviews. Plus the schemaguard CLI for CI validation.';
+  'Free JSON-LD schema generators built for the AI search era. 12 schema types optimized for citation by Perplexity, ChatGPT, Gemini, and Google AI Overviews. Plus the schemaguardian CLI for CI validation.';
 
 const websiteJsonLd = jsonLdEnvelope({
   '@type': 'WebSite',
@@ -44,9 +44,9 @@ const collectionJsonLd = jsonLdEnvelope({
     </header>
 
     <section class="cli-hero">
-      <h2>New: schemaguard CLI</h2>
+      <h2>New: schemaguardian CLI</h2>
       <p>Validate your structured data in CI, before it ships:</p>
-      <pre class="install-block"><code>npx schemaguard check https://your-site.com --ci</code></pre>
+      <pre class="install-block"><code>npx schemaguardian check https://your-site.com --ci</code></pre>
       <p class="hint">
         <a href="/cli">Read the docs</a> · MIT-licensed · Zero dependencies · Node 18+
       </p>
@@ -82,7 +82,7 @@ const collectionJsonLd = jsonLdEnvelope({
       <p>
         These generators output clean, valid JSON-LD aimed at the new
         consumer: large language models indexing the open web for citation.
-        The companion <a href="/cli">schemaguard CLI</a> lets you validate that
+        The companion <a href="/cli">schemaguardian CLI</a> lets you validate that
         output in CI so regressions never reach production.
       </p>
     </section>
