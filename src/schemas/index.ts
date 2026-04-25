@@ -22,6 +22,7 @@ import { breadcrumbSchema } from './breadcrumb';
 import { organizationSchema } from './organization';
 import { courseSchema } from './course';
 import { jobPostingSchema } from './jobposting';
+import { videoSchema } from './video';
 
 export const schemaRegistry: SchemaTypeDef[] = [
   faqSchema,
@@ -36,6 +37,7 @@ export const schemaRegistry: SchemaTypeDef[] = [
   organizationSchema,
   courseSchema,
   jobPostingSchema,
+  videoSchema,
 ];
 
 export function getSchemaBySlug(slug: string): SchemaTypeDef | undefined {
