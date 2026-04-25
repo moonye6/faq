@@ -1,0 +1,62 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import SchemaGenerator from '~/components/SchemaGenerator';
+import { schemaRegistry, getSchemaBySlug } from '~/schemas';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+export function getStaticPaths() {
+  return schemaRegistry.map((s) => ({
+    params: { slug: s.slug },
+    props: { schemaId: s.id },
+  }));
+}
+
+const { slug } = Astro.params;
+const schema = getSchemaBySlug(slug!);
+if (!schema) {
+  return Astro.redirect('/404');
+}
+
+// The page itself uses FAQPage schema (eat our own dog food)
+const pageFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: schema.pageFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+<BaseLayout title={schema.title} description={schema.metaDescription}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(pageFaqJsonLd)} />
+  </Fragment>
+
+  <article class="schema-page">
+    <header class="schema-hero">
+      <h1>{schema.h1}</h1>
+      <p class="lede">{schema.intro}</p>
+    </header>
+
+    <section class="generator-section">
+      <SchemaGenerator client:load schemaSlug={schema.slug} />
+    </section>
+
+    <section class="geo-aeo-context">
+      <h2>Why this matters in 2026</h2>
+      <p>{schema.geoAeoAngle}</p>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions about {schema.name}</h2>
+      <dl>
+        {schema.pageFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  </article>
+</BaseLayout>

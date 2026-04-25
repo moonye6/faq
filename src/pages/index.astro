@@ -1,0 +1,65 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { schemaRegistry } from '~/schemas';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'Schema Generators for AI Search | FAQ, HowTo, and more';
+const description =
+  'Free JSON-LD schema generators built for the AI search era. Generate FAQPage, HowTo, and more — optimized for citation by Perplexity, ChatGPT, Gemini, and Google AI Overviews.';
+
+const orgJsonLd = jsonLdEnvelope({
+  '@type': 'WebSite',
+  name: 'Schema for AI Search',
+  url: Astro.site?.toString(),
+  description,
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(orgJsonLd)} />
+  </Fragment>
+
+  <article class="home">
+    <header class="home-hero">
+      <h1>Structured Data, Built for AI Search</h1>
+      <p class="lede">
+        Google scaled back FAQ and HowTo rich results in 2023 and cut them
+        further in March 2026. But structured data is now a primary signal
+        for AI search citation. These generators are built for that reality.
+      </p>
+    </header>
+
+    <section class="schema-grid">
+      <h2>Schema generators</h2>
+      <ul class="schema-list">
+        {schemaRegistry.map((s) => (
+          <li>
+            <a href={`/${s.slug}`}>
+              <strong>{s.name}</strong>
+              <span>{s.metaDescription}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="why">
+      <h2>Why we built this</h2>
+      <p>
+        FAQ and HowTo rich results were the original reason most sites added
+        structured data. Google removed HowTo rich results in 2023 and cut FAQ
+        rich results to authority sites only — then compressed them further in
+        the March 2026 core update.
+      </p>
+      <p>
+        At the same time, AI search consumers (Perplexity, ChatGPT, Gemini,
+        Google AI Overviews) lean heavily on structured data when extracting
+        and citing answers. The value of schema did not disappear. It moved.
+      </p>
+      <p>
+        These generators output clean, valid JSON-LD aimed at the new
+        consumer: large language models indexing the open web for citation.
+      </p>
+    </section>
+  </article>
+</BaseLayout>

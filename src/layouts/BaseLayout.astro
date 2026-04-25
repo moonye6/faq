@@ -1,0 +1,48 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+}
+const { title, description, canonical } = Astro.props;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const canonicalUrl = canonical ?? `${site}${Astro.url.pathname}`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+    <slot name="head" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="/" class="brand">Schema for AI Search</a>
+      <nav>
+        <a href="/faq-schema-generator">FAQ</a>
+        <a href="/howto-schema-generator">HowTo</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p>
+        Built for the AI search era. FAQ rich snippets are deprecated for most
+        sites, but FAQ and HowTo schema remain primary signals for Perplexity,
+        ChatGPT, Gemini, and Google AI Overviews.
+      </p>
+    </footer>
+  </body>
+</html>
