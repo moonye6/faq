@@ -1,0 +1,54 @@
+{
+  "name": "schemaguard",
+  "version": "0.1.0",
+  "description": "Validate JSON-LD structured data on URLs and HTML files. CI-friendly. Built for the AI search era.",
+  "type": "module",
+  "bin": {
+    "schemaguard": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "bun build src/index.ts --target=node --outfile=dist/index.js --minify",
+    "dev": "bun run src/index.ts",
+    "check:self": "bun run src/index.ts check https://faqjsonld.com/faq-schema-generator",
+    "prepublishOnly": "bun run build"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "schema",
+    "json-ld",
+    "structured-data",
+    "seo",
+    "validation",
+    "cli",
+    "ci",
+    "schema.org",
+    "geo",
+    "aeo",
+    "ai-search"
+  ],
+  "author": "moon ye <464461539@qq.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moonye6/faq.git",
+    "directory": "cli"
+  },
+  "homepage": "https://faqjsonld.com",
+  "bugs": {
+    "url": "https://github.com/moonye6/faq/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.0"
+  }
+}

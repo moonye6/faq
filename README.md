@@ -1,86 +1,99 @@
 # Schema for AI Search
 
-Schema generators built for the AI search era. FAQ rich snippets were
-deprecated for most sites in 2023 and cut further by Google's March 2026
-core update — but FAQ, HowTo, and other structured data types remain
-primary signals for citation by Perplexity, ChatGPT, Gemini, and Google
-AI Overviews. This site generates clean JSON-LD aimed at that consumer.
+Two products:
+
+1. **[faqjsonld.com](https://faqjsonld.com)** — 12 free schema generators
+   (FAQ / HowTo / Product / Recipe / Article / Review / LocalBusiness /
+   Event / Breadcrumb / Organization / Course / JobPosting). Built for the
+   AI search era: structured data is now a primary signal for citation by
+   Perplexity, ChatGPT, Gemini, and Google AI Overviews, even where Google
+   stopped showing FAQ and HowTo rich snippets in 2023-2026.
+2. **[`schemaguard`](./cli/) CLI** — `npx schemaguard check <url>` validates
+   JSON-LD on any page or HTML file. CI-friendly. See [`cli/README.md`](./cli/README.md).
+
+## Layout
+
+```
+faq/
+├── src/                    # the website (Astro)
+│   ├── lib/                # SchemaTypeDef interface + helpers
+│   ├── schemas/            # one file per supported schema type (registry-driven)
+│   ├── components/         # SchemaGenerator Preact island
+│   ├── layouts/
+│   └── pages/              # /, /404, /[slug] (dynamic per schema type)
+├── cli/                    # the schemaguard CLI (separate npm package)
+│   ├── src/
+│   │   ├── lib/            # extract, validators, report
+│   │   ├── commands/       # check (v0.1)
+│   │   └── schemas/        # vendored copy of schema definitions
+│   └── README.md
+├── public/
+└── docs/                   # CEO plan, outside voice review, keyword research, phase plans
+```
 
 ## Stack
 
-- **Astro 6** — SSG, MPA architecture, one URL per schema type
-- **Preact** — interactive generator islands
-- **Bun** — package manager + runtime
-- **TypeScript strict**
-- **@astrojs/sitemap** — auto-generated sitemap
+- Astro 6 + Preact + Bun + TypeScript strict (website)
+- Bun bundler + Node 18+ runtime + zero deps (CLI)
+- @astrojs/sitemap (auto sitemap)
 
-## Commands
+## Development
+
+### Website
 
 ```sh
-bun install               # install deps (use BUN_CONFIG_REGISTRY=https://registry.npmjs.org/ if behind a mirror)
+bun install               # use BUN_CONFIG_REGISTRY=https://registry.npmjs.org/ if behind a mirror
 bun run dev               # localhost:4321
 bun run build             # → dist/
-bun run preview           # serve dist/
 bun run check             # astro + ts check
-SITE_URL=https://faqjsonld.com bun run build   # default site URL is faqjsonld.com; override here if needed
 ```
 
-## Adding a new schema type
+### CLI
+
+```sh
+cd cli
+bun install
+bun run build             # → dist/index.js (single bundled file)
+node dist/index.js check https://faqjsonld.com   # smoke test
+```
+
+### Adding a new schema type
 
 1. Create `src/schemas/{id}.ts` exporting a `SchemaTypeDef`
 2. Register it in `src/schemas/index.ts`
+3. (Optional) copy the same file into `cli/src/schemas/` and register
+   in `cli/src/schemas/index.ts` so the CLI validates it too
 
-That's the only change. Routing, sitemap, landing page, and generator UI
-are derived from the registry automatically.
-
-See `src/schemas/faq.ts` and `src/schemas/howto.ts` for reference.
-
-## Project layout
-
-```
-src/
-├── lib/
-│   └── schema-types.ts          # SchemaTypeDef interface + helpers
-├── schemas/
-│   ├── index.ts                 # registry
-│   ├── faq.ts                   # FAQPage adapter
-│   └── howto.ts                 # HowTo adapter
-├── components/
-│   └── SchemaGenerator.tsx      # Preact island: form → JSON-LD
-├── layouts/
-│   └── BaseLayout.astro         # global shell + SEO meta
-└── pages/
-    ├── index.astro              # home: lists all schema types
-    ├── 404.astro
-    └── [slug].astro             # dynamic route per schema type
-```
+Routing, sitemap, landing page, and generator UI are derived
+automatically from the registry.
 
 ## Strategy
 
-This repository implements the SELECTIVE EXPANSION baseline of the CEO
-plan in `docs/ceo-plan-2026-04-25-faq-schema-generator.md`:
-the **schema type generator matrix layer** that serves as the SEO traffic
-entry. Higher-level modules (auto-extract from URL/PDF, AI citation
-monitoring, schema health dashboard, AI-friendliness score) are
-cherry-pick decisions pending the next round of outside voice review.
+See `docs/` for the full strategic record:
 
-## Phase 1 status
+- `ceo-plan-2026-04-25-faq-schema-generator.md` — original plan (v1)
+- `outside-voice-2026-04-25.md` — independent critique that invalidated v1's
+  "AI citation monitoring SaaS" thesis
+- `keyword-research-2026-04-25.md` — SERP recon evidence
+- `phase2-schemaguard-cli-2026-04-25.md` — current Phase 2 plan (CLI route)
 
-- [x] Astro + Bun + TypeScript scaffolding
-- [x] SchemaTypeDef abstraction
-- [x] FAQ + HowTo adapters
-- [x] Reusable SchemaGenerator Preact island
-- [x] GEO/AEO landing template + dynamic routing
-- [x] SEO infrastructure (sitemap, robots, canonical, OG meta)
-- [x] Build + SSR verified
-- [ ] Add: Product, Recipe, Article, Review, LocalBusiness, Event, Course, JobPosting, Breadcrumb (Phase 1 cont.)
-- [ ] Pick a domain + deploy (Cloudflare Pages / Vercel / GitHub Pages)
-- [ ] Outside voice review of Approach C commercial assumptions
+**Current strategic route:** OSS CLI distributes via GitHub stars + npm,
+with planned paid Pro tier for multi-domain monitoring + auto-PR fix.
+The website is the SEO funnel top.
 
-## Notes
+## Deploy
 
-- Production domain: `https://faqjsonld.com`. Auto-deploys on push to
-  `main` via Vercel.
-- The favicon is the Astro default. Replace `public/favicon.svg`.
-- Each landing page is itself marked up with `FAQPage` JSON-LD using its
-  own `pageFaqs` content. Eat your own dog food.
+- Production: `https://faqjsonld.com` (Vercel, auto-deploys on push to main)
+- CLI: `npm publish` from `cli/` directory (manual; needs npm token)
+
+## Status
+
+- [x] Phase 1: 12-schema generator matrix + landing pages + SEO infra
+- [x] Phase 1A: GEO/AEO copy positioning per schema type
+- [x] Phase 2 v0.1: schemaguard CLI `check` command
+- [ ] Phase 2 v0.2: `scan` (sitemap-driven), `generate` (CLI prompts)
+- [ ] Phase 2 v0.3+: paid Pro features (planned)
+
+## License
+
+MIT

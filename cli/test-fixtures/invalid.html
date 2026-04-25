@@ -1,0 +1,41 @@
+<!doctype html>
+<html><head>
+<title>Test fixture: invalid schema</title>
+
+<!-- block 1: missing @context -->
+<script type="application/ld+json">
+{
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Q1?" }
+  ]
+}
+</script>
+
+<!-- block 2: malformed JSON -->
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "Product", "name": "Foo" oops
+</script>
+
+<!-- block 3: BreadcrumbList with bad position -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://x.com/" },
+    { "@type": "ListItem", "position": 5, "name": "Cat", "item": "https://x.com/cat" }
+  ]
+}
+</script>
+
+<!-- block 4: JobPosting missing required fields -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "JobPosting",
+  "title": "Engineer"
+}
+</script>
+
+</head><body>Test fixture</body></html>
