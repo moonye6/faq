@@ -8,7 +8,7 @@ Two products:
    AI search era: structured data is now a primary signal for citation by
    Perplexity, ChatGPT, Gemini, and Google AI Overviews, even where Google
    stopped showing FAQ and HowTo rich snippets in 2023-2026.
-2. **[`schemaguardian`](./cli/) CLI** — `npx schemaguardian check <url>` validates
+2. **[`schemaguardian`](./cli/) CLI** — `npx @moonye/schemaguardian check <url>` validates
    JSON-LD on any page or HTML file. CI-friendly. See [`cli/README.md`](./cli/README.md).
 
 ## Layout

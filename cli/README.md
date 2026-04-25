@@ -4,7 +4,7 @@ Validate JSON-LD structured data on any URL or HTML file. CI-friendly.
 Built for the AI search era.
 
 ```sh
-npx schemaguardian check https://your-site.com
+npx @moonye/schemaguardian check https://your-site.com
 ```
 
 ## Why this exists
@@ -23,14 +23,14 @@ It runs in CI. It exits non-zero on real problems. It tells you why.
 
 ```sh
 # one-off
-npx schemaguardian check https://example.com
+npx @moonye/schemaguardian check https://example.com
 
 # global
-npm i -g schemaguardian
+npm i -g @moonye/schemaguardian
 schemaguardian check https://example.com
 
 # project dev dependency
-npm i -D schemaguardian
+npm i -D @moonye/schemaguardian
 ```
 
 Requires Node 18+.
@@ -84,7 +84,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-      - run: npx schemaguardian check https://your-preview-url.example --ci
+      - run: npx @moonye/schemaguardian check https://your-preview-url.example --ci
 ```
 
 ### GitLab CI
@@ -94,7 +94,7 @@ jobs:
 schema-check:
   image: node:20
   script:
-    - npx schemaguardian check $CI_ENVIRONMENT_URL --ci
+    - npx @moonye/schemaguardian check $CI_ENVIRONMENT_URL --ci
 ```
 
 ### package.json

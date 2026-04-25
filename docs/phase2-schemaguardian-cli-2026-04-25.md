@@ -103,8 +103,8 @@ For each detected JSON-LD block:
 
 ## Success criteria for Phase 2 v0.1
 
-- [ ] `npx schemaguardian check https://faqjsonld.com/faq-schema-generator` returns clean output (we eat our own dog food)
-- [ ] `npx schemaguardian check ./test-fixtures/invalid.html --ci` exits non-zero
+- [ ] `npx @moonye/schemaguardian check https://faqjsonld.com/faq-schema-generator` returns clean output (we eat our own dog food)
+- [ ] `npx @moonye/schemaguardian check ./test-fixtures/invalid.html --ci` exits non-zero
 - [ ] README documents 3 CI integration examples (GitHub Actions, GitLab CI, generic shell)
 - [ ] Published to npm as `schemaguardian`
 - [ ] First 50 GitHub stars within 6 weeks (organic indicator)

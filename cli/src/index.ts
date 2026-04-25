@@ -31,7 +31,7 @@ EXAMPLES
 CI INTEGRATION
   In .github/workflows/seo.yml:
 
-    - run: npx schemaguardian check \${{ env.PREVIEW_URL }} --ci
+    - run: npx @moonye/schemaguardian check \${{ env.PREVIEW_URL }} --ci
 
   In package.json:
 

@@ -21,7 +21,7 @@ const softwareJsonLd = jsonLdEnvelope({
   operatingSystem: 'Cross-platform (Node.js 18+)',
   description,
   url: 'https://faqjsonld.com/cli',
-  downloadUrl: 'https://www.npmjs.com/package/schemaguardian',
+  downloadUrl: 'https://www.npmjs.com/package/@moonye/schemaguardian',
   softwareVersion: '0.1.0',
   offers: {
     '@type': 'Offer',
@@ -50,7 +50,7 @@ const pageFaqs = [
   },
   {
     q: 'How do I add it to my CI pipeline?',
-    a: 'In GitHub Actions: `npx schemaguardian check $PREVIEW_URL --ci`. The --ci flag exits non-zero on any error so the workflow fails. See the GitHub Actions example below for the full pattern with Vercel preview URLs.',
+    a: 'In GitHub Actions: `npx @moonye/schemaguardian check $PREVIEW_URL --ci`. The --ci flag exits non-zero on any error so the workflow fails. See the GitHub Actions example below for the full pattern with Vercel preview URLs.',
   },
   {
     q: "Will it tell me if my schema content matches what's visible on the page?",
@@ -81,7 +81,7 @@ const pageFaqJsonLd = jsonLdEnvelope({
         Validate JSON-LD structured data on any URL or HTML file. CI-friendly.
         Zero dependencies. Built for the AI search era.
       </p>
-      <pre class="install-block"><code>npx schemaguardian check https://your-site.com</code></pre>
+      <pre class="install-block"><code>npx @moonye/schemaguardian check https://your-site.com</code></pre>
     </header>
 
     <section>
@@ -108,14 +108,14 @@ const pageFaqJsonLd = jsonLdEnvelope({
     <section>
       <h2>Install</h2>
       <pre class="install-block"><code>{`# one-off
-npx schemaguardian check https://example.com
+npx @moonye/schemaguardian check https://example.com
 
 # global
-npm i -g schemaguardian
+npm i -g @moonye/schemaguardian
 schemaguardian check https://example.com
 
 # project dev dependency
-npm i -D schemaguardian`}</code></pre>
+npm i -D @moonye/schemaguardian`}</code></pre>
       <p class="hint">Requires Node 18+. Bun and Deno also work.</p>
     </section>
 
@@ -132,14 +132,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-      - run: npx schemaguardian check https://your-preview-url --ci`}</code></pre>
+      - run: npx @moonye/schemaguardian check https://your-preview-url --ci`}</code></pre>
 
       <h3>GitLab CI</h3>
       <pre class="install-block"><code>{`# .gitlab-ci.yml
 schema-check:
   image: node:20
   script:
-    - npx schemaguardian check $CI_ENVIRONMENT_URL --ci`}</code></pre>
+    - npx @moonye/schemaguardian check $CI_ENVIRONMENT_URL --ci`}</code></pre>
 
       <h3>package.json script</h3>
       <pre class="install-block"><code>{`{

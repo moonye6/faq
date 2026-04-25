@@ -1,5 +1,5 @@
 {
-  "name": "schemaguardian",
+  "name": "@moonye/schemaguardian",
   "version": "0.1.0",
   "description": "Validate JSON-LD structured data on URLs and HTML files. CI-friendly. Built for the AI search era.",
   "type": "module",
