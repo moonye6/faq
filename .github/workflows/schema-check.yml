@@ -1,0 +1,81 @@
+name: schemaguard self-check
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  schema-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3'
+
+      - name: Build schemaguard CLI
+        run: |
+          cd cli
+          bun install
+          bun run build
+
+      - name: Wait for Vercel preview deployment
+        if: github.event_name == 'pull_request'
+        id: preview
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          max_timeout: 300
+
+      - name: Resolve check URL
+        id: url
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "url=${{ steps.preview.outputs.url }}" >> "$GITHUB_OUTPUT"
+            echo "Checking preview URL: ${{ steps.preview.outputs.url }}"
+          else
+            # Production push: faqjsonld.com is the live domain. Vercel takes
+            # ~30-60s to roll out after merge — sleep then check.
+            sleep 60
+            echo "url=https://faqjsonld.com" >> "$GITHUB_OUTPUT"
+            echo "Checking production URL: https://faqjsonld.com"
+          fi
+
+      - name: Run schemaguard against critical pages
+        run: |
+          set -e
+          BASE="${{ steps.url.outputs.url }}"
+          # Strip trailing slash for clean concatenation
+          BASE="${BASE%/}"
+          PAGES=(
+            ""
+            "/faq-schema-generator"
+            "/howto-schema-generator"
+            "/product-schema-generator"
+            "/recipe-schema-generator"
+            "/breadcrumb-schema-generator"
+            "/job-posting-schema-generator"
+          )
+          for p in "${PAGES[@]}"; do
+            URL="$BASE$p"
+            echo ""
+            echo "::group::schemaguard check $URL"
+            node cli/dist/index.js check "$URL" --ci --no-color
+            echo "::endgroup::"
+          done
+
+      - name: Summary
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "✓ All checked pages have valid JSON-LD schema."
+          else
+            echo "✗ One or more pages have invalid schema. See logs above."
+          fi

@@ -1,4 +1,6 @@
 ---
+import { schemaRegistry } from '~/schemas';
+
 interface Props {
   title: string;
   description: string;
@@ -31,18 +33,42 @@ const canonicalUrl = canonical ?? `${site}${Astro.url.pathname}`;
       <a href="/" class="brand">Schema for AI Search</a>
       <nav>
         <a href="/faq-schema-generator">FAQ</a>
-        <a href="/howto-schema-generator">HowTo</a>
+        <a href="/product-schema-generator">Product</a>
+        <a href="/recipe-schema-generator">Recipe</a>
+        <a href="/cli" class="nav-cli">CLI</a>
       </nav>
     </header>
     <main>
       <slot />
     </main>
     <footer class="site-footer">
-      <p>
-        Built for the AI search era. FAQ rich snippets are deprecated for most
-        sites, but FAQ and HowTo schema remain primary signals for Perplexity,
-        ChatGPT, Gemini, and Google AI Overviews.
-      </p>
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Schema generators</h4>
+          <ul>
+            {schemaRegistry.map((s) => (
+              <li><a href={`/${s.slug}`}>{s.name.replace(/ Schema Generator$/, '')}</a></li>
+            ))}
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Tools</h4>
+          <ul>
+            <li><a href="/cli">schemaguard CLI</a></li>
+            <li><a href="https://github.com/moonye6/faq" rel="noopener">GitHub</a></li>
+            <li><a href="https://www.npmjs.com/package/schemaguard" rel="noopener">npm</a></li>
+          </ul>
+        </div>
+        <div class="footer-col footer-about">
+          <h4>About</h4>
+          <p>
+            Built for the AI search era. FAQ and HowTo rich snippets are largely
+            deprecated, but structured data remains a primary signal for citation
+            in Perplexity, ChatGPT, Gemini, and Google AI Overviews.
+          </p>
+        </div>
+      </div>
+      <p class="footer-meta">© {new Date().getFullYear()} faqjsonld.com · MIT licensed</p>
     </footer>
   </body>
 </html>

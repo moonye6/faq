@@ -3,20 +3,34 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import { schemaRegistry } from '~/schemas';
 import { jsonLdEnvelope } from '~/lib/schema-types';
 
-const title = 'Schema Generators for AI Search | FAQ, HowTo, and more';
+const title = 'Schema Generators for AI Search | FAQ, HowTo, Product, Recipe and 8 more';
 const description =
-  'Free JSON-LD schema generators built for the AI search era. Generate FAQPage, HowTo, and more — optimized for citation by Perplexity, ChatGPT, Gemini, and Google AI Overviews.';
+  'Free JSON-LD schema generators built for the AI search era. 12 schema types optimized for citation by Perplexity, ChatGPT, Gemini, and Google AI Overviews. Plus the schemaguard CLI for CI validation.';
 
-const orgJsonLd = jsonLdEnvelope({
+const websiteJsonLd = jsonLdEnvelope({
   '@type': 'WebSite',
   name: 'Schema for AI Search',
   url: Astro.site?.toString(),
   description,
 });
+
+const collectionJsonLd = jsonLdEnvelope({
+  '@type': 'CollectionPage',
+  name: 'Schema generators',
+  description: 'Free JSON-LD schema generators for 12 schema.org types.',
+  url: Astro.site?.toString(),
+  hasPart: schemaRegistry.map((s) => ({
+    '@type': 'WebPage',
+    name: s.name,
+    url: `${Astro.site?.toString().replace(/\/$/, '')}/${s.slug}`,
+    description: s.metaDescription,
+  })),
+});
 ---
 <BaseLayout title={title} description={description}>
   <Fragment slot="head">
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(orgJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(collectionJsonLd)} />
   </Fragment>
 
   <article class="home">
@@ -29,8 +43,17 @@ const orgJsonLd = jsonLdEnvelope({
       </p>
     </header>
 
+    <section class="cli-hero">
+      <h2>New: schemaguard CLI</h2>
+      <p>Validate your structured data in CI, before it ships:</p>
+      <pre class="install-block"><code>npx schemaguard check https://your-site.com --ci</code></pre>
+      <p class="hint">
+        <a href="/cli">Read the docs</a> · MIT-licensed · Zero dependencies · Node 18+
+      </p>
+    </section>
+
     <section class="schema-grid">
-      <h2>Schema generators</h2>
+      <h2>12 schema generators</h2>
       <ul class="schema-list">
         {schemaRegistry.map((s) => (
           <li>
@@ -48,7 +71,7 @@ const orgJsonLd = jsonLdEnvelope({
       <p>
         FAQ and HowTo rich results were the original reason most sites added
         structured data. Google removed HowTo rich results in 2023 and cut FAQ
-        rich results to authority sites only — then compressed them further in
+        rich results to authority sites only, then compressed them further in
         the March 2026 core update.
       </p>
       <p>
@@ -59,6 +82,8 @@ const orgJsonLd = jsonLdEnvelope({
       <p>
         These generators output clean, valid JSON-LD aimed at the new
         consumer: large language models indexing the open web for citation.
+        The companion <a href="/cli">schemaguard CLI</a> lets you validate that
+        output in CI so regressions never reach production.
       </p>
     </section>
   </article>

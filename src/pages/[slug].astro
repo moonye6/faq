@@ -17,7 +17,10 @@ if (!schema) {
   return Astro.redirect('/404');
 }
 
-// The page itself uses FAQPage schema (eat our own dog food)
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const pageUrl = `${site}/${schema.slug}`;
+
+// Page-level FAQPage JSON-LD (eat our own dog food)
 const pageFaqJsonLd = jsonLdEnvelope({
   '@type': 'FAQPage',
   mainEntity: schema.pageFaqs.map((f) => ({
@@ -26,11 +29,34 @@ const pageFaqJsonLd = jsonLdEnvelope({
     acceptedAnswer: { '@type': 'Answer', text: f.a },
   })),
 });
+
+// Breadcrumb JSON-LD (one of the most reliably-rendered schema types in 2026)
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: schema.name, item: pageUrl },
+  ],
+});
+
+// Pick 4 related schema types (next 4 in the registry, wrapping around)
+const idx = schemaRegistry.findIndex((s) => s.id === schema.id);
+const related = Array.from({ length: 4 }, (_, i) => {
+  const j = (idx + i + 1) % schemaRegistry.length;
+  return schemaRegistry[j];
+}).filter((s): s is NonNullable<typeof s> => Boolean(s));
 ---
 <BaseLayout title={schema.title} description={schema.metaDescription}>
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(pageFaqJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
   </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <span>{schema.name}</span>
+  </nav>
 
   <article class="schema-page">
     <header class="schema-hero">
@@ -41,6 +67,15 @@ const pageFaqJsonLd = jsonLdEnvelope({
     <section class="generator-section">
       <SchemaGenerator client:load schemaSlug={schema.slug} />
     </section>
+
+    <aside class="cli-callout">
+      <strong>Want to validate this schema in CI?</strong>
+      <p>
+        After you paste the JSON-LD into your page, run
+        <code>npx schemaguard check https://your-page.com --ci</code> to catch
+        regressions before deploy. <a href="/cli">See the CLI docs</a>.
+      </p>
+    </aside>
 
     <section class="geo-aeo-context">
       <h2>Why this matters in 2026</h2>
@@ -57,6 +92,20 @@ const pageFaqJsonLd = jsonLdEnvelope({
           </div>
         ))}
       </dl>
+    </section>
+
+    <section class="related-schemas">
+      <h2>Related schema generators</h2>
+      <ul class="schema-list">
+        {related.map((s) => (
+          <li>
+            <a href={`/${s.slug}`}>
+              <strong>{s.name}</strong>
+              <span>{s.metaDescription}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </section>
   </article>
 </BaseLayout>
