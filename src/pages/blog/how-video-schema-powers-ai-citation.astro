@@ -1,0 +1,245 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'How Video Schema Powers AI Video Discovery in 2026';
+const description =
+  'Video rich results survived the 2023-2026 reductions intact. Gemini and Perplexity Pro increasingly surface video answers, but they cannot watch videos at scale — they extract from VideoObject markup. Here is how to optimize video pages for AI discovery.';
+const slug = 'how-video-schema-powers-ai-citation';
+const datePublished = '2026-04-25';
+const dateModified = '2026-04-25';
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/blog/${slug}`;
+
+const articleJsonLd = jsonLdEnvelope({
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished,
+  dateModified,
+  url,
+  mainEntityOfPage: url,
+  author: { '@type': 'Organization', name: 'Schema for AI Search', url: site },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Schema for AI Search',
+    url: site,
+    logo: { '@type': 'ImageObject', url: `${site}/favicon.svg` },
+  },
+});
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}/blog` },
+    { '@type': 'ListItem', position: 3, name: title, item: url },
+  ],
+});
+
+const postFaqs = [
+  {
+    q: 'Why does video schema matter when AI cannot watch videos?',
+    a: 'Exactly because AI cannot watch them at scale. AI assistants extract metadata from VideoObject markup to decide which videos to surface. Without structured metadata, your video is an opaque iframe to AI crawlers — invisible. With it, the AI knows the title, length, upload date, and topic well enough to cite confidently.',
+  },
+  {
+    q: 'What is the difference between contentUrl and embedUrl?',
+    a: 'contentUrl is the direct media file URL (e.g., a .mp4 hosted on your CDN). embedUrl is the iframe embed URL (e.g., https://www.youtube.com/embed/abc123). YouTube embeds need embedUrl. Self-hosted video needs contentUrl. You can provide both. Google requires at least one.',
+  },
+  {
+    q: 'Do I need to host video on my own domain to benefit from VideoObject?',
+    a: 'No. YouTube embeds work fine. Set embedUrl to the YouTube embed URL, thumbnailUrl to the YouTube thumbnail (https://i.ytimg.com/vi/{ID}/maxresdefault.jpg), and the schema validates regardless of hosting. The embedding page is what gets crawled and cited.',
+  },
+  {
+    q: 'How do I mark up a video tutorial vs a marketing video vs a product demo?',
+    a: 'All three use VideoObject. Differentiation comes from the description and how you structure surrounding context. A video tutorial benefits from being inside a HowTo schema (with VideoObject as one of the steps\' video field). A product demo embedded on a Product page should reference the Product. Marketing videos can stand alone.',
+  },
+  {
+    q: 'How do I validate video schema?',
+    a: 'Run schemaguardian: npx @moonye/schemaguardian check https://your-page-with-video.com. It validates required fields (name, description, thumbnailUrl, uploadDate, contentUrl-or-embedUrl), correct ISO 8601 duration format, and presence of publisher info for richer extraction.',
+  },
+];
+
+const postFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: postFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(postFaqJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="/blog">Blog</a>
+    <span aria-hidden="true">›</span>
+    <span>Video &amp; AI Discovery</span>
+  </nav>
+
+  <article class="blog-post">
+    <header class="schema-hero">
+      <p class="post-meta">Published 2026-04-25 · ~6 min read · Part 5 of the AI Citation series</p>
+      <h1>How Video Schema Powers AI Video Discovery in 2026</h1>
+      <p class="lede">
+        Video rich results survived the 2023-2026 reductions intact. Google
+        video carousels still render prominently. AND Gemini and Perplexity
+        Pro increasingly surface video answers — but AI cannot watch videos
+        at scale. It extracts from VideoObject metadata. Here is how that
+        works and what to do.
+      </p>
+    </header>
+
+    <section>
+      <h2>What VideoObject is</h2>
+      <p>
+        <code>VideoObject</code> wraps a video's metadata: name,
+        description, thumbnailUrl, uploadDate, duration, plus either
+        <code>contentUrl</code> (direct .mp4 link) or <code>embedUrl</code>
+        (iframe embed URL like a YouTube embed). Generate clean VideoObject
+        JSON-LD with the <a href="/video-schema-generator">Video schema
+        generator</a>.
+      </p>
+      <p>
+        VideoObject works for any video: self-hosted .mp4, YouTube embed,
+        Vimeo embed, Wistia, Cloudflare Stream, etc. The hosting platform
+        does not matter — the embedding page is what gets crawled and
+        indexed.
+      </p>
+    </section>
+
+    <section>
+      <h2>The dual playbook: SERP + AI</h2>
+
+      <h3>1. Google video rich results (still active in 2026)</h3>
+      <p>
+        Unlike FAQ and HowTo, video rich results were preserved through the
+        2023-2026 cuts. Pages with VideoObject markup get:
+      </p>
+      <ul>
+        <li>Video carousels above standard SERP listings</li>
+        <li>Thumbnail + duration display in standard results</li>
+        <li>Video tab placement</li>
+        <li>Discover card eligibility</li>
+        <li>Image search inclusion</li>
+      </ul>
+
+      <h3>2. AI video answers (new since 2024)</h3>
+      <p>
+        Gemini increasingly answers "show me how to..." queries with video
+        result cards. Perplexity Pro renders video previews inline in
+        answers when the query has a clear "watch this" intent. Both parse
+        VideoObject metadata to decide which videos to surface — they do
+        not (and cannot) watch billions of videos to discover them.
+      </p>
+      <p>
+        For a query like "watch how to set up an Astro site," the AI
+        retrieves candidate pages, parses each one's VideoObject markup,
+        and surfaces the best matches based on:
+      </p>
+      <ul>
+        <li>Title relevance (matches user intent)</li>
+        <li>Recency (uploadDate close to now beats years-old videos)</li>
+        <li>Duration (under-10-minute tutorials cited more than 90-min recordings)</li>
+        <li>Publisher trust (videos from known brands cited more)</li>
+      </ul>
+      <p>
+        All four signals come from your VideoObject markup. Without it, the
+        video might still exist in the AI's index, but it cannot be ranked
+        or cited confidently.
+      </p>
+    </section>
+
+    <section>
+      <h2>How to mark up YouTube embeds</h2>
+      <p>
+        YouTube is the most common case. The minimum complete VideoObject
+        for a YouTube embed:
+      </p>
+      <pre class="install-block"><code>{`{
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": "How to Add FAQ Schema in 5 Minutes",
+  "description": "A short tutorial on adding valid FAQPage JSON-LD to any HTML page.",
+  "thumbnailUrl": "https://i.ytimg.com/vi/abc123/maxresdefault.jpg",
+  "uploadDate": "2026-04-25",
+  "duration": "PT5M30S",
+  "embedUrl": "https://www.youtube.com/embed/abc123",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Your Channel"
+  }
+}`}</code></pre>
+      <p>
+        Drop this in the <code>&lt;head&gt;</code> of any page that embeds the
+        video. The video does not need to be hosted on your domain —
+        Google indexes the embed wherever it appears.
+      </p>
+    </section>
+
+    <section>
+      <h2>5 things to do for video schema in 2026</h2>
+      <ol>
+        <li>
+          <strong>Add VideoObject to every page that embeds a video</strong>
+          using the <a href="/video-schema-generator">Video schema generator</a>.
+          Tutorial videos, product demos, marketing videos, course videos —
+          all get it.
+        </li>
+        <li>
+          <strong>Use accurate ISO 8601 duration.</strong> PT5M30S = 5 min 30 sec.
+          Wrong format means AI assistants filtering on duration ("under 10 min
+          tutorials") skip your video.
+        </li>
+        <li>
+          <strong>Use the highest-quality thumbnail.</strong> For YouTube,
+          <code>https://i.ytimg.com/vi/&#123;ID&#125;/maxresdefault.jpg</code>
+          gives the 1280x720 frame. Better thumbnails win in carousel placement.
+        </li>
+        <li>
+          <strong>Pair tutorial videos with <a href="/howto-schema-generator">HowTo schema</a></strong>
+          on the same page. The HowTo describes the steps; the VideoObject
+          provides the watchable instance. AI assistants stack these signals
+          for "show me how to..." queries.
+        </li>
+        <li>
+          <strong>Validate in CI.</strong> Common video schema bugs (wrong
+          duration format, missing thumbnailUrl, neither contentUrl nor
+          embedUrl set) silently kill discoverability. Run
+          <code>npx @moonye/schemaguardian scan https://your-site.com --ci</code>
+          on every deploy. <a href="/cli">CLI docs</a>.
+        </li>
+      </ol>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions about video schema and AI discovery</h2>
+      <dl>
+        {postFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section>
+      <h2>Series next reads</h2>
+      <ul>
+        <li><a href="/blog/how-faq-schema-powers-ai-citation">How FAQ schema powers AI citation</a></li>
+        <li><a href="/blog/how-product-schema-powers-ai-citation">How Product schema powers AI shopping queries</a></li>
+        <li><a href="/blog/how-breadcrumb-schema-powers-ai-citation">How Breadcrumb schema powers SERP and AI hierarchy</a></li>
+        <li><a href="/blog/how-local-business-schema-powers-ai-citation">How LocalBusiness schema powers "near me" queries</a></li>
+        <li><a href="/blog/geo-aeo-explained">GEO and AEO Explained</a></li>
+      </ul>
+    </section>
+  </article>
+</BaseLayout>

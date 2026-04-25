@@ -1,0 +1,241 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'How FAQ Schema Powers AI Search Citation in 2026';
+const description =
+  'FAQ schema lost its Google rich snippet in 2023 but became the highest-citation-rate schema type in AI search. Here is exactly how Perplexity, ChatGPT, Gemini, and Google AI Overviews extract from FAQPage markup, and how to optimize for it.';
+const slug = 'how-faq-schema-powers-ai-citation';
+const datePublished = '2026-04-25';
+const dateModified = '2026-04-25';
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/blog/${slug}`;
+
+const articleJsonLd = jsonLdEnvelope({
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished,
+  dateModified,
+  url,
+  mainEntityOfPage: url,
+  author: { '@type': 'Organization', name: 'Schema for AI Search', url: site },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Schema for AI Search',
+    url: site,
+    logo: { '@type': 'ImageObject', url: `${site}/favicon.svg` },
+  },
+});
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}/blog` },
+    { '@type': 'ListItem', position: 3, name: title, item: url },
+  ],
+});
+
+const postFaqs = [
+  {
+    q: 'Why does FAQ schema get cited more than prose Q&A content?',
+    a: 'Structured data removes guesswork. With FAQPage JSON-LD, the question is explicitly the question and the answer is explicitly the answer — no parsing risk. AI assistants extract these atomic units confidently. Prose Q&A content forces the AI to infer structure, which it does worse and less often, leading to lower citation rates.',
+  },
+  {
+    q: 'Which AI surface cites FAQ schema most?',
+    a: 'Perplexity has the cleanest citation behavior for FAQ schema — every claim links its source. Google AI Overviews has the largest reach because it ships with default Google traffic. ChatGPT search and Gemini both parse FAQ schema actively but cite less consistently. Across all four, pages with FAQ schema get cited at notably higher rates than equivalent pages without it.',
+  },
+  {
+    q: 'How many FAQ Q&A pairs should a single page have?',
+    a: '4-8 high-quality, self-contained pairs outperform 30 padded ones. AI search engines extract answers individually — each answer must stand alone without context from other answers. Pages with too many FAQs often have lower-quality individual answers that get skipped.',
+  },
+  {
+    q: 'Should the FAQ content be visible on the page?',
+    a: 'Yes, mandatorily. Google requires that FAQ schema content match visible page content. Hidden FAQs (in collapsed accordions can be OK if they expand on click; in display:none they are not) can trigger schema removal or manual actions. AI search engines also use the visible content as a signal of legitimacy.',
+  },
+  {
+    q: 'How do I check if my FAQ schema is correctly structured?',
+    a: 'Run schemaguardian: npx @moonye/schemaguardian check https://your-page.com. It validates against schema.org rules plus the 2026 Google rejection patterns. Add --ci to your build pipeline to fail on regressions.',
+  },
+];
+
+const postFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: postFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(postFaqJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="/blog">Blog</a>
+    <span aria-hidden="true">›</span>
+    <span>FAQ &amp; AI Citation</span>
+  </nav>
+
+  <article class="blog-post">
+    <header class="schema-hero">
+      <p class="post-meta">Published 2026-04-25 · ~6 min read · Part 1 of the AI Citation series</p>
+      <h1>How FAQ Schema Powers AI Search Citation in 2026</h1>
+      <p class="lede">
+        FAQ schema lost its Google rich snippet for most sites in 2023 and got
+        cut further in March 2026. But FAQPage markup quietly became the
+        highest-citation-rate schema type in AI search. Here is exactly why
+        and how to optimize for it.
+      </p>
+    </header>
+
+    <section>
+      <h2>What FAQ schema actually is</h2>
+      <p>
+        FAQPage is a schema.org type that wraps a list of <code>Question</code>
+        objects, each containing the question text and an <code>acceptedAnswer</code>.
+        The whole structure is emitted as JSON-LD inside a
+        <code>&lt;script type="application/ld+json"&gt;</code> tag in your page
+        <code>&lt;head&gt;</code>. Generate one in 30 seconds with the
+        <a href="/faq-schema-generator">FAQ schema generator</a>.
+      </p>
+      <p>
+        Until 2023, FAQ schema's primary value was the expandable Q&amp;A
+        dropdown that Google rendered directly in search results. That
+        dropdown was killed for non-authority sites in August 2023 and the
+        remaining display was halved by the March 2026 core update — see
+        <a href="/blog/google-faq-deprecation-2026">the FAQ deprecation
+        post</a> for the timeline. The schema is still valid markup. The
+        consumer changed.
+      </p>
+    </section>
+
+    <section>
+      <h2>How AI search engines actually use it</h2>
+      <p>
+        When a user asks an AI assistant a question, the assistant retrieves
+        candidate web pages, parses each one, and extracts claim-level facts
+        that answer the query. Pages with FAQ schema are dramatically easier
+        to extract from because the structure is explicit:
+      </p>
+      <pre class="install-block"><code>{`{
+  "@type": "Question",
+  "name": "What is FAQ schema?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "FAQ schema is structured data that..."
+  }
+}`}</code></pre>
+      <p>
+        The question is the question. The answer is the answer. The AI does
+        not have to guess where the question ends and the answer begins, or
+        whether a paragraph is an answer or a tangent. It extracts atomically
+        and cites confidently.
+      </p>
+      <p>
+        Per-surface behavior in 2026:
+      </p>
+      <ul>
+        <li>
+          <strong>Perplexity</strong> — extracts whole <code>acceptedAnswer.text</code>
+          values and quotes them in answers, linking the source page.
+          The cleanest citation pattern of any AI search engine.
+        </li>
+        <li>
+          <strong>Google AI Overviews</strong> — uses FAQ schema as one signal
+          among many. Pages with FAQ schema appear in AI Overview source lists
+          at higher rates than equivalent prose pages for "what is X" queries.
+        </li>
+        <li>
+          <strong>ChatGPT search</strong> — parses FAQ schema when retrieving
+          for definitional queries. Citation rate is improving with each
+          model update.
+        </li>
+        <li>
+          <strong>Gemini</strong> — uses FAQ markup for both standalone Gemini
+          queries and Google Search responses powered by Gemini.
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>5 things to do for FAQ schema in 2026</h2>
+      <ol>
+        <li>
+          <strong>Add FAQ schema to every page that has visible Q&amp;A content.</strong>
+          Use the <a href="/faq-schema-generator">FAQ schema generator</a> for
+          each page. The cost is one paste into <code>&lt;head&gt;</code>.
+        </li>
+        <li>
+          <strong>Keep answers self-contained.</strong> Each answer should
+          make sense without reading the others. If "this depends on" appears
+          in your answer, the AI may skip it.
+        </li>
+        <li>
+          <strong>Match visible content exactly.</strong> Do not write longer
+          answers in the schema than what is visible on the page. Google
+          flags mismatches; AI assistants distrust them.
+        </li>
+        <li>
+          <strong>Pair FAQ with <a href="/article-schema-generator">Article schema</a></strong>
+          for blog/news pages. Article gives the author + date AI assistants
+          need for attribution; FAQ gives the extractable answer block.
+        </li>
+        <li>
+          <strong>Validate in CI.</strong> Schema regressions are silent —
+          a botched template change can strip your FAQ markup site-wide
+          without a visible bug. Run
+          <code>npx @moonye/schemaguardian scan https://your-site.com --ci</code>
+          on every PR. <a href="/cli">CLI docs</a>.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>The validation loop</h2>
+      <p>
+        Schema generated → schema published → schema validated → schema cited.
+        The middle step is where most teams lose pages. Set up
+        <a href="/cli">schemaguardian</a> in CI once, and every future
+        deploy is gated:
+      </p>
+      <pre class="install-block"><code>npx @moonye/schemaguardian init --url https://your-site.com</code></pre>
+      <p>
+        That one command writes a ready-to-commit GitHub Actions workflow
+        that runs <code>scan</code> on every PR and push to main, walks
+        your sitemap, and fails the build on any error.
+      </p>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions about FAQ schema and AI citation</h2>
+      <dl>
+        {postFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section>
+      <h2>Series next reads</h2>
+      <ul>
+        <li><a href="/blog/how-product-schema-powers-ai-citation">How Product schema powers AI shopping queries</a></li>
+        <li><a href="/blog/how-breadcrumb-schema-powers-ai-citation">How Breadcrumb schema powers SERP and AI hierarchy understanding</a></li>
+        <li><a href="/blog/how-local-business-schema-powers-ai-citation">How LocalBusiness schema powers AI "near me" answers</a></li>
+        <li><a href="/blog/how-video-schema-powers-ai-citation">How Video schema powers AI video discovery</a></li>
+        <li><a href="/blog/google-faq-deprecation-2026">Google FAQ Schema Deprecation in 2026 (the longer story)</a></li>
+        <li><a href="/blog/geo-aeo-explained">GEO and AEO Explained</a></li>
+      </ul>
+    </section>
+  </article>
+</BaseLayout>

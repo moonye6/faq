@@ -1,0 +1,254 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'How Product Schema Powers AI Shopping Queries in 2026';
+const description =
+  'Product schema kept its full SERP rich results through 2023-2026 AND became the primary input for AI shopping search. ChatGPT shopping, Perplexity Pro, and Gemini parse Product JSON-LD to power "best X under $Y" recommendations. Here is how to optimize for both.';
+const slug = 'how-product-schema-powers-ai-citation';
+const datePublished = '2026-04-25';
+const dateModified = '2026-04-25';
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/blog/${slug}`;
+
+const articleJsonLd = jsonLdEnvelope({
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished,
+  dateModified,
+  url,
+  mainEntityOfPage: url,
+  author: { '@type': 'Organization', name: 'Schema for AI Search', url: site },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Schema for AI Search',
+    url: site,
+    logo: { '@type': 'ImageObject', url: `${site}/favicon.svg` },
+  },
+});
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}/blog` },
+    { '@type': 'ListItem', position: 3, name: title, item: url },
+  ],
+});
+
+const postFaqs = [
+  {
+    q: 'What makes Product schema different from other schema types in 2026?',
+    a: 'Product is the rare schema type that does double duty: it still produces full SERP rich results in standard Google search (price, star rating, stock availability render directly) AND it is the primary input for AI shopping search. Most schema types lost SERP visibility but gained AI value. Product retained both.',
+  },
+  {
+    q: 'Which AI engines use Product schema for shopping queries?',
+    a: 'ChatGPT shopping mode (the recent shopping-tuned variant), Perplexity Pro shopping, Gemini for "best X" queries, and Google AI Overviews for product comparison answers all parse Product JSON-LD. Bing Copilot shopping uses it heavily for Microsoft\'s ecommerce ranking.',
+  },
+  {
+    q: 'Do I need both offers and aggregateRating?',
+    a: 'For full SERP rich results, you need at least one. For maximum AI citation rate, you want both. AI shopping queries explicitly filter on price ranges and rating thresholds — pages without both fields get filtered out of "best X under $Y with 4+ stars" answers entirely.',
+  },
+  {
+    q: 'Can I inflate ratings to game the system?',
+    a: 'No, and Google has gotten very good at detecting this in 2025-2026. AggregateRating that does not match visible reviews on the page is one of the most common triggers for manual actions. AI search engines also cross-check rating claims against external review sources (Trustpilot, Amazon reviews, etc.) when they exist.',
+  },
+  {
+    q: 'How do I validate my Product schema in CI?',
+    a: 'Run schemaguardian: npx @moonye/schemaguardian check https://your-product-page.com. It validates required fields (name, offers OR aggregateRating), flags Product schema without either (a known rich result blocker), and emits warnings for missing recommended fields like brand, sku, or condition.',
+  },
+];
+
+const postFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: postFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(postFaqJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="/blog">Blog</a>
+    <span aria-hidden="true">›</span>
+    <span>Product &amp; AI Shopping</span>
+  </nav>
+
+  <article class="blog-post">
+    <header class="schema-hero">
+      <p class="post-meta">Published 2026-04-25 · ~6 min read · Part 2 of the AI Citation series</p>
+      <h1>How Product Schema Powers AI Shopping Queries in 2026</h1>
+      <p class="lede">
+        Product schema is the highest-leverage structured data type in 2026.
+        It kept its SERP rich results AND became the primary input for AI
+        shopping. Get it right and you appear in "best X under $Y" answers.
+        Get it wrong and you are invisible to a fast-growing query class.
+      </p>
+    </header>
+
+    <section>
+      <h2>What Product schema is</h2>
+      <p>
+        <code>Product</code> is a schema.org type that describes a sellable
+        item: name, image, description, brand, sku, plus the two
+        commercially-critical sub-objects: <code>offers</code> (price,
+        currency, availability, URL) and <code>aggregateRating</code>
+        (rating value + review count). Generate clean Product JSON-LD with
+        the <a href="/product-schema-generator">Product schema generator</a>.
+      </p>
+      <p>
+        Product schema covers physical goods, digital downloads, SaaS,
+        services, and even free items. The <code>offers.price</code> field
+        accepts <code>"0"</code> for free products — and AI assistants
+        explicitly favor free options in "best free X" queries.
+      </p>
+    </section>
+
+    <section>
+      <h2>The dual playbook: SERP rich results AND AI shopping</h2>
+      <p>
+        Most schema types in 2026 do one or the other. FAQ lost SERP
+        visibility but became AI-citable. HowTo lost both SERP and serves
+        only AI now. Product is the rare type that wins on both:
+      </p>
+      <ul>
+        <li>
+          <strong>SERP rich results (still active in 2026):</strong> price,
+          star rating, review count, and availability render directly in
+          standard Google search results. Google Shopping panels also pull
+          from Product schema. These are the same rich results SEO teams
+          have optimized for since 2018, still working.
+        </li>
+        <li>
+          <strong>AI shopping (new since 2024):</strong> ChatGPT shopping,
+          Perplexity Pro shopping, Gemini, and Bing Copilot all parse
+          Product schema as their primary metadata signal. When a user
+          asks "best wireless headphones under $200 with 4+ stars," the
+          AI filters on <code>offers.price</code> and
+          <code>aggregateRating.ratingValue</code> across candidate pages
+          and cites only those that pass.
+        </li>
+      </ul>
+      <p>
+        The structural opportunity: a single Product JSON-LD block on each
+        product page wins both surfaces with no additional work.
+      </p>
+    </section>
+
+    <section>
+      <h2>How AI assistants extract from Product markup</h2>
+      <p>
+        When ChatGPT shopping or Perplexity Pro receives a query like
+        "best noise-cancelling headphones under $300 from Sony or Bose":
+      </p>
+      <ol>
+        <li>Retrieve candidate product pages from indexed web</li>
+        <li>Parse each page's Product JSON-LD</li>
+        <li>Filter: <code>offers.price</code> ≤ 300 AND <code>brand.name</code> ∈ {`{Sony, Bose}`}</li>
+        <li>Sort by <code>aggregateRating.ratingValue</code> × <code>aggregateRating.reviewCount</code> (a quality + popularity proxy)</li>
+        <li>Generate the comparison answer, citing top-N pages</li>
+      </ol>
+      <p>
+        Pages without complete Product schema get filtered out at step 3 or
+        deprioritized at step 4. This is not a marginal effect — for narrow
+        comparison queries, having complete Product schema is the difference
+        between being cited and being invisible.
+      </p>
+    </section>
+
+    <section>
+      <h2>5 things to do for Product schema in 2026</h2>
+      <ol>
+        <li>
+          <strong>Add Product schema to every product page.</strong> Use the
+          <a href="/product-schema-generator">Product schema generator</a>.
+          One block per page, in <code>&lt;head&gt;</code>.
+        </li>
+        <li>
+          <strong>Always include both offers and aggregateRating.</strong>
+          Either alone gets you halfway. Both together get you into AI
+          shopping query results.
+        </li>
+        <li>
+          <strong>Add <a href="/review-schema-generator">Review schema</a> for individual reviews</strong>
+          alongside Product. Reviews stack: AggregateRating summarizes,
+          individual Reviews add depth and quotability.
+        </li>
+        <li>
+          <strong>Add <a href="/breadcrumb-schema-generator">BreadcrumbList</a></strong>
+          to give AI assistants the category path. "Sony WH-1000XM5" with a
+          breadcrumb of Home &gt; Audio &gt; Headphones &gt; Sony makes the
+          taxonomic context explicit.
+        </li>
+        <li>
+          <strong>Validate in CI.</strong> Product schema regressions kill
+          your shopping query visibility silently. Set up
+          <code>npx @moonye/schemaguardian scan https://your-store.com --ci</code>
+          on every deploy. <a href="/cli">CLI docs</a>.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Common Product schema mistakes that break AI citation</h2>
+      <ul>
+        <li>
+          <strong>Price as string with currency in same field</strong> ("$199.00").
+          Required: <code>price</code> is the numeric value as string ("199.00"),
+          and <code>priceCurrency</code> is the ISO 4217 code separately ("USD").
+          Combined breaks both SERP rich results and AI parsing.
+        </li>
+        <li>
+          <strong>Availability without the schema.org URL prefix.</strong>
+          "InStock" alone does not validate; the spec wants
+          <code>https://schema.org/InStock</code>. Generators handle this; hand-rolled
+          markup often misses it.
+        </li>
+        <li>
+          <strong>aggregateRating with reviews not visible on the page.</strong>
+          Schema-stuffing was the #1 trigger for manual actions in 2025-2026.
+          If your schema says 4.6 stars from 200 reviews, you must show those
+          reviews on the page.
+        </li>
+        <li>
+          <strong>Stale availability after products sell out.</strong> Pages
+          marked InStock that are actually OutOfStock are a top reason for
+          AI assistants to deprioritize a domain over time.
+        </li>
+      </ul>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions about Product schema and AI shopping</h2>
+      <dl>
+        {postFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section>
+      <h2>Series next reads</h2>
+      <ul>
+        <li><a href="/blog/how-faq-schema-powers-ai-citation">How FAQ schema powers AI citation</a></li>
+        <li><a href="/blog/how-breadcrumb-schema-powers-ai-citation">How Breadcrumb schema powers SERP and AI hierarchy</a></li>
+        <li><a href="/blog/how-local-business-schema-powers-ai-citation">How LocalBusiness schema powers "near me" queries</a></li>
+        <li><a href="/blog/how-video-schema-powers-ai-citation">How Video schema powers AI video discovery</a></li>
+        <li><a href="/blog/geo-aeo-explained">GEO and AEO Explained</a></li>
+      </ul>
+    </section>
+  </article>
+</BaseLayout>

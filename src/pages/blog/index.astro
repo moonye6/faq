@@ -7,7 +7,61 @@ const description =
   'Long-form posts on structured data, GEO/AEO, AI search citation, and the 2026 reality of schema.org for SEO.';
 const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
 
-const posts = [
+interface Post {
+  slug: string;
+  title: string;
+  description: string;
+  datePublished: string;
+  readMin: number;
+  series?: string;
+}
+
+const posts: Post[] = [
+  {
+    slug: 'how-faq-schema-powers-ai-citation',
+    title: 'How FAQ Schema Powers AI Search Citation in 2026',
+    description:
+      'FAQ schema lost its Google rich snippet in 2023 but became the highest-citation-rate schema type in AI search. Here is exactly how Perplexity, ChatGPT, Gemini, and Google AI Overviews extract from FAQPage markup.',
+    datePublished: '2026-04-25',
+    readMin: 6,
+    series: 'AI Citation series · Part 1',
+  },
+  {
+    slug: 'how-product-schema-powers-ai-citation',
+    title: 'How Product Schema Powers AI Shopping Queries in 2026',
+    description:
+      'Product schema kept its full SERP rich results AND became the primary input for AI shopping search. ChatGPT shopping, Perplexity Pro, and Gemini parse Product JSON-LD to power "best X under $Y" recommendations.',
+    datePublished: '2026-04-25',
+    readMin: 6,
+    series: 'AI Citation series · Part 2',
+  },
+  {
+    slug: 'how-breadcrumb-schema-powers-ai-citation',
+    title: 'How Breadcrumb Schema Powers SERP Rich Results and AI Hierarchy Understanding',
+    description:
+      'BreadcrumbList is the most reliably-rendered schema type in 2026 — visible in nearly every Google SERP — AND it tells AI search engines the topical context of every page on your site.',
+    datePublished: '2026-04-25',
+    readMin: 5,
+    series: 'AI Citation series · Part 3',
+  },
+  {
+    slug: 'how-local-business-schema-powers-ai-citation',
+    title: 'How LocalBusiness Schema Powers AI "Near Me" Answers in 2026',
+    description:
+      'LocalBusiness schema feeds Google Map Pack AND drives "best X near me" answers in ChatGPT search and Perplexity. Without it, you are invisible to both surfaces.',
+    datePublished: '2026-04-25',
+    readMin: 6,
+    series: 'AI Citation series · Part 4',
+  },
+  {
+    slug: 'how-video-schema-powers-ai-citation',
+    title: 'How Video Schema Powers AI Video Discovery in 2026',
+    description:
+      'Video rich results survived the 2023-2026 reductions intact. Gemini and Perplexity Pro increasingly surface video answers, but they cannot watch videos at scale — they extract from VideoObject markup.',
+    datePublished: '2026-04-25',
+    readMin: 6,
+    series: 'AI Citation series · Part 5',
+  },
   {
     slug: 'google-faq-deprecation-2026',
     title: 'Google FAQ Schema Deprecation in 2026: What Happened and What to Do',
@@ -76,7 +130,9 @@ const blogJsonLd = jsonLdEnvelope({
             <a href={`/blog/${p.slug}`}>
               <strong>{p.title}</strong>
               <span>{p.description}</span>
-              <span class="post-meta">{p.datePublished} · ~{p.readMin} min read</span>
+              <span class="post-meta">
+                {p.datePublished} · ~{p.readMin} min read{p.series ? ` · ${p.series}` : ''}
+              </span>
             </a>
           </li>
         ))}

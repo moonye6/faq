@@ -1,0 +1,228 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'How Breadcrumb Schema Powers SERP Rich Results and AI Hierarchy Understanding';
+const description =
+  'BreadcrumbList is the most reliably-rendered schema type in 2026 — visible in nearly every Google SERP — AND it tells AI search engines the topical context of every page on your site. Two minutes of work, persistent SERP win, plus better AI categorization.';
+const slug = 'how-breadcrumb-schema-powers-ai-citation';
+const datePublished = '2026-04-25';
+const dateModified = '2026-04-25';
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/blog/${slug}`;
+
+const articleJsonLd = jsonLdEnvelope({
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished,
+  dateModified,
+  url,
+  mainEntityOfPage: url,
+  author: { '@type': 'Organization', name: 'Schema for AI Search', url: site },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Schema for AI Search',
+    url: site,
+    logo: { '@type': 'ImageObject', url: `${site}/favicon.svg` },
+  },
+});
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}/blog` },
+    { '@type': 'ListItem', position: 3, name: title, item: url },
+  ],
+});
+
+const postFaqs = [
+  {
+    q: 'Why do breadcrumbs matter to AI search if they are mainly a SERP feature?',
+    a: 'AI search engines use breadcrumbs to understand site taxonomy. When AI sees "Home > Audio > Headphones > Sony WH-1000XM5", it knows the page is a specific product within a brand within a category within an audio store. That taxonomic context shapes every retrieval and citation decision the AI makes.',
+  },
+  {
+    q: 'Should breadcrumb names match the visible breadcrumb on the page?',
+    a: 'Yes. Schema names should mirror the visible breadcrumb trail exactly. Mismatches (where schema says "Products > Headphones" but visible says "Shop > Audio") trigger Google to ignore your structured data or, worse, replace your visible breadcrumb with the (possibly wrong) schema version.',
+  },
+  {
+    q: 'What about a single page with multiple legitimate breadcrumb paths?',
+    a: 'You can include multiple BreadcrumbList objects. If a product is reachable from "Shop > Audio > Headphones" and "Brands > Acme > Headphones", include both. Google picks the most relevant trail per query context. AI assistants similarly use whichever path best matches the user intent.',
+  },
+  {
+    q: 'Do breadcrumbs help with internal linking SEO?',
+    a: 'Yes — breadcrumb schema reinforces the same taxonomy your visible nav shows, but in a machine-readable way. Combined with consistent visible breadcrumbs, it strengthens your site\'s topical authority signals for both Google and AI search.',
+  },
+  {
+    q: 'How do I validate breadcrumb schema?',
+    a: 'Run schemaguardian: npx @moonye/schemaguardian check https://your-page.com. It validates that positions are sequential starting at 1 (a common mistake that breaks the entire BreadcrumbList), that each ListItem has a name and URL, and that the structure matches schema.org spec.',
+  },
+];
+
+const postFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: postFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(postFaqJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="/blog">Blog</a>
+    <span aria-hidden="true">›</span>
+    <span>Breadcrumb &amp; Hierarchy</span>
+  </nav>
+
+  <article class="blog-post">
+    <header class="schema-hero">
+      <p class="post-meta">Published 2026-04-25 · ~5 min read · Part 3 of the AI Citation series</p>
+      <h1>How Breadcrumb Schema Powers SERP Rich Results and AI Hierarchy Understanding</h1>
+      <p class="lede">
+        BreadcrumbList is the most reliably-rendered schema type in 2026.
+        It still appears above your page title on virtually every Google
+        SERP, AND it tells AI search engines the topical taxonomy of your
+        site. Two minutes of work, persistent visual SERP win, plus better
+        AI categorization. The cheapest schema win in the matrix.
+      </p>
+    </header>
+
+    <section>
+      <h2>What BreadcrumbList is</h2>
+      <p>
+        BreadcrumbList wraps an ordered array of <code>ListItem</code>
+        objects, each with a position (1, 2, 3, ...), a name (the visible
+        text in your trail), and an item (the URL). The first item is
+        usually your homepage; the last is the current page. Generate one
+        with the <a href="/breadcrumb-schema-generator">Breadcrumb schema
+        generator</a>.
+      </p>
+      <p>
+        Visible breadcrumbs and breadcrumb schema are complementary. The
+        visible trail is the human signal; the schema is the machine signal.
+        They should match exactly.
+      </p>
+    </section>
+
+    <section>
+      <h2>The 2026 status: most reliable schema type, period</h2>
+      <p>
+        Google reduced or removed many rich result types in the 2023-2026
+        window: FAQ rich snippets gone for non-authority sites, HowTo
+        removed entirely, sitelinks search box deprecated. BreadcrumbList
+        was untouched. It still renders:
+      </p>
+      <ul>
+        <li>Above your page title in standard SERPs (desktop and mobile)</li>
+        <li>In Google Discover cards</li>
+        <li>In Google Image search results</li>
+        <li>As a navigational aid in voice search "I'm at..." responses</li>
+      </ul>
+      <p>
+        For the cost of one JSON-LD block per page, you get persistent
+        visual placement in nearly every Google search result for your URL.
+        No other schema type has this rendering reliability in 2026.
+      </p>
+    </section>
+
+    <section>
+      <h2>How AI search engines use breadcrumbs</h2>
+      <p>
+        AI assistants build mental models of your site's structure when
+        they index. BreadcrumbList is the cleanest signal you can give them:
+      </p>
+      <pre class="install-block"><code>{`{
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://example.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Audio", "item": "https://example.com/audio" },
+    { "@type": "ListItem", "position": 3, "name": "Headphones", "item": "https://example.com/audio/headphones" },
+    { "@type": "ListItem", "position": 4, "name": "Sony WH-1000XM5", "item": "https://example.com/audio/headphones/sony-wh-1000xm5" }
+  ]
+}`}</code></pre>
+      <p>
+        From this, an AI assistant infers: the page is a specific product
+        (level 4) inside a category (Headphones, level 3) inside a broader
+        category (Audio, level 2) on a domain. That context shapes:
+      </p>
+      <ul>
+        <li>
+          Which queries the page is retrieved for (more specific contexts =
+          more specific query matches)
+        </li>
+        <li>
+          How the AI summarizes the page in citations ("a headphones product page on example.com" beats "a page on example.com")
+        </li>
+        <li>
+          Whether sibling pages (other items at the same level) get retrieved
+          for comparison queries
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>5 things to do for breadcrumb schema in 2026</h2>
+      <ol>
+        <li>
+          <strong>Add BreadcrumbList to every page</strong> except the
+          homepage. Use the <a href="/breadcrumb-schema-generator">Breadcrumb
+          schema generator</a> for each page's specific trail.
+        </li>
+        <li>
+          <strong>Position numbers must be sequential starting at 1.</strong>
+          Skipping a number (1, 2, 4) breaks the whole list. The most common
+          breadcrumb schema bug.
+        </li>
+        <li>
+          <strong>Match visible breadcrumb text exactly.</strong> If your
+          visible nav says "Audio Gear", do not put "Audio" in schema.
+          Mismatches get punished.
+        </li>
+        <li>
+          <strong>Stack with type-specific schema.</strong> A product page
+          gets <a href="/product-schema-generator">Product</a> + Breadcrumb.
+          A blog post gets <a href="/article-schema-generator">Article</a> +
+          Breadcrumb. They reinforce each other.
+        </li>
+        <li>
+          <strong>Validate in CI.</strong> Position-sequence bugs are silent.
+          <code>npx @moonye/schemaguardian scan https://your-site.com --ci</code>
+          catches them before they ship. <a href="/cli">CLI docs</a>.
+        </li>
+      </ol>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions about breadcrumb schema</h2>
+      <dl>
+        {postFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section>
+      <h2>Series next reads</h2>
+      <ul>
+        <li><a href="/blog/how-faq-schema-powers-ai-citation">How FAQ schema powers AI citation</a></li>
+        <li><a href="/blog/how-product-schema-powers-ai-citation">How Product schema powers AI shopping queries</a></li>
+        <li><a href="/blog/how-local-business-schema-powers-ai-citation">How LocalBusiness schema powers "near me" queries</a></li>
+        <li><a href="/blog/how-video-schema-powers-ai-citation">How Video schema powers AI video discovery</a></li>
+        <li><a href="/blog/geo-aeo-explained">GEO and AEO Explained</a></li>
+      </ul>
+    </section>
+  </article>
+</BaseLayout>
