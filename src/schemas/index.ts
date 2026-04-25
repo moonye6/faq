@@ -12,8 +12,31 @@
 import type { SchemaTypeDef } from '~/lib/schema-types';
 import { faqSchema } from './faq';
 import { howtoSchema } from './howto';
+import { productSchema } from './product';
+import { recipeSchema } from './recipe';
+import { articleSchema } from './article';
+import { reviewSchema } from './review';
+import { localBusinessSchema } from './localbusiness';
+import { eventSchema } from './event';
+import { breadcrumbSchema } from './breadcrumb';
+import { organizationSchema } from './organization';
+import { courseSchema } from './course';
+import { jobPostingSchema } from './jobposting';
 
-export const schemaRegistry: SchemaTypeDef[] = [faqSchema, howtoSchema];
+export const schemaRegistry: SchemaTypeDef[] = [
+  faqSchema,
+  howtoSchema,
+  productSchema,
+  recipeSchema,
+  articleSchema,
+  reviewSchema,
+  localBusinessSchema,
+  eventSchema,
+  breadcrumbSchema,
+  organizationSchema,
+  courseSchema,
+  jobPostingSchema,
+];
 
 export function getSchemaBySlug(slug: string): SchemaTypeDef | undefined {
   return schemaRegistry.find((s) => s.slug === slug);
