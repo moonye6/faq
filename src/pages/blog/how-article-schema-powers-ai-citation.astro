@@ -1,0 +1,287 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'How Article Schema Powers AI Search Citation in 2026';
+const description =
+  'Article schema is the cheapest way to make AI assistants attribute citations to your content correctly. Here is how Perplexity, ChatGPT, Gemini, and Google AI Overviews use Article markup, and what fields move the needle for cite share in 2026.';
+const slug = 'how-article-schema-powers-ai-citation';
+const datePublished = '2026-04-26';
+const dateModified = '2026-04-26';
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/blog/${slug}`;
+
+const articleJsonLd = jsonLdEnvelope({
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished,
+  dateModified,
+  url,
+  mainEntityOfPage: url,
+  author: { '@type': 'Organization', name: 'Schema for AI Search', url: site },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Schema for AI Search',
+    url: site,
+    logo: { '@type': 'ImageObject', url: `${site}/favicon.svg` },
+  },
+});
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}/blog` },
+    { '@type': 'ListItem', position: 3, name: title, item: url },
+  ],
+});
+
+const postFaqs = [
+  {
+    q: 'Why does Article schema matter for AI citation specifically?',
+    a: 'When AI assistants cite content, they need to attribute it correctly: "According to {author}, writing in {publisher} on {date}, ...". Article schema gives them all four fields cleanly. Pages without it get cited as "according to a website" or get skipped entirely in favor of pages with full attribution. AI engines explicitly weight content with Article schema higher in cite-share for editorial queries.',
+  },
+  {
+    q: 'Which AI surface relies on Article schema most?',
+    a: 'Google AI Overviews — heavily favors cited sources with full Article markup (clear author, date, publisher logo). Pages without it cite at lower rates and often get replaced by aggregator sites that do mark up correctly. Perplexity and ChatGPT also use Article schema for attribution but with slightly less weight. Gemini uses it for both standalone queries and Google Search responses.',
+  },
+  {
+    q: 'What are the highest-leverage Article fields for AI citation?',
+    a: 'In order: author (with sameAs URLs to LinkedIn / Twitter / Wikipedia), publisher (with name + logo), datePublished, headline. The sameAs field on author is dramatically underused — it lets AI engines verify the author across the web and cite with confidence. dateModified matters for freshness ranking but does not directly affect citation.',
+  },
+  {
+    q: 'Should I use Article, BlogPosting, or NewsArticle?',
+    a: 'BlogPosting for blog posts. NewsArticle for news (gets Top Stories carousel consideration). Article as the generic catch-all. Pick the most specific that fits per page — search engines and AI assistants treat them differently in eligibility. NewsArticle without genuine editorial oversight can backfire when Google\'s news classifier disagrees.',
+  },
+  {
+    q: 'How do I check if my Article schema is correctly structured?',
+    a: 'Run schemaguardian: npx @moonye/schemaguardian check https://your-page.com. It validates against schema.org rules plus the 2026 Google rich result requirements (image dimensions, publisher logo size, etc.). Add --ci to your build pipeline to fail on regressions.',
+  },
+];
+
+const postFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: postFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(postFaqJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="/blog">Blog</a>
+    <span aria-hidden="true">›</span>
+    <span>Article &amp; AI Citation</span>
+  </nav>
+
+  <article class="blog-post">
+    <header class="schema-hero">
+      <p class="post-meta">Published 2026-04-26 · ~6 min read · Part 7 of the AI Citation series</p>
+      <h1>How Article Schema Powers AI Search Citation in 2026</h1>
+      <p class="lede">
+        Article schema is what AI assistants use to attribute citations to
+        a real author, publication, and date. Without it, your post gets
+        cited as "according to a website" — or skipped entirely. Here is
+        what AI engines actually do with Article markup, and the four
+        fields that move cite share in 2026.
+      </p>
+    </header>
+
+    <section>
+      <h2>What Article schema actually is</h2>
+      <p>
+        Article (and its subtypes <code>BlogPosting</code> and
+        <code>NewsArticle</code>) wraps editorial content as structured
+        data: <code>headline</code>, <code>image</code>,
+        <code>datePublished</code>, <code>author</code>,
+        <code>publisher</code>. Generate one in 30 seconds with the
+        <a href="/article-schema-generator">Article schema generator</a>.
+      </p>
+      <p>
+        Until 2023, Article schema's primary value was Top Stories carousel
+        eligibility and Google News surfaces. Both still apply for
+        NewsArticle. But the bigger 2026 shift is that AI assistants
+        explicitly require attribution metadata to cite with confidence —
+        and Article schema is the only structured way to provide it.
+      </p>
+    </section>
+
+    <section>
+      <h2>Why AI assistants demand attribution metadata</h2>
+      <p>
+        AI search engines have moved from "summarize the answer" to "cite
+        the source". Users and regulators both push toward attribution
+        — and AI engines have responded by ranking content with explicit
+        author + date + publisher metadata higher in retrieval.
+      </p>
+      <p>
+        When the schema gives them this:
+      </p>
+      <pre class="install-block"><code>{`{
+  "@type": "BlogPosting",
+  "headline": "How AI Search Changed SEO in 2026",
+  "datePublished": "2026-04-25",
+  "author": {
+    "@type": "Person",
+    "name": "Alex Chen",
+    "sameAs": [
+      "https://www.linkedin.com/in/alexchen",
+      "https://twitter.com/alexchen"
+    ]
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Example Magazine",
+    "logo": { "@type": "ImageObject", "url": "..." }
+  }
+}`}</code></pre>
+      <p>
+        the assistant can write: "According to Alex Chen, writing in
+        Example Magazine on April 25, 2026, ..." with confidence. Without
+        the schema, the assistant has to extract author and date from
+        prose, fails ~30% of the time, and skips the source rather than
+        cite ambiguously.
+      </p>
+      <p>Per-surface behavior in 2026:</p>
+      <ul>
+        <li>
+          <strong>Google AI Overviews</strong> — heaviest weighting on
+          Article schema. Pages with full author + publisher logo + dates
+          appear in AI Overview source lists at 2-3x the rate of
+          schema-less competitors. The logo requirement (≥600×60) is
+          strict; missing it costs Top Stories eligibility too.
+        </li>
+        <li>
+          <strong>Perplexity</strong> — uses Article schema for source
+          attribution cards. Author sameAs URLs power the inline LinkedIn /
+          Twitter links Perplexity now shows in cite cards.
+        </li>
+        <li>
+          <strong>ChatGPT search</strong> — uses Article schema as one
+          input to the cite-or-skip decision. Pages with strong attribution
+          cite at higher rates than equivalent prose.
+        </li>
+        <li>
+          <strong>Gemini</strong> — uses Article markup across both
+          standalone Gemini and Google Search responses. Same attribution
+          weighting as AI Overviews.
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>5 things to do for Article schema in 2026</h2>
+      <ol>
+        <li>
+          <strong>Add Article schema to every editorial page.</strong>
+          Blog posts, news pieces, research, longform. Use the
+          <a href="/article-schema-generator">Article schema generator</a>.
+          One paste into <code>&lt;head&gt;</code>.
+        </li>
+        <li>
+          <strong>Always include author with sameAs.</strong> The single
+          most underused field. Add 2-4 verified author profile URLs
+          (LinkedIn, Twitter, personal site, ORCID for academics). Boosts
+          cite confidence dramatically.
+        </li>
+        <li>
+          <strong>Use a wide-format publisher logo (≥600×60).</strong>
+          Different from Organization.logo (which is square ≥600×600). Most
+          sites use one logo for both and lose Top Stories carousel
+          eligibility plus AI cite weight.
+        </li>
+        <li>
+          <strong>Pass image as an array of three aspects (1×1, 4×3, 16×9).</strong>
+          Different rich result surfaces use different aspect ratios. A
+          single image still works but loses placement on some surfaces.
+        </li>
+        <li>
+          <strong>Validate in CI.</strong> Schema regressions are silent.
+          Run
+          <code>npx @moonye/schemaguardian scan https://your-site.com --ci</code>
+          on every PR. <a href="/cli">CLI docs</a>.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Article schema's compounding effect with Organization</h2>
+      <p>
+        The maximum-leverage pattern for editorial sites is to combine:
+      </p>
+      <ul>
+        <li>
+          <strong><a href="/organization-schema-generator">Organization schema</a></strong>
+          on the homepage with stable <code>@id</code>
+        </li>
+        <li>
+          <strong>Article schema</strong> on every post, with
+          <code>publisher.@id</code> pointing back to the Organization
+        </li>
+        <li>
+          <strong>Author Person objects</strong> with sameAs URLs to
+          authoritative profiles
+        </li>
+      </ul>
+      <p>
+        AI assistants build an entity graph from these relationships. Posts
+        on your site become "Articles published by [verified
+        Organization], authored by [verified Person]". That's a much
+        stronger trust signal than a standalone post. Cite share on
+        editorial queries scales with how complete this graph is.
+      </p>
+    </section>
+
+    <section>
+      <h2>The validation loop</h2>
+      <p>
+        Article schema breaks in subtle ways. Author becomes a string
+        instead of a Person. Publisher logo URL 404s after a CDN migration.
+        dateModified gets bumped on every deploy. Each failure mode looks
+        fine in dev tools but silently drops AI cite share. Set up
+        <a href="/cli">schemaguardian</a> in CI once:
+      </p>
+      <pre class="install-block"><code>npx @moonye/schemaguardian init --url https://your-site.com</code></pre>
+      <p>
+        That one command writes a GitHub Actions workflow that runs
+        <code>scan</code> on every PR and push to main, walks your
+        sitemap, and fails the build on any error.
+      </p>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions about Article schema and AI citation</h2>
+      <dl>
+        {postFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section>
+      <h2>Series next reads</h2>
+      <ul>
+        <li><a href="/blog/how-faq-schema-powers-ai-citation">How FAQ schema powers AI search citation</a></li>
+        <li><a href="/blog/how-product-schema-powers-ai-citation">How Product schema powers AI shopping queries</a></li>
+        <li><a href="/blog/how-breadcrumb-schema-powers-ai-citation">How Breadcrumb schema powers SERP and AI hierarchy understanding</a></li>
+        <li><a href="/blog/how-local-business-schema-powers-ai-citation">How LocalBusiness schema powers AI "near me" answers</a></li>
+        <li><a href="/blog/how-video-schema-powers-ai-citation">How Video schema powers AI video discovery</a></li>
+        <li><a href="/blog/how-howto-schema-powers-ai-citation">How HowTo schema powers AI tutorial citation</a></li>
+        <li><a href="/blog/how-organization-schema-powers-ai-citation">How Organization schema powers AI brand attribution</a></li>
+      </ul>
+    </section>
+  </article>
+</BaseLayout>

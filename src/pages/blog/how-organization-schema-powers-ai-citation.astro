@@ -1,0 +1,302 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'How Organization Schema Powers AI Brand Attribution in 2026';
+const description =
+  'Organization schema is the structural foundation of how AI assistants understand "what is this company". Here is how Perplexity, ChatGPT, Gemini, and Google AI Overviews use Organization markup to verify entities, attribute facts, and rank brand queries in 2026.';
+const slug = 'how-organization-schema-powers-ai-citation';
+const datePublished = '2026-04-26';
+const dateModified = '2026-04-26';
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/blog/${slug}`;
+
+const articleJsonLd = jsonLdEnvelope({
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished,
+  dateModified,
+  url,
+  mainEntityOfPage: url,
+  author: { '@type': 'Organization', name: 'Schema for AI Search', url: site },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Schema for AI Search',
+    url: site,
+    logo: { '@type': 'ImageObject', url: `${site}/favicon.svg` },
+  },
+});
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}/blog` },
+    { '@type': 'ListItem', position: 3, name: title, item: url },
+  ],
+});
+
+const postFaqs = [
+  {
+    q: 'How do AI assistants use Organization schema differently from Google?',
+    a: 'Google uses Organization schema as a primary input to the Knowledge Panel (the box beside SERPs for branded searches). AI assistants use it for entity verification — when they need to attribute a fact about a company ("according to Acme..."), they look up the canonical Organization entity. Without your schema, AI engines pull facts from random aggregator sites that may be stale or wrong.',
+  },
+  {
+    q: 'Which fields move the needle most for AI citation?',
+    a: 'sameAs URLs are by far the most underused high-leverage field. 4-8 verified profiles (LinkedIn company page, Wikipedia, Crunchbase, GitHub) let AI engines link your entity across the web and verify claims. Logo (square ≥600×600) drives Knowledge Panel display. Stable @id (e.g., https://example.com/#organization) lets AI engines consolidate cites across all your pages into one entity.',
+  },
+  {
+    q: 'Where should Organization schema live on my site?',
+    a: 'Once on the homepage, with a stable @id. Reference that @id from per-page Article publisher and Product brand fields. Repeating the full Organization block on every page adds no value, bloats payload, and AI engines may fingerprint redundant schema as a low-trust signal.',
+  },
+  {
+    q: 'How is Organization different from LocalBusiness?',
+    a: 'Organization is the parent type for any organization. LocalBusiness is a subtype for businesses with physical presence and local-search relevance. Multi-location chains use Organization at the parent and LocalBusiness per location. Pure SaaS / remote agencies should use Organization, not LocalBusiness — the latter creates confused signals (map pack expects local data; AI surfaces you for "near me" queries you can\'t serve).',
+  },
+  {
+    q: 'How do I check if my Organization schema is correctly structured?',
+    a: 'Run schemaguardian: npx @moonye/schemaguardian check https://your-site.com. It validates schema.org rules plus the 2026 Knowledge Panel requirements (logo aspect, sameAs validity, @id consistency). Add --ci to your build pipeline to fail on regressions.',
+  },
+];
+
+const postFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: postFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(postFaqJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="/blog">Blog</a>
+    <span aria-hidden="true">›</span>
+    <span>Organization &amp; AI Attribution</span>
+  </nav>
+
+  <article class="blog-post">
+    <header class="schema-hero">
+      <p class="post-meta">Published 2026-04-26 · ~6 min read · Part 8 of the AI Citation series</p>
+      <h1>How Organization Schema Powers AI Brand Attribution in 2026</h1>
+      <p class="lede">
+        When an AI assistant cites your company, it needs a verified
+        anchor — a canonical entity to attribute facts to. Organization
+        schema is that anchor. Without it, AI engines pull stale facts
+        from random aggregators. With it, you control the canonical answer
+        for every brand query.
+      </p>
+    </header>
+
+    <section>
+      <h2>What Organization schema actually is</h2>
+      <p>
+        Organization is a schema.org type that wraps your company as a
+        structured entity: <code>name</code>, <code>logo</code>,
+        <code>url</code>, <code>sameAs</code> (array of canonical
+        external profiles), <code>contactPoint</code>, and optional
+        <code>foundingDate</code>, <code>founders</code>,
+        <code>address</code>. Generate one in 30 seconds with the
+        <a href="/organization-schema-generator">Organization schema
+        generator</a>.
+      </p>
+      <p>
+        It feeds Google's Knowledge Panel (the box beside SERPs for
+        branded searches) and is the primary input AI assistants use when
+        attributing facts to your company. Skip it and AI engines fall
+        back to aggregator sites — Crunchbase, Wikipedia, random forums.
+        Those sources are often stale, wrong, or contradictory across
+        sites. The AI's resulting answer about your company is whatever
+        emerges from that mess.
+      </p>
+    </section>
+
+    <section>
+      <h2>Why AI assistants treat Organization schema as the canonical entity</h2>
+      <p>
+        AI search engines have moved from pulling facts page-by-page to
+        building entity graphs — networks of "this fact is about this
+        company, which is the same as the company on LinkedIn here, which
+        was founded by these people". Organization schema with sameAs
+        URLs is what lets them connect those nodes:
+      </p>
+      <pre class="install-block"><code>{`{
+  "@type": "Organization",
+  "@id": "https://acme.example/#organization",
+  "name": "Acme Inc.",
+  "url": "https://acme.example",
+  "logo": "https://acme.example/logo-square.png",
+  "sameAs": [
+    "https://www.linkedin.com/company/acme",
+    "https://twitter.com/acme",
+    "https://en.wikipedia.org/wiki/Acme",
+    "https://www.crunchbase.com/organization/acme"
+  ]
+}`}</code></pre>
+      <p>
+        That tells the AI: this entity is Acme Inc., these are its
+        verified profiles, treat them as the same entity. When the AI
+        later needs to cite "Acme's founding date" or "Acme's headquarters
+        city", it has a canonical source — your homepage — instead of
+        guessing across the web.
+      </p>
+      <p>Per-surface behavior in 2026:</p>
+      <ul>
+        <li>
+          <strong>Google AI Overviews</strong> — uses Organization schema
+          to populate the brand-context block in AI Overview answers
+          ("Acme is a SaaS company founded in 2018, headquartered in San
+          Francisco..."). Pages without Organization schema get those
+          facts from Wikipedia or Crunchbase, often outdated.
+        </li>
+        <li>
+          <strong>Perplexity</strong> — surfaces Organization data in the
+          inline brand panels shown next to source cites. sameAs URLs power
+          the LinkedIn / Twitter / Wikipedia links.
+        </li>
+        <li>
+          <strong>ChatGPT</strong> — uses Organization schema as one input
+          when answering "what does X do" / "who founded X" queries. With
+          schema, your canonical answer is the source. Without, you get
+          whatever ChatGPT inferred from its training data plus current
+          web retrieval.
+        </li>
+        <li>
+          <strong>Gemini</strong> — uses Organization schema across both
+          Gemini.com and Google Search responses. Same Knowledge Graph
+          dependency as Google Search itself.
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>5 things to do for Organization schema in 2026</h2>
+      <ol>
+        <li>
+          <strong>Add Organization schema to your homepage with a stable @id.</strong>
+          Use the
+          <a href="/organization-schema-generator">Organization schema generator</a>.
+          One paste into <code>&lt;head&gt;</code>. Use
+          <code>"@id": "https://your-site.com/#organization"</code> as the
+          stable identifier.
+        </li>
+        <li>
+          <strong>Include 4-8 high-trust sameAs URLs.</strong> Mandatory:
+          LinkedIn company page, Twitter/X. Strong: Wikipedia (if exists),
+          Crunchbase, GitHub (if relevant), Facebook. Skip low-trust
+          profiles — diluting sameAs with junk weakens the signal.
+        </li>
+        <li>
+          <strong>Use a square logo (≥600×600) for Organization.logo.</strong>
+          Different from Article.publisher.logo (which is wide ≥600×60).
+          Most sites use one logo for both — lose either Knowledge Panel
+          display or Top Stories carousel eligibility.
+        </li>
+        <li>
+          <strong>Reference the Organization @id from Article and Product schema.</strong>
+          On blog posts, set
+          <code>publisher: &#123; "@id": "https://your-site.com/#organization" &#125;</code>.
+          On product pages, set
+          <code>brand: &#123; "@id": "..." &#125;</code>.
+          Pulls everything into one entity graph.
+        </li>
+        <li>
+          <strong>Validate in CI.</strong> Logo URLs that 404 after a CDN
+          migration, sameAs URLs that change after a rebrand, all silent
+          failures. Run
+          <code>npx @moonye/schemaguardian scan https://your-site.com --ci</code>
+          on every PR. <a href="/cli">CLI docs</a>.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>The compounding entity graph effect</h2>
+      <p>
+        Organization schema's value compounds with the rest of your schema
+        matrix. The maximum-leverage pattern:
+      </p>
+      <ul>
+        <li>
+          <strong>Organization on homepage</strong> — canonical entity
+        </li>
+        <li>
+          <strong>Article on every post</strong> with
+          publisher.@id pointing back —
+          <a href="/blog/how-article-schema-powers-ai-citation">how Article
+          powers AI citation</a>
+        </li>
+        <li>
+          <strong>Product on every product</strong> with
+          brand.@id pointing back —
+          <a href="/blog/how-product-schema-powers-ai-citation">how Product
+          powers AI shopping</a>
+        </li>
+        <li>
+          <strong>LocalBusiness per location</strong> (if multi-location)
+          with parentOrganization pointing back —
+          <a href="/blog/how-local-business-schema-powers-ai-citation">how
+          LocalBusiness powers "near me" answers</a>
+        </li>
+      </ul>
+      <p>
+        Each piece reinforces the entity graph. AI engines treat your site
+        as one verified company with consistent attribution across every
+        page. Cite share scales with how complete and consistent the
+        graph is.
+      </p>
+    </section>
+
+    <section>
+      <h2>The validation loop</h2>
+      <p>
+        Organization schema breaks in subtle ways. A logo URL that 404s
+        after a CDN migration. A sameAs URL that redirects to a moved
+        LinkedIn page. A Wikipedia link that gets vandalized into a
+        404-stub. Each failure mode silently degrades AI cite quality
+        without a visible bug. Set up
+        <a href="/cli">schemaguardian</a> in CI once:
+      </p>
+      <pre class="install-block"><code>npx @moonye/schemaguardian init --url https://your-site.com</code></pre>
+      <p>
+        That one command writes a GitHub Actions workflow that runs
+        <code>scan</code> on every PR and push to main, walks your
+        sitemap, and fails the build on any error.
+      </p>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions about Organization schema and AI attribution</h2>
+      <dl>
+        {postFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section>
+      <h2>Series next reads</h2>
+      <ul>
+        <li><a href="/blog/how-faq-schema-powers-ai-citation">How FAQ schema powers AI search citation</a></li>
+        <li><a href="/blog/how-product-schema-powers-ai-citation">How Product schema powers AI shopping queries</a></li>
+        <li><a href="/blog/how-breadcrumb-schema-powers-ai-citation">How Breadcrumb schema powers SERP and AI hierarchy understanding</a></li>
+        <li><a href="/blog/how-local-business-schema-powers-ai-citation">How LocalBusiness schema powers AI "near me" answers</a></li>
+        <li><a href="/blog/how-video-schema-powers-ai-citation">How Video schema powers AI video discovery</a></li>
+        <li><a href="/blog/how-howto-schema-powers-ai-citation">How HowTo schema powers AI tutorial citation</a></li>
+        <li><a href="/blog/how-article-schema-powers-ai-citation">How Article schema powers AI attribution</a></li>
+      </ul>
+    </section>
+  </article>
+</BaseLayout>

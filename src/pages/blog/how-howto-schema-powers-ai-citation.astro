@@ -1,0 +1,263 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'How HowTo Schema Powers AI Search Citation in 2026';
+const description =
+  'HowTo lost its Google rich result in 2024 — but it became one of the most cited schema types in AI coding assistants and step-by-step answers. Here is how Perplexity, ChatGPT, Gemini, and AI Overviews extract from HowTo markup, and how to optimize for them.';
+const slug = 'how-howto-schema-powers-ai-citation';
+const datePublished = '2026-04-26';
+const dateModified = '2026-04-26';
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/blog/${slug}`;
+
+const articleJsonLd = jsonLdEnvelope({
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished,
+  dateModified,
+  url,
+  mainEntityOfPage: url,
+  author: { '@type': 'Organization', name: 'Schema for AI Search', url: site },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Schema for AI Search',
+    url: site,
+    logo: { '@type': 'ImageObject', url: `${site}/favicon.svg` },
+  },
+});
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}/blog` },
+    { '@type': 'ListItem', position: 3, name: title, item: url },
+  ],
+});
+
+const postFaqs = [
+  {
+    q: 'Why bother with HowTo schema if Google removed the rich result?',
+    a: 'Because HowTo schema is now the cleanest signal for AI assistants extracting tutorial answers. Coding assistants (Cursor, Copilot Chat, Claude in IDE), Perplexity, ChatGPT, and Gemini all read HowTo markup as a primary signal when answering "how do I X" queries. Pages with structured steps get cited; pages with prose tutorials get skipped or cited at lower fidelity.',
+  },
+  {
+    q: 'Which AI surface cites HowTo schema most?',
+    a: 'AI coding assistants — they cite step-by-step technical content constantly during real coding sessions, and they prefer structured steps. Perplexity is also a heavy consumer of HowTo schema for general "how do I" queries, with the cleanest source attribution. Google AI Overviews uses HowTo as one ranking signal among many. ChatGPT and Gemini both parse it, with citation quality improving each model release.',
+  },
+  {
+    q: 'How granular should each HowTo step be?',
+    a: 'One concrete action per step. "Open the file" is a step. "Open the file, parse the JSON, and validate the schema" is three steps. AI assistants extract individual steps when answering questions like "what is the first step to do X" — atomic steps cite better than combined ones.',
+  },
+  {
+    q: 'Can I use HowTo schema for software tutorials and code-heavy guides?',
+    a: 'Yes — and it is one of the highest-leverage HowTo cases for AI citation. AI coding assistants cite step-by-step coding guides constantly. Use code blocks inside step.text (HTML <code> or <pre> tags are accepted) and the assistant will quote them with attribution.',
+  },
+  {
+    q: 'How do I check if my HowTo schema is correctly structured?',
+    a: 'Run schemaguardian: npx @moonye/schemaguardian check https://your-page.com. It validates against schema.org rules plus the 2026 patterns AI assistants reward. Add --ci to your build pipeline to fail on regressions.',
+  },
+];
+
+const postFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: postFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(postFaqJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="/blog">Blog</a>
+    <span aria-hidden="true">›</span>
+    <span>HowTo &amp; AI Citation</span>
+  </nav>
+
+  <article class="blog-post">
+    <header class="schema-hero">
+      <p class="post-meta">Published 2026-04-26 · ~6 min read · Part 6 of the AI Citation series</p>
+      <h1>How HowTo Schema Powers AI Search Citation in 2026</h1>
+      <p class="lede">
+        Google removed HowTo rich results from desktop in 2023 and from all
+        surfaces by 2024. The schema is technically deprecated for SERP
+        display — and one of the most cited schema types in AI coding
+        assistants. Here is what changed, who reads HowTo now, and how to
+        optimize for them.
+      </p>
+    </header>
+
+    <section>
+      <h2>What HowTo schema actually is</h2>
+      <p>
+        HowTo is a schema.org type that wraps a step-by-step tutorial as
+        structured data. Each step (<code>HowToStep</code>) has a
+        <code>name</code> and <code>text</code>, optionally an image, and
+        the parent HowTo carries name, totalTime, tools, supplies, and
+        description. Generate one in 30 seconds with the
+        <a href="/howto-schema-generator">HowTo schema generator</a>.
+      </p>
+      <p>
+        Until 2023, HowTo's primary value was the visual rich result Google
+        rendered in SERPs (the carousel of step thumbnails). That display
+        was retired in October 2023 on desktop and 2024 on mobile. The
+        schema is still valid markup. The consumer changed.
+      </p>
+    </section>
+
+    <section>
+      <h2>Why AI assistants love HowTo schema</h2>
+      <p>
+        Tutorial content is exactly the kind of thing AI coding assistants
+        and search engines are asked about constantly. "How do I add auth
+        to a Next.js app." "How do I patch a drywall hole." "How do I
+        configure GitHub Actions for X." When the answer is on a page with
+        HowTo schema, the AI gets:
+      </p>
+      <pre class="install-block"><code>{`{
+  "@type": "HowToStep",
+  "position": 1,
+  "name": "Install the package",
+  "text": "Run npm install @your/lib in your project root."
+}`}</code></pre>
+      <p>
+        The step is the step. Position 1 is unambiguous. The action is
+        explicit. Compared to extracting from a prose paragraph that says
+        "First, you'll want to install the package, but before that, make
+        sure you have Node 18+...", the structured form is dramatically
+        easier to cite cleanly.
+      </p>
+      <p>Per-surface behavior in 2026:</p>
+      <ul>
+        <li>
+          <strong>AI coding assistants (Cursor, Copilot Chat, Claude in IDE)</strong>
+          — by far the heaviest consumers of HowTo schema in 2026. When you
+          ask Cursor "how do I add Stripe to my Next.js app", it retrieves
+          tutorials and cites step-by-step guides. Pages with HowTo markup
+          rank higher in retrieval and produce cleaner inline citations.
+        </li>
+        <li>
+          <strong>Perplexity</strong> — extracts individual steps and quotes
+          them with source links. Strongest citation behavior for tutorial
+          queries among general AI search engines.
+        </li>
+        <li>
+          <strong>Google AI Overviews</strong> — uses HowTo schema as a
+          ranking signal for "how do I" queries. Pages with HowTo schema
+          appear in AI Overview source lists more often than equivalent
+          prose tutorials.
+        </li>
+        <li>
+          <strong>ChatGPT search and Gemini</strong> — both parse HowTo
+          markup. Citation rate has improved with each model update through
+          2025-2026.
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>5 things to do for HowTo schema in 2026</h2>
+      <ol>
+        <li>
+          <strong>Add HowTo schema to every step-by-step tutorial page.</strong>
+          Use the <a href="/howto-schema-generator">HowTo schema generator</a>.
+          The cost is one paste into <code>&lt;head&gt;</code>.
+        </li>
+        <li>
+          <strong>Make steps atomic.</strong> One concrete action per
+          step. AI assistants cite "what is the first step" queries with
+          confidence when each step is single-purpose; combined steps cite
+          poorly or get summarized inaccurately.
+        </li>
+        <li>
+          <strong>Include totalTime, tools, and supplies when applicable.</strong>
+          AI engines filter "quick how-to" vs "weekend project" queries by
+          duration, and the tool/supply lists answer "what do I need" follow-ups.
+          Most generators omit these. Including them is a strong differentiator.
+        </li>
+        <li>
+          <strong>Pair HowTo with <a href="/article-schema-generator">Article schema</a>
+          for tutorial blog posts.</strong> Article gives the author + date
+          AI assistants need for attribution; HowTo gives the extractable
+          step structure.
+        </li>
+        <li>
+          <strong>Validate in CI.</strong> A botched template change can
+          strip HowTo markup site-wide without a visible bug. Run
+          <code>npx @moonye/schemaguardian scan https://your-site.com --ci</code>
+          on every PR. <a href="/cli">CLI docs</a>.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>The HowTo vs Recipe distinction</h2>
+      <p>
+        Recipe is a specialized subtype of HowTo with food-specific fields
+        (<code>recipeIngredient</code>, <code>recipeYield</code>,
+        <code>nutrition</code>, <code>cookTime</code>). Recipe rich results
+        survived the 2023-2026 cuts; HowTo did not. So for cooking content,
+        always use <a href="/recipe-schema-generator">Recipe schema</a>
+        — you keep the rich result eligibility and gain food-specific AI
+        citation hooks.
+      </p>
+      <p>
+        For everything else (DIY, software, repairs, crafts, hobby
+        tutorials), HowTo is the right type. The AI citation value applies
+        equally; only Google SERP eligibility differs.
+      </p>
+    </section>
+
+    <section>
+      <h2>The validation loop</h2>
+      <p>
+        Schema generated → schema published → schema validated → schema cited.
+        The middle step is where most teams lose pages — schemas that look
+        valid but have one wrong field (non-sequential positions, wrong time
+        format, mismatched step counts) get silently dropped from AI
+        retrieval. Set up <a href="/cli">schemaguardian</a> in CI once:
+      </p>
+      <pre class="install-block"><code>npx @moonye/schemaguardian init --url https://your-site.com</code></pre>
+      <p>
+        That one command writes a ready-to-commit GitHub Actions workflow
+        that runs <code>scan</code> on every PR and push to main, walks
+        your sitemap, and fails the build on any error.
+      </p>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions about HowTo schema and AI citation</h2>
+      <dl>
+        {postFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section>
+      <h2>Series next reads</h2>
+      <ul>
+        <li><a href="/blog/how-faq-schema-powers-ai-citation">How FAQ schema powers AI search citation</a></li>
+        <li><a href="/blog/how-product-schema-powers-ai-citation">How Product schema powers AI shopping queries</a></li>
+        <li><a href="/blog/how-breadcrumb-schema-powers-ai-citation">How Breadcrumb schema powers SERP and AI hierarchy understanding</a></li>
+        <li><a href="/blog/how-local-business-schema-powers-ai-citation">How LocalBusiness schema powers AI "near me" answers</a></li>
+        <li><a href="/blog/how-video-schema-powers-ai-citation">How Video schema powers AI video discovery</a></li>
+        <li><a href="/blog/how-article-schema-powers-ai-citation">How Article schema powers AI attribution</a></li>
+        <li><a href="/blog/how-organization-schema-powers-ai-citation">How Organization schema powers AI brand attribution</a></li>
+      </ul>
+    </section>
+  </article>
+</BaseLayout>
