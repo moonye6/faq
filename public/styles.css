@@ -141,6 +141,67 @@ h2 { font-size: 1.4rem; font-weight: 600; margin: 2.5rem 0 0.75rem; }
 
 .related-schemas { margin-top: 3rem; }
 
+/* Deep content sections (examples, integrations, errors) */
+.examples-gallery,
+.platform-integrations,
+.common-errors {
+  margin: 3rem 0;
+}
+.example-card,
+.integration-card {
+  margin: 1.5rem 0;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+}
+.example-card h3,
+.integration-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.example-card p,
+.integration-card p {
+  color: var(--muted);
+  margin: 0 0 0.75rem;
+}
+.integration-card ol {
+  margin: 0.5rem 0 0.75rem 1.25rem;
+  padding: 0;
+  color: var(--fg);
+}
+.integration-card ol li { margin: 0.4rem 0; }
+.example-card .install-block,
+.integration-card .install-block {
+  margin-top: 0.75rem;
+  font-size: 0.78rem;
+  max-height: 360px;
+  overflow: auto;
+}
+.error-list {
+  display: grid;
+  gap: 1rem;
+}
+.error-card {
+  padding: 1rem 1.25rem;
+  border-left: 3px solid #c0392b;
+  background: #fff;
+  border-radius: 4px;
+}
+.error-card h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #c0392b;
+}
+.error-card p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+  color: var(--fg);
+}
+.error-card strong { color: var(--fg); }
+
 .cli-page section { margin-bottom: 2rem; }
 .cli-page .badges { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.5rem 0 1rem; }
 .cli-page .badges img { height: 20px; }

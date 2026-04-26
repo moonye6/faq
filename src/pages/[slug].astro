@@ -82,6 +82,66 @@ const related = Array.from({ length: 4 }, (_, i) => {
       <p>{schema.geoAeoAngle}</p>
     </section>
 
+    {schema.deepContent?.examplesGallery && (
+      <section class="examples-gallery">
+        <h2>Real-world {schema.name.replace(/ Schema Generator$/, '')} examples</h2>
+        <p class="lede">
+          Three patterns covering the common cases. Drop-in ready — copy any
+          block into your <code>&lt;head&gt;</code> and adapt the values.
+        </p>
+        {schema.deepContent.examplesGallery.map((ex) => (
+          <article class="example-card">
+            <h3>{ex.scenario}</h3>
+            <p>{ex.description}</p>
+            <pre class="install-block"><code>{ex.jsonLd}</code></pre>
+          </article>
+        ))}
+      </section>
+    )}
+
+    {schema.deepContent?.platformIntegrations && (
+      <section class="platform-integrations">
+        <h2>Add {schema.name.replace(/ Schema Generator$/, '')} schema to your platform</h2>
+        <p class="lede">
+          Platform-specific implementation paths. Pick yours.
+        </p>
+        {schema.deepContent.platformIntegrations.map((p) => (
+          <article class="integration-card">
+            <h3>{p.platform}</h3>
+            <p>{p.description}</p>
+            <ol>
+              {p.steps.map((step) => (
+                <li>{step}</li>
+              ))}
+            </ol>
+            {p.codeExample && (
+              <pre class="install-block"><code>{p.codeExample}</code></pre>
+            )}
+          </article>
+        ))}
+      </section>
+    )}
+
+    {schema.deepContent?.commonErrors && (
+      <section class="common-errors">
+        <h2>Common errors that break {schema.name.replace(/ Schema Generator$/, '')} schema</h2>
+        <p class="lede">
+          The bugs that silently kill rich result eligibility and AI citation.
+          Run <code>npx @moonye/schemaguardian check https://your-page.com --ci</code>
+          to catch them in CI.
+        </p>
+        <div class="error-list">
+          {schema.deepContent.commonErrors.map((e) => (
+            <article class="error-card">
+              <h3>{e.error}</h3>
+              <p><strong>Why it breaks:</strong> {e.why}</p>
+              <p><strong>Fix:</strong> {e.fix}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+
     <section class="page-faq">
       <h2>Common questions about {schema.name}</h2>
       <dl>

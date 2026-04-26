@@ -48,6 +48,47 @@ export interface PageFaq {
   a: string;
 }
 
+export interface PlatformIntegration {
+  /** e.g. "Shopify", "WooCommerce", "Webflow", "Next.js" */
+  platform: string;
+  /** 1-sentence framing of the integration. */
+  description: string;
+  /** Numbered steps, plain text, may include code references. */
+  steps: string[];
+  /** Optional code snippet (rendered in a <pre>). */
+  codeExample?: string;
+}
+
+export interface ExampleScenario {
+  /** Scenario name, e.g. "Physical product" / "SaaS subscription". */
+  scenario: string;
+  /** When to use this pattern. */
+  description: string;
+  /** Pretty-printed JSON-LD example to show in a code block. */
+  jsonLd: string;
+}
+
+export interface ErrorEntry {
+  /** Short error name. */
+  error: string;
+  /** Why it breaks (rich result, AI extraction, both). */
+  why: string;
+  /** How to fix. */
+  fix: string;
+}
+
+/**
+ * Optional deep-content for high-priority schema type pages.
+ * Pages without it render the standard layout. Pages with it gain
+ * platform integration guides, examples gallery, common-error
+ * checklist sections.
+ */
+export interface DeepContent {
+  platformIntegrations?: PlatformIntegration[];
+  examplesGallery?: ExampleScenario[];
+  commonErrors?: ErrorEntry[];
+}
+
 export interface SchemaTypeDef {
   /** Stable identifier, used as registry key. */
   id: string;
@@ -78,6 +119,9 @@ export interface SchemaTypeDef {
   sampleData: FormData;
   /** Builder: form data → schema.org JSON-LD object. */
   buildJsonLd: (data: FormData) => Record<string, unknown>;
+
+  /** Optional deep content (platform guides, examples, errors). */
+  deepContent?: DeepContent;
 }
 
 /**
