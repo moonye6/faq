@@ -3,9 +3,9 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import { schemaRegistry } from '~/schemas';
 import { jsonLdEnvelope } from '~/lib/schema-types';
 
-const title = 'Schema Generators for AI Search | FAQ, HowTo, Product, Recipe and 8 more';
+const title = 'Schema Generators for AI Search | FAQ, HowTo, Product, Recipe and 9 more';
 const description =
-  'Free JSON-LD schema generators built for the AI search era. 12 schema types optimized for citation by Perplexity, ChatGPT, Gemini, and Google AI Overviews. Plus the schemaguardian CLI for CI validation.';
+  'Free JSON-LD schema generators built for the AI search era. 13 schema types optimized for citation by Perplexity, ChatGPT, Gemini, and Google AI Overviews. Plus the schemaguardian CLI for CI validation.';
 
 const websiteJsonLd = jsonLdEnvelope({
   '@type': 'WebSite',
@@ -53,7 +53,12 @@ const collectionJsonLd = jsonLdEnvelope({
     </section>
 
     <section class="schema-grid">
-      <h2>12 schema generators</h2>
+      <h2>13 schema generators</h2>
+      <p class="hint" style="margin: 0 0 1rem;">
+        Not sure where to start? See the
+        <a href="/schema-types">schema type comparison matrix</a> sorted by
+        AI citation + SERP value.
+      </p>
       <ul class="schema-list">
         {schemaRegistry.map((s) => (
           <li>

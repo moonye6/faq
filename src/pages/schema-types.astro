@@ -1,0 +1,308 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'Schema Type Comparison Matrix | AI Citation Value vs SERP Value (2026)';
+const description =
+  'Side-by-side comparison of 13 schema.org types: AI citation value, SERP rich result value, work effort, and primary consumers. Decide which schema types to add to your site first in 2026.';
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/schema-types`;
+
+interface Rating {
+  slug: string;
+  schemaType: string;
+  pageName: string;
+  aiCitation: number; // 0-5
+  serpValue: number; // 0-5
+  workEffort: number; // 1-5 (5 = least effort)
+  primaryConsumer: string;
+  whyItMatters: string;
+}
+
+const ratings: Rating[] = [
+  {
+    slug: 'product-schema-generator',
+    schemaType: 'Product',
+    pageName: 'Product',
+    aiCitation: 5,
+    serpValue: 5,
+    workEffort: 3,
+    primaryConsumer: 'AI shopping (ChatGPT shopping, Perplexity Pro), Google SERP rich results',
+    whyItMatters:
+      'Highest-leverage schema type. Kept full SERP rich results AND became primary input for AI shopping search. Price, rating, availability still render in standard SERPs; AI shopping cites pages with Product schema for "best X under $Y" queries.',
+  },
+  {
+    slug: 'organization-schema-generator',
+    schemaType: 'Organization',
+    pageName: 'Organization',
+    aiCitation: 5,
+    serpValue: 4,
+    workEffort: 5,
+    primaryConsumer: 'Google Knowledge Panel, all AI assistants for brand attribution',
+    whyItMatters:
+      'Foundational. Without it, AI engines pull stale brand facts from random aggregators. With it, you control the canonical answer for every brand query. One paste on the homepage; sameAs is the highest-leverage field.',
+  },
+  {
+    slug: 'article-schema-generator',
+    schemaType: 'Article / BlogPosting / NewsArticle',
+    pageName: 'Article',
+    aiCitation: 5,
+    serpValue: 4,
+    workEffort: 4,
+    primaryConsumer: 'Google AI Overviews, Top Stories, Discover, all AI assistants for editorial citation',
+    whyItMatters:
+      'AI assistants need author + date + publisher to cite with confidence. Article schema is the only structured way to provide them. Pages without it get cited as "according to a website" or skipped entirely.',
+  },
+  {
+    slug: 'faq-schema-generator',
+    schemaType: 'FAQPage',
+    pageName: 'FAQ',
+    aiCitation: 5,
+    serpValue: 1,
+    workEffort: 5,
+    primaryConsumer: 'Perplexity, ChatGPT, Gemini, Google AI Overviews',
+    whyItMatters:
+      'Lost SERP rich snippet in 2023, cut further March 2026 — but became the highest-citation-rate schema type in AI search. Atomic Q&A pairs are the easiest unit for AI to extract and cite.',
+  },
+  {
+    slug: 'breadcrumb-schema-generator',
+    schemaType: 'BreadcrumbList',
+    pageName: 'Breadcrumb',
+    aiCitation: 4,
+    serpValue: 5,
+    workEffort: 5,
+    primaryConsumer: 'Google SERP (renders on virtually every result), AI engines for hierarchy',
+    whyItMatters:
+      'The cheapest schema win. Renders on nearly every SERP — desktop and mobile. Survived intact through the 2023-2026 reductions. AI engines also use it to understand topical hierarchy and route long-tail queries.',
+  },
+  {
+    slug: 'local-business-schema-generator',
+    schemaType: 'LocalBusiness',
+    pageName: 'LocalBusiness',
+    aiCitation: 5,
+    serpValue: 5,
+    workEffort: 3,
+    primaryConsumer: 'Google Map Pack, ChatGPT search, Perplexity Pro for "near me" answers',
+    whyItMatters:
+      'Double duty: Map Pack signal AND AI "near me" citation. Without it, you are invisible to both surfaces. AI engines cannot scrape Google Business Profile API at scale, so they parse LocalBusiness schema directly.',
+  },
+  {
+    slug: 'video-schema-generator',
+    schemaType: 'VideoObject',
+    pageName: 'Video',
+    aiCitation: 4,
+    serpValue: 5,
+    workEffort: 3,
+    primaryConsumer: 'Google video carousels, Discover, Gemini and Perplexity Pro for video answers',
+    whyItMatters:
+      'Survived 2023-2026 reductions intact. AI engines cannot watch videos at scale — they extract metadata from VideoObject markup to decide which videos to surface. Pages without it get skipped in video answer queries.',
+  },
+  {
+    slug: 'recipe-schema-generator',
+    schemaType: 'Recipe',
+    pageName: 'Recipe',
+    aiCitation: 4,
+    serpValue: 5,
+    workEffort: 2,
+    primaryConsumer: 'Google image carousels, AI cooking assistants, Discover',
+    whyItMatters:
+      'Rare schema type whose visual rich results were preserved through the 2023-2026 cuts. Image carousels still render. AI cooking assistants cite Recipe schema heavily for grocery list generation, scaling, and substitutions.',
+  },
+  {
+    slug: 'review-schema-generator',
+    schemaType: 'Review / AggregateRating',
+    pageName: 'Review',
+    aiCitation: 4,
+    serpValue: 5,
+    workEffort: 3,
+    primaryConsumer: 'Google SERP (star ratings), AI shopping for "best X" recommendations',
+    whyItMatters:
+      'Produces the star rating shown directly in SERPs (when attached to a Product or LocalBusiness). Standalone Review with positiveNotes / negativeNotes is heavily cited by AI shopping for structured pros/cons answers.',
+  },
+  {
+    slug: 'jobposting-schema-generator',
+    schemaType: 'JobPosting',
+    pageName: 'JobPosting',
+    aiCitation: 4,
+    serpValue: 5,
+    workEffort: 3,
+    primaryConsumer: 'Google for Jobs (required), AI hiring assistants',
+    whyItMatters:
+      'Required for Google for Jobs visibility — no schema means no carousel placement, period. AI hiring assistants filter by salary band, location, employment type from JobPosting schema. baseSalary is the most underused high-leverage field.',
+  },
+  {
+    slug: 'event-schema-generator',
+    schemaType: 'Event',
+    pageName: 'Event',
+    aiCitation: 4,
+    serpValue: 4,
+    workEffort: 3,
+    primaryConsumer: 'Google Events SERP, Maps, AI assistants for "what is happening near me"',
+    whyItMatters:
+      'Feeds Google Events feature card, Maps event display, AND AI calendar queries. AI engines parse Event schema to answer "what is happening this weekend in {city}". Pages with full Event markup get cited disproportionately.',
+  },
+  {
+    slug: 'howto-schema-generator',
+    schemaType: 'HowTo',
+    pageName: 'HowTo',
+    aiCitation: 5,
+    serpValue: 1,
+    workEffort: 4,
+    primaryConsumer: 'AI coding assistants (Cursor, Copilot Chat, Claude in IDE), Perplexity',
+    whyItMatters:
+      'Lost Google rich result in 2024 — but became one of the most cited schema types in AI coding assistants. They cite step-by-step technical content constantly during real coding sessions, and they prefer structured steps.',
+  },
+  {
+    slug: 'course-schema-generator',
+    schemaType: 'Course',
+    pageName: 'Course',
+    aiCitation: 4,
+    serpValue: 3,
+    workEffort: 3,
+    primaryConsumer: 'Google Course rich results (limited providers), AI learning assistants',
+    whyItMatters:
+      'Google Course rich results favor recognized providers (Coursera, edX, Udemy). For independent course creators, the bigger value is AI learning assistants that recommend courses — they cite pages with Course schema (free + workload + level + rating) disproportionately.',
+  },
+];
+
+// Sort by combined value (aiCitation + serpValue) descending, then by workEffort (least effort first)
+const sortedRatings = [...ratings].sort((a, b) => {
+  const sumA = a.aiCitation + a.serpValue;
+  const sumB = b.aiCitation + b.serpValue;
+  if (sumA !== sumB) return sumB - sumA;
+  return b.workEffort - a.workEffort;
+});
+
+const renderStars = (n: number, max = 5): string => {
+  return '●'.repeat(n) + '○'.repeat(max - n);
+};
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Schema Types Comparison', item: url },
+  ],
+});
+
+const itemListJsonLd = jsonLdEnvelope({
+  '@type': 'ItemList',
+  name: 'Schema Type Comparison Matrix',
+  description,
+  url,
+  itemListOrder: 'https://schema.org/ItemListOrderDescending',
+  numberOfItems: sortedRatings.length,
+  itemListElement: sortedRatings.map((r, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: r.pageName,
+    url: `${site}/${r.slug}`,
+  })),
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(itemListJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <span>Schema Types</span>
+  </nav>
+
+  <article class="home">
+    <header class="home-hero">
+      <h1>Schema Type Comparison Matrix</h1>
+      <p class="lede">
+        Which schema types should you add to your site first in 2026? Sorted
+        by combined AI citation + SERP value. Higher = more valuable.
+      </p>
+    </header>
+
+    <section class="schema-matrix">
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th>Schema</th>
+            <th title="How heavily AI assistants weight this schema for citation">AI cite</th>
+            <th title="Google SERP rich result eligibility and prominence">SERP</th>
+            <th title="How quick to implement (5 = fastest)">Effort</th>
+            <th>Primary consumer</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sortedRatings.map((r) => (
+            <tr>
+              <td>
+                <a href={`/${r.slug}`}>
+                  <strong>{r.pageName}</strong>
+                  <span class="schema-type-tag">{r.schemaType}</span>
+                </a>
+              </td>
+              <td class="rating" aria-label={`AI citation: ${r.aiCitation} of 5`}>
+                <span class="rating-dots">{renderStars(r.aiCitation)}</span>
+              </td>
+              <td class="rating" aria-label={`SERP value: ${r.serpValue} of 5`}>
+                <span class="rating-dots">{renderStars(r.serpValue)}</span>
+              </td>
+              <td class="rating" aria-label={`Effort to implement: ${r.workEffort} of 5`}>
+                <span class="rating-dots">{renderStars(r.workEffort)}</span>
+              </td>
+              <td class="consumer-cell">{r.primaryConsumer}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
+    <section class="matrix-detail">
+      <h2>Why each schema type matters</h2>
+      <ul class="schema-list">
+        {sortedRatings.map((r) => (
+          <li>
+            <a href={`/${r.slug}`}>
+              <strong>{r.pageName}</strong>
+              <span>{r.whyItMatters}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="why">
+      <h2>How to read the matrix</h2>
+      <p>
+        Three independent dimensions: AI citation value, SERP rich result
+        value, and effort to implement. They do not correlate — FAQ has
+        zero SERP value but the highest AI citation rate; Breadcrumb has
+        the cheapest effort and the most reliable SERP rendering;
+        Organization has near-zero direct SERP rendering but feeds the
+        Knowledge Panel and every AI brand query.
+      </p>
+      <p>
+        Most sites should start with Organization, Article, and Breadcrumb
+        — they are universal foundations. Add type-specific schemas (Product,
+        LocalBusiness, Recipe, Video, Course, Event, JobPosting, Review)
+        based on what content your site actually has. FAQ and HowTo are
+        the AI-citation-only plays — high leverage if your content fits,
+        skip if it does not.
+      </p>
+    </section>
+
+    <section class="why">
+      <h2>Validate everything in CI</h2>
+      <p>
+        Schema regressions are silent. A botched template change can strip
+        valid markup site-wide without a visible bug. Run the full sitemap
+        scan on every PR:
+      </p>
+      <pre class="install-block"><code>npx @moonye/schemaguardian init --url https://your-site.com</code></pre>
+      <p>
+        That writes a ready-to-commit GitHub Actions workflow gated on
+        every push. <a href="/cli">CLI docs</a>.
+      </p>
+    </section>
+  </article>
+</BaseLayout>
