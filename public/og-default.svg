@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a1f1a"/>
+      <stop offset="100%" stop-color="#0d4f3c"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3ddc97"/>
+      <stop offset="100%" stop-color="#7af0c2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- subtle grid -->
+  <g opacity="0.06" stroke="#ffffff" stroke-width="1">
+    <line x1="0" y1="120" x2="1200" y2="120"/>
+    <line x1="0" y1="240" x2="1200" y2="240"/>
+    <line x1="0" y1="360" x2="1200" y2="360"/>
+    <line x1="0" y1="480" x2="1200" y2="480"/>
+    <line x1="0" y1="600" x2="1200" y2="600"/>
+    <line x1="200" y1="0" x2="200" y2="630"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+
+  <!-- top accent bar -->
+  <rect x="80" y="80" width="80" height="6" fill="url(#accent)" rx="3"/>
+
+  <!-- brand mark -->
+  <text x="80" y="150" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="600" fill="#7af0c2" letter-spacing="0.05em">SCHEMA FOR AI SEARCH</text>
+
+  <!-- main headline -->
+  <text x="80" y="280" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="76" font-weight="700" fill="#ffffff" letter-spacing="-0.02em">
+    <tspan x="80" dy="0">Structured data,</tspan>
+    <tspan x="80" dy="86">built for AI search.</tspan>
+  </text>
+
+  <!-- subhead -->
+  <text x="80" y="475" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="26" font-weight="400" fill="#c5e6d8" opacity="0.92">
+    <tspan x="80" dy="0">13 free schema generators + the schemaguardian CLI.</tspan>
+    <tspan x="80" dy="38">Built for Perplexity, ChatGPT, Gemini, Google AI Overviews.</tspan>
+  </text>
+
+  <!-- bottom row: domain + chip -->
+  <text x="80" y="585" font-family="ui-monospace, 'SF Mono', Menlo, Consolas, monospace" font-size="22" fill="#7af0c2" font-weight="500">faqjsonld.com</text>
+
+  <g transform="translate(900, 545)">
+    <rect x="0" y="0" width="220" height="50" rx="25" fill="#3ddc97"/>
+    <text x="110" y="32" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="600" fill="#0a1f1a" text-anchor="middle">JSON-LD · 2026</text>
+  </g>
+</svg>
