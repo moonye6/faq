@@ -3,15 +3,70 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import { schemaRegistry } from '~/schemas';
 import { jsonLdEnvelope } from '~/lib/schema-types';
 
-const title = 'Schema Generators for AI Search | FAQ, HowTo, Product, Recipe and 9 more';
+const title = 'Free Schema Generator for AI Search — FAQ, Product, JSON-LD';
 const description =
-  'Free JSON-LD schema generators built for the AI search era. 13 schema types optimized for citation by Perplexity, ChatGPT, Gemini, and Google AI Overviews. Plus the schemaguardian CLI for CI validation.';
+  'Generate valid JSON-LD structured data that gets cited by ChatGPT, Perplexity, Gemini, and Google AI Overviews. 13 free schema generators. No signup, copy-paste ready.';
+
+const popular = [
+  {
+    slug: 'faq-schema-generator',
+    name: 'FAQ Schema',
+    blurb: 'The highest-citation-rate schema in AI search. Atomic Q&A pairs that Perplexity, ChatGPT, and AI Overviews lift cleanly.',
+    primary: true,
+  },
+  {
+    slug: 'product-schema-generator',
+    name: 'Product Schema',
+    blurb: 'Full SERP rich results in 2026 (price, rating, stock) plus the primary input for AI shopping queries.',
+  },
+  {
+    slug: 'article-schema-generator',
+    name: 'Article Schema',
+    blurb: 'Author, publisher, date — what AI assistants need to attribute citations to your content correctly.',
+  },
+];
+
+const homeFaqs = [
+  {
+    q: 'What is schema markup?',
+    a: 'Schema markup is structured data that describes your page content in a way search engines and AI assistants can read. It uses the schema.org vocabulary, encoded as JSON-LD inside a <script> tag in your <head>. With it, your FAQ becomes "this is a question, this is its answer" — explicit, citeable, machine-readable.',
+  },
+  {
+    q: 'Do ChatGPT, Perplexity, and Gemini actually use structured data?',
+    a: 'Yes. ChatGPT search, Perplexity, Gemini, and Google AI Overviews all parse JSON-LD when retrieving and citing web pages. Pages with clean schema get cited at notably higher rates than equivalent prose-only pages — the structure removes guesswork for the AI extracting answers.',
+  },
+  {
+    q: 'Is FAQ schema still useful in 2026?',
+    a: 'Yes — but for a different reason than 2022. Google restricted FAQ rich snippets to authority sites in 2023 and cut them further in March 2026. The SERP rich result is mostly gone. But FAQ schema is now the highest-citation-rate schema type in AI search. Atomic Q&A pairs are the easiest unit for AI engines to extract and cite cleanly.',
+  },
+  {
+    q: 'How do I add JSON-LD to my site?',
+    a: 'Generate the JSON-LD with one of our generators. Copy the output. Paste it inside a <script type="application/ld+json"> tag in the <head> of the page where the matching content lives. That is it — no build step, no API key, no library. Validates with Google Rich Results Test out of the box.',
+  },
+  {
+    q: 'Are these generators really free?',
+    a: 'Yes. Every generator on this site is free, no signup, no rate limit, no upsell. The companion schemaguardian CLI is also free under MIT license — npx @moonye/schemaguardian validates your structured data in CI. Source on GitHub.',
+  },
+  {
+    q: 'Do I need a different generator for each schema type?',
+    a: 'Yes — each schema.org type has its own required fields and structure. We have 13 generators covering the most common types: FAQ, Product, Article, HowTo, Recipe, Review, LocalBusiness, Event, Breadcrumb, Organization, Course, JobPosting, and Video. Compare them in the schema types matrix to decide which to add first.',
+  },
+];
 
 const websiteJsonLd = jsonLdEnvelope({
   '@type': 'WebSite',
   name: 'Schema for AI Search',
   url: Astro.site?.toString(),
   description,
+});
+
+const homeFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: homeFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
 });
 
 const collectionJsonLd = jsonLdEnvelope({
@@ -26,38 +81,126 @@ const collectionJsonLd = jsonLdEnvelope({
     description: s.metaDescription,
   })),
 });
+
+const exampleFaq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'How long does shipping take?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Standard shipping is 3-5 business days within the US. Express is 1-2 business days. International shipping varies from 7-21 days.',
+      },
+    },
+  ],
+};
 ---
 <BaseLayout title={title} description={description}>
   <Fragment slot="head">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(homeFaqJsonLd)} />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(collectionJsonLd)} />
   </Fragment>
 
   <article class="home">
-    <header class="home-hero">
-      <h1>Structured Data, Built for AI Search</h1>
-      <p class="lede">
-        Google scaled back FAQ and HowTo rich results in 2023 and cut them
-        further in March 2026. But structured data is now a primary signal
-        for AI search citation. These generators are built for that reality.
+    <header class="home-hero-v2">
+      <p class="hero-eyebrow">Built for the AI search era · 2026</p>
+      <h1>
+        Free Schema Generator for AI Search<br />
+        <span class="hero-h1-accent">FAQ, Product, JSON-LD</span>
+      </h1>
+      <p class="hero-sub">
+        Generate valid structured data that gets cited by ChatGPT, Perplexity,
+        Gemini, and Google AI Overviews. Copy-paste ready JSON-LD. No signup,
+        no rate limit, MIT-licensed.
+      </p>
+      <div class="hero-cta-row">
+        <a href="/faq-schema-generator" class="cta cta-primary">
+          Generate FAQ schema →
+        </a>
+        <a href="#all-generators" class="cta cta-secondary">
+          See all 13 generators
+        </a>
+      </div>
+      <p class="hero-meta">
+        <strong>13 schema types</strong>
+        <span class="dot">·</span>
+        <span>FAQ · Product · Article · HowTo · Recipe + 8 more</span>
       </p>
     </header>
 
-    <section class="cli-hero">
-      <h2>New: schemaguardian CLI</h2>
-      <p>Validate your structured data in CI, before it ships:</p>
-      <pre class="install-block"><code>npx @moonye/schemaguardian check https://your-site.com --ci</code></pre>
-      <p class="hint">
-        <a href="/cli">Read the docs</a> · MIT-licensed · Zero dependencies · Node 18+
+    <section class="popular-section">
+      <h2>Most popular</h2>
+      <p class="section-subtitle">
+        Start here. These three cover the bulk of AI-citation use cases for content sites and ecommerce.
+      </p>
+      <ul class="popular-grid">
+        {popular.map((p) => (
+          <li class={`popular-card${p.primary ? ' popular-card-primary' : ''}`}>
+            <a href={`/${p.slug}`}>
+              <h3>
+                {p.name}
+                {p.primary && <span class="badge">Most cited in AI</span>}
+              </h3>
+              <p>{p.blurb}</p>
+              <span class="card-cta">Generate {p.name.replace(' Schema', '')} →</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="how-it-works">
+      <h2>How it works</h2>
+      <ol class="how-steps">
+        <li>
+          <span class="step-num">1</span>
+          <h3>Choose your schema type</h3>
+          <p>Pick FAQ, Product, Article, or any of 13 schema.org types matching your content.</p>
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          <h3>Fill in your content</h3>
+          <p>Paste your real questions, prices, dates. We handle JSON-LD escaping and structure.</p>
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          <h3>Copy into <code>&lt;head&gt;</code></h3>
+          <p>One <code>&lt;script&gt;</code> tag. No build step, no API key. Validates with Google Rich Results Test.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="example-section">
+      <h2>Example: FAQ schema in 30 seconds</h2>
+      <p class="section-subtitle">
+        A real Q&amp;A on a product page becomes the JSON-LD on the right. Drop the script into <code>&lt;head&gt;</code> — done.
+      </p>
+      <div class="example-split">
+        <div class="example-pane">
+          <div class="example-label">Your Q&amp;A on the page</div>
+          <div class="example-qa">
+            <p class="example-q">Q. How long does shipping take?</p>
+            <p class="example-a">Standard shipping is 3-5 business days within the US. Express is 1-2 business days. International shipping varies from 7-21 days.</p>
+          </div>
+        </div>
+        <div class="example-pane">
+          <div class="example-label">Generated JSON-LD</div>
+          <pre class="example-code"><code>{JSON.stringify(exampleFaq, null, 2)}</code></pre>
+        </div>
+      </div>
+      <p class="example-cta">
+        <a href="/faq-schema-generator" class="cta cta-primary">Try it with your own Q&amp;A →</a>
       </p>
     </section>
 
-    <section class="schema-grid">
-      <h2>13 schema generators</h2>
-      <p class="hint" style="margin: 0 0 1rem;">
-        Not sure where to start? See the
-        <a href="/schema-types">schema type comparison matrix</a> sorted by
-        AI citation + SERP value.
+    <section class="schema-grid" id="all-generators">
+      <h2>All 13 schema generators</h2>
+      <p class="section-subtitle">
+        Not sure where to start?
+        <a href="/schema-types">See the comparison matrix</a> sorted by AI citation + SERP value.
       </p>
       <ul class="schema-list">
         {schemaRegistry.map((s) => (
@@ -69,6 +212,27 @@ const collectionJsonLd = jsonLdEnvelope({
           </li>
         ))}
       </ul>
+    </section>
+
+    <section class="page-faq home-faq">
+      <h2>Common questions</h2>
+      <dl>
+        {homeFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="cli-hero">
+      <h2>Validate in CI: schemaguardian</h2>
+      <p>Schema regressions are silent. A botched template change can strip valid markup site-wide without a visible bug. Catch it before it ships:</p>
+      <pre class="install-block"><code>npx @moonye/schemaguardian check https://your-site.com --ci</code></pre>
+      <p class="hint">
+        <a href="/cli">Read the docs</a> · MIT-licensed · Zero dependencies · Node 18+
+      </p>
     </section>
 
     <section class="why">
@@ -87,7 +251,7 @@ const collectionJsonLd = jsonLdEnvelope({
       <p>
         These generators output clean, valid JSON-LD aimed at the new
         consumer: large language models indexing the open web for citation.
-        The companion <a href="/cli">schemaguardian CLI</a> lets you validate that
+        The companion <a href="/cli">schemaguardian CLI</a> validates that
         output in CI so regressions never reach production.
       </p>
     </section>
