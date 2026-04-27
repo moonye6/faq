@@ -4,7 +4,7 @@ import { runCheck } from '~/commands/check';
 import { runScan } from '~/commands/scan';
 import { runInit } from '~/commands/init';
 
-const VERSION = '0.2.0';
+const VERSION = '0.3.0';
 
 const HELP = `schemaguardian ${VERSION}
 

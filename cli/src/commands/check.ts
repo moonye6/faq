@@ -1,5 +1,6 @@
 import { extractJsonLdBlocks, fetchHtml } from '~/lib/extract';
 import { validateBlock, type Issue } from '~/lib/validators';
+import { annotateHints } from '~/lib/hints';
 import {
   exitCodeFor,
   formatHuman,
@@ -51,6 +52,7 @@ export async function runCheck(opts: CheckOptions): Promise<number> {
     } else {
       issues = validateBlock(b.parsed);
     }
+    annotateHints(issues);
     return {
       block: b,
       schemaType: getTypeStr(b.parsed),

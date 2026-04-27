@@ -5,6 +5,7 @@ export interface Issue {
   code: string;
   message: string;
   path?: string;
+  hint?: string;
 }
 
 type Obj = Record<string, unknown>;

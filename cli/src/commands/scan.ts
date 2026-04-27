@@ -1,5 +1,6 @@
 import { extractJsonLdBlocks, fetchHtml } from '~/lib/extract';
 import { validateBlock, type Issue } from '~/lib/validators';
+import { annotateHints, FIX_HINTS } from '~/lib/hints';
 import { fetchSitemap, discoverSitemap } from '~/lib/sitemap';
 
 export interface ScanOptions {
@@ -12,6 +13,14 @@ export interface ScanOptions {
   noColor?: boolean;
 }
 
+export interface IssueCount {
+  code: string;
+  severity: Issue['severity'];
+  count: number;
+  exampleMessage: string;
+  hint?: string;
+}
+
 export interface PageResult {
   url: string;
   status: 'ok' | 'errors' | 'warnings' | 'no-schema' | 'fetch-error';
@@ -20,6 +29,7 @@ export interface PageResult {
   schemaTypes: string[];
   errors: number;
   warnings: number;
+  issueCodes: string[];
 }
 
 export interface ScanResult {
@@ -37,6 +47,7 @@ export interface ScanResult {
     schemaTypeCounts: Record<string, number>;
     totalErrors: number;
     totalWarnings: number;
+    issueBreakdown: IssueCount[];
   };
 }
 
@@ -71,7 +82,11 @@ async function batch<T, R>(
   return out;
 }
 
-async function checkPage(url: string): Promise<PageResult> {
+interface PageResultInternal extends PageResult {
+  issues: Issue[];
+}
+
+async function checkPage(url: string): Promise<PageResultInternal> {
   let html: string;
   try {
     html = await fetchHtml(url);
@@ -84,6 +99,8 @@ async function checkPage(url: string): Promise<PageResult> {
       schemaTypes: [],
       errors: 0,
       warnings: 0,
+      issueCodes: [],
+      issues: [],
     };
   }
 
@@ -96,12 +113,15 @@ async function checkPage(url: string): Promise<PageResult> {
       schemaTypes: [],
       errors: 0,
       warnings: 0,
+      issueCodes: [],
+      issues: [],
     };
   }
 
   let errors = 0;
   let warnings = 0;
   const types: string[] = [];
+  const allIssues: Issue[] = [];
 
   for (const b of blocks) {
     const t = getTypeStr(b.parsed);
@@ -113,10 +133,12 @@ async function checkPage(url: string): Promise<PageResult> {
     } else {
       issues = validateBlock(b.parsed);
     }
+    annotateHints(issues);
     for (const i of issues) {
       if (i.severity === 'error') errors += 1;
       else if (i.severity === 'warning') warnings += 1;
     }
+    allIssues.push(...issues);
   }
 
   let status: PageResult['status'];
@@ -131,6 +153,8 @@ async function checkPage(url: string): Promise<PageResult> {
     schemaTypes: types,
     errors,
     warnings,
+    issueCodes: dedupe(allIssues.map((i) => i.code)),
+    issues: allIssues,
   };
 }
 
@@ -185,9 +209,10 @@ export async function runScan(opts: ScanOptions): Promise<number> {
     );
   }
 
-  const results = await batch(urlsToScan, opts.concurrency, checkPage);
+  const internalResults = await batch(urlsToScan, opts.concurrency, checkPage);
 
   // Aggregate summary
+  const issueBreakdownMap = new Map<string, IssueCount>();
   const summary: ScanResult['summary'] = {
     ok: 0,
     withErrors: 0,
@@ -197,8 +222,9 @@ export async function runScan(opts: ScanOptions): Promise<number> {
     schemaTypeCounts: {},
     totalErrors: 0,
     totalWarnings: 0,
+    issueBreakdown: [],
   };
-  for (const r of results) {
+  for (const r of internalResults) {
     if (r.status === 'ok') summary.ok += 1;
     else if (r.status === 'errors') summary.withErrors += 1;
     else if (r.status === 'warnings') summary.withWarnings += 1;
@@ -209,14 +235,39 @@ export async function runScan(opts: ScanOptions): Promise<number> {
     for (const t of r.schemaTypes) {
       summary.schemaTypeCounts[t] = (summary.schemaTypeCounts[t] ?? 0) + 1;
     }
+    for (const issue of r.issues) {
+      if (issue.severity === 'info') continue;
+      const existing = issueBreakdownMap.get(issue.code);
+      if (existing) {
+        existing.count += 1;
+      } else {
+        issueBreakdownMap.set(issue.code, {
+          code: issue.code,
+          severity: issue.severity,
+          count: 1,
+          exampleMessage: issue.message,
+          hint: issue.hint ?? FIX_HINTS[issue.code],
+        });
+      }
+    }
   }
+  summary.issueBreakdown = [...issueBreakdownMap.values()].sort((a, b) => {
+    if (a.severity !== b.severity) return a.severity === 'error' ? -1 : 1;
+    return b.count - a.count;
+  });
+
+  // Strip internal-only issues array from public PageResult
+  const pages: PageResult[] = internalResults.map((r) => {
+    const { issues: _issues, ...rest } = r;
+    return rest;
+  });
 
   const result: ScanResult = {
     sitemap: smap.sitemapUrl,
     totalUrlsInSitemap: total,
-    scanned: results.length,
+    scanned: pages.length,
     limited,
-    pages: results,
+    pages,
     summary,
   };
 
@@ -304,6 +355,26 @@ function formatScanHuman(result: ScanResult, opts: ScanOptions): string {
     }
   }
 
+  if (result.summary.issueBreakdown.length > 0) {
+    lines.push('');
+    lines.push(c(BOLD, 'Top issues with fixes'));
+    const top = result.summary.issueBreakdown.slice(0, 8);
+    for (const issue of top) {
+      const tag =
+        issue.severity === 'error' ? c(RED, 'ERR ') : c(YELLOW, 'WARN');
+      lines.push(`  ${tag} [${c(CYAN, issue.code)}] × ${issue.count}`);
+      lines.push(c(DIM, `        ${issue.exampleMessage}`));
+      if (issue.hint) {
+        lines.push(c(CYAN, `   fix: ${wrapText(issue.hint, 76, '        ')}`));
+      }
+    }
+    if (result.summary.issueBreakdown.length > top.length) {
+      lines.push(
+        c(DIM, `  …and ${result.summary.issueBreakdown.length - top.length} more issue code(s). Use --json for the full breakdown.`),
+      );
+    }
+  }
+
   lines.push('');
   if (result.summary.totalErrors === 0 && result.summary.fetchErrors === 0) {
     lines.push(c(GREEN, `Result: clean (${result.summary.ok} ok, ${result.summary.withWarnings} warnings, ${result.summary.missingSchema} missing).`));
@@ -311,6 +382,24 @@ function formatScanHuman(result: ScanResult, opts: ScanOptions): string {
     lines.push(c(RED, `Result: ${result.summary.totalErrors} error(s) across ${result.summary.withErrors} page(s); ${result.summary.fetchErrors} fetch failure(s).`));
   }
   return lines.join('\n');
+}
+
+function wrapText(text: string, width: number, indent: string): string {
+  const words = text.split(/\s+/);
+  const lines: string[] = [];
+  let line = '';
+  for (const w of words) {
+    if (line.length === 0) {
+      line = w;
+    } else if (line.length + 1 + w.length > width) {
+      lines.push(line);
+      line = w;
+    } else {
+      line += ' ' + w;
+    }
+  }
+  if (line) lines.push(line);
+  return lines.join('\n' + indent);
 }
 
 function relativePath(url: string, base: string): string {

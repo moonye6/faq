@@ -73,6 +73,9 @@ export function formatHuman(result: CheckResult, useColor = true): string {
       const path = issue.path ? c(DIM, ` (${issue.path})`) : '';
       lines.push(`   ${tag}  ${issue.message}${path}`);
       lines.push(c(DIM, `         code: ${issue.code}`));
+      if (issue.hint) {
+        lines.push(c(CYAN, `         fix:  ${issue.hint}`));
+      }
     }
     lines.push('');
   }
