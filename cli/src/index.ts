@@ -3,6 +3,7 @@ import { parseArgs } from 'node:util';
 import { runCheck } from '~/commands/check';
 import { runScan } from '~/commands/scan';
 import { runInit } from '~/commands/init';
+import { runGenerate } from '~/commands/generate';
 
 const VERSION = '0.3.0';
 
@@ -16,6 +17,7 @@ USAGE
 COMMANDS
   check <url|file>     Validate a single URL or local HTML file.
   scan  <site-url>     Walk a site's sitemap.xml and validate every page.
+  generate [type]      Interactively generate schema markup.
   init                 Generate a .github/workflows/schemaguardian.yml template.
   help                 Show this help.
   version              Show version.
@@ -38,6 +40,11 @@ OPTIONS for init
   --command <name>     check | scan (default scan).
   --target <path>      Output file path (default .github/workflows/schemaguardian.yml).
   --force              Overwrite if the target file already exists.
+
+OPTIONS for generate
+  --output <path>      Save generated schema to file instead of printing to stdout.
+  --preview            Show generated schema without saving.
+  --type <type>        Specify schema type directly instead of selecting interactively.
 
 EXAMPLES
   schemaguardian check https://faqjsonld.com/faq-schema-generator
@@ -179,6 +186,29 @@ async function main(): Promise<number> {
       target: parsed.values.target as string | undefined,
       command,
       force: parsed.values.force as boolean,
+    });
+  }
+
+  if (cmd === 'generate') {
+    let parsed;
+    try {
+      parsed = parseArgs({
+        args: rest,
+        options: {
+          output: { type: 'string' },
+          preview: { type: 'boolean', default: false },
+          type: { type: 'string' },
+        },
+        allowPositionals: true,
+      });
+    } catch (e) {
+      return fail(e instanceof Error ? e.message : String(e));
+    }
+    const type = parsed.positionals[0] || parsed.values.type as string | undefined;
+    return await runGenerate({
+      type,
+      output: parsed.values.output as string | undefined,
+      preview: parsed.values.preview as boolean,
     });
   }
 
