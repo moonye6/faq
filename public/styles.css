@@ -55,7 +55,180 @@ h2 { font-size: 1.4rem; font-weight: 600; margin: 2.5rem 0 0.75rem; }
 
 .schema-hero, .home-hero { margin-bottom: 2rem; }
 
-/* ─── Home v2 hero ──────────────────────────────────────────────────── */
+/* ─── Home v3 hero (split with preview) ──────────────────────────────── */
+.home-hero-v3 {
+  padding: 2.5rem 0 2.25rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2.5rem;
+}
+.hero-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+@media (max-width: 880px) {
+  .hero-split { grid-template-columns: 1fr; gap: 2rem; }
+}
+.hero-left { min-width: 0; }
+.home-hero-v3 h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: 0 0 1rem;
+  max-width: 22ch;
+}
+.home-hero-v3 .hero-sub {
+  font-size: 1.08rem;
+  color: var(--muted);
+  max-width: 50ch;
+  line-height: 1.55;
+  margin: 0 0 1.5rem;
+}
+.home-hero-v3 .hero-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0 0 1.5rem;
+}
+
+/* Trust badges row */
+.trust-badges {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.trust-badges li {
+  position: relative;
+  padding-left: 0.95rem;
+  white-space: nowrap;
+}
+.trust-badges li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+/* Hero preview card (right column) */
+.hero-preview { min-width: 0; }
+.hero-preview-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: linear-gradient(180deg, #f7faf8 0%, #ffffff 100%);
+  box-shadow: 0 2px 18px rgba(13, 79, 60, 0.06);
+}
+.preview-pane {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.75rem 0.9rem;
+}
+.preview-pane.preview-output {
+  background: var(--code-bg);
+  border-color: #2a2a2a;
+}
+.preview-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+.preview-output .preview-label { color: #b8b8b8; }
+.preview-q {
+  margin: 0 0 0.3rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+.preview-a {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.preview-output pre {
+  margin: 0;
+  font-family: ui-monospace, "SF Mono", "JetBrains Mono", Monaco, Consolas, monospace;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--code-fg);
+  overflow-x: auto;
+}
+.preview-output code {
+  white-space: pre;
+  color: inherit;
+}
+.preview-arrow {
+  text-align: center;
+  font-size: 1rem;
+  color: var(--accent);
+  line-height: 1;
+  margin: 0.1rem 0;
+}
+@media (max-width: 880px) {
+  .hero-preview-card { max-width: 460px; margin: 0 auto; }
+}
+
+/* Founder note (replaces long "Why we built this") */
+.founder-note {
+  margin: 3rem 0 1rem;
+  padding: 1.25rem 1.5rem;
+  border-left: 3px solid var(--accent);
+  background: #f7faf8;
+  border-radius: 0 6px 6px 0;
+}
+.founder-note p {
+  margin: 0;
+  max-width: 65ch;
+  line-height: 1.6;
+}
+.founder-note p + p {
+  margin-top: 0.6rem;
+}
+.founder-note .founder-sig {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* Schema groups (3-section IA) */
+.schema-group { margin: 2rem 0 0; }
+.schema-group:first-of-type { margin-top: 1.5rem; }
+.schema-group-header {
+  margin: 0 0 0.85rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--border);
+}
+.schema-group-header h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--fg);
+}
+.schema-group-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  max-width: 65ch;
+}
+
+/* ─── Home v2 hero (legacy, kept for transition) ─────────────────────── */
 .home-hero-v2 {
   padding: 2.5rem 0 2rem;
   border-bottom: 1px solid var(--border);
