@@ -51,6 +51,7 @@ Requires Node 18+.
 ```sh
 schemaguardian check <url|file>      Validate a single URL or local HTML file.
 schemaguardian scan  <site-url>      Walk a site's sitemap.xml and validate every page.
+schemaguardian generate [type]       Interactively generate schema markup.
 schemaguardian init                  Generate .github/workflows/schemaguardian.yml.
 schemaguardian help
 schemaguardian version
@@ -110,6 +111,32 @@ schemaguardian init --url https://my-site.com --target .gitlab-ci.yml --force
 Options: `--url <url>` (the site to validate) · `--command check|scan`
 (default scan) · `--target <path>` (output location) · `--force`
 (overwrite an existing file).
+
+### `generate` — interactively generate schema markup
+
+```sh
+# Interactive mode: select schema type and fill in fields
+schemaguardian generate
+
+# Direct mode: specify schema type directly
+schemaguardian generate faq
+
+# Preview without saving
+schemaguardian generate product --preview
+
+# Save to file
+schemaguardian generate article --output schema.json
+
+# Combine options
+schemaguardian generate recipe --output my-recipe.json --preview
+```
+
+Options: `--output <path>` (save to file) · `--preview` (show without saving) · 
+`--type <type>` (specify schema type directly instead of interactive selection).
+
+Supports all 12 schema types: FAQPage, HowTo, Product, Recipe, Article, 
+Review, LocalBusiness, Event, BreadcrumbList, Organization, Course, 
+JobPosting, and Video.
 
 ## CI integration
 
@@ -235,8 +262,9 @@ that type-specific validation was skipped.
 ## Roadmap
 
 - **v0.1**: `check` command for a single URL or file
-- **v0.2** (now): `scan` for whole sites via sitemap, `init` for one-shot CI setup
-- **v0.3+** (paid Pro, planned): multi-domain monitoring, auto-PR fix
+- **v0.2**: `scan` for whole sites via sitemap, `init` for one-shot CI setup  
+- **v0.3**: `generate` for interactive schema creation
+- **v0.4+** (paid Pro, planned): multi-domain monitoring, auto-PR fix
   via GitHub API, team workflows, GitHub Action wrapper
 
 The free CLI will always validate any site. Paid tiers add multi-domain

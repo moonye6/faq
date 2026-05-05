@@ -1,0 +1,184 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import SchemaValidator from '~/components/SchemaValidator';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'FAQ Schema Validator | Free JSON-LD Validation with Fix Hints';
+const description =
+  'Free browser-based JSON-LD validator. Paste your FAQPage / Product / Article schema and get instant validation with specific fix suggestions for every error. No signup, runs locally.';
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/faq-schema-validator`;
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'FAQ Schema Validator', item: url },
+  ],
+});
+
+const pageFaqs = [
+  {
+    q: 'What does this validator check?',
+    a: 'It validates your JSON-LD against schema.org structural rules plus the 2024-2026 patterns Google and AI assistants reward. It supports 13 schema types: FAQPage, Product, Article (and BlogPosting / NewsArticle), HowTo, Recipe, Review, LocalBusiness, Event, BreadcrumbList, Organization, Course, JobPosting, and VideoObject. For each issue found, it shows the specific fix.',
+  },
+  {
+    q: 'How is this different from Google\'s Rich Results Test?',
+    a: 'Google\'s Rich Results Test tells you whether your schema parses and qualifies for rich results. This validator goes further: it checks the patterns AI assistants (Perplexity, ChatGPT, Gemini, Google AI Overviews) actually reward in 2026, AND it ships with 60+ specific fix hints — the exact code change to make for each error code. Google\'s tool says "missing publisher logo." This one says "publisher.logo must be ≥600×60 wide for Top Stories — different from Organization.logo (square)."',
+  },
+  {
+    q: 'Does my schema get sent to a server?',
+    a: 'No. Validation runs entirely in your browser via JavaScript. The same validator code that powers the schemaguardian CLI runs locally on this page. Nothing is uploaded, logged, or stored. You can view-source to confirm or run the same validator offline via the CLI.',
+  },
+  {
+    q: 'Can I paste a full <script> tag or just the JSON?',
+    a: 'Both work. The validator extracts JSON-LD from <script type="application/ld+json"> tags automatically, and it also accepts bare JSON objects or arrays. If your page has multiple JSON-LD blocks (common for product pages with Product + BreadcrumbList + FAQPage), paste the whole <head> snippet and it will validate each block separately.',
+  },
+  {
+    q: 'What is a "fix hint" and why does it matter?',
+    a: 'A fix hint is the specific code change to apply for each error or warning. For example, an error like "article-missing-author" comes with the hint: "Add author as a Person or Organization object. Strongly recommend Person with name + url + sameAs (LinkedIn, Twitter) for AI cite confidence." It tells you not just what is wrong but the exact pattern to use. Saves the round-trip to schema.org docs for every error.',
+  },
+  {
+    q: 'How do I integrate this into my CI/CD pipeline?',
+    a: 'Use the schemaguardian CLI (the same validator that powers this page). Run npx @moonye/schemaguardian init in your project and it generates a GitHub Actions workflow that fails the build on any schema regression. The CLI also supports scanning entire sitemaps in one command for site-wide audits.',
+  },
+  {
+    q: 'Is this validator open source?',
+    a: 'Yes — MIT licensed. The validator core, the fix hints catalog, the schemaguardian CLI, and the 13 schema generators on this site all share the same source. Source on GitHub at github.com/moonye6/faq.',
+  },
+  {
+    q: 'Why does it warn about things Google\'s validator passes?',
+    a: 'Because Google\'s validator only checks "does this qualify for rich results today." This validator additionally flags patterns that hurt AI citation rates — things like Article without author.sameAs URLs, Product without aggregateRating + offers, FAQPage with answers under 40 words. Google does not penalize these, but AI search engines de-prioritize them. The warnings tell you which patterns to upgrade.',
+  },
+];
+
+const pageFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: pageFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+
+const softwareJsonLd = jsonLdEnvelope({
+  '@type': 'WebApplication',
+  name: 'FAQ Schema Validator',
+  url,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any (browser-based)',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  description,
+  featureList: [
+    'JSON-LD validation against schema.org rules',
+    '60+ actionable fix hints per error',
+    '13 schema types supported',
+    'Runs entirely in browser (no server)',
+    'Open source, MIT licensed',
+  ],
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(pageFaqJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(softwareJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <span>FAQ Schema Validator</span>
+  </nav>
+
+  <article class="schema-tool">
+    <header class="schema-hero">
+      <h1>FAQ Schema Validator</h1>
+      <p class="lede">
+        Paste your JSON-LD. Get instant validation with the specific fix for
+        every error. Validates 13 schema types against schema.org rules plus
+        the 2026 patterns AI assistants actually reward. Runs entirely in
+        your browser.
+      </p>
+      <p class="hint">
+        Free · MIT-licensed · No signup · Same engine as the
+        <a href="/cli">schemaguardian CLI</a>.
+      </p>
+    </header>
+
+    <SchemaValidator client:load />
+
+    <section class="why">
+      <h2>Why a fix-hint validator</h2>
+      <p>
+        Most schema validators tell you what is wrong. Google's
+        <a href="https://search.google.com/test/rich-results" rel="noopener">Rich Results Test</a>
+        will say "missing field author." The schema.org validator will say
+        "type mismatch on offers." Both are technically correct. Neither
+        tells you the specific change to make.
+      </p>
+      <p>
+        That gap matters more in 2026 than it did in 2022. Google deprecated
+        FAQ rich results in 2023 and HowTo in 2024. The schema is still
+        indexed, but its consumers are now AI assistants — Perplexity,
+        ChatGPT, Gemini, Google AI Overviews — and they have stricter
+        rules than Google's parser. A schema that "passes Google's
+        validator" still gets silently skipped by AI extractors if it
+        lacks the patterns they reward (author sameAs, publisher logo of
+        the right aspect, AggregateRating with genuine reviews, etc.).
+      </p>
+      <p>
+        This validator's hint catalog is curated specifically for those
+        patterns. Each error code maps to a one-line fix that tells you
+        the schema-spec-correct change AND the AI-citation context for
+        why it matters.
+      </p>
+    </section>
+
+    <section class="schema-grid" id="related-tools">
+      <h2>Related tools</h2>
+      <ul class="schema-list">
+        <li>
+          <a href="/faq-schema-generator">
+            <strong>FAQ Schema Generator</strong>
+            <span>Generate FAQPage JSON-LD from a form. Output is pre-validated against the same rules this page checks.</span>
+          </a>
+        </li>
+        <li>
+          <a href="/cli">
+            <strong>schemaguardian CLI</strong>
+            <span>Run the same validator in your CI pipeline. Catches regressions across your entire sitemap before they ship.</span>
+          </a>
+        </li>
+        <li>
+          <a href="/schema-types">
+            <strong>Schema type comparison</strong>
+            <span>13 schema types rated on AI citation value, SERP value, and effort. Decide which to add first.</span>
+          </a>
+        </li>
+        <li>
+          <a href="/blog/how-faq-schema-powers-ai-citation">
+            <strong>How FAQ schema powers AI citation in 2026</strong>
+            <span>Why FAQ is the highest-citation-rate schema in AI search despite the SERP rich result deprecation.</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions</h2>
+      <dl>
+        {pageFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  </article>
+</BaseLayout>
