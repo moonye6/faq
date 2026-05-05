@@ -45,6 +45,19 @@ const related = Array.from({ length: 4 }, (_, i) => {
   const j = (idx + i + 1) % schemaRegistry.length;
   return schemaRegistry[j];
 }).filter((s): s is NonNullable<typeof s> => Boolean(s));
+
+// Map schema id to "How X Schema Powers AI Citation" blog post slug (if exists)
+const blogPostMap: Record<string, { slug: string; title: string }> = {
+  faq: { slug: 'how-faq-schema-powers-ai-citation', title: 'How FAQ Schema Powers AI Search Citation in 2026' },
+  product: { slug: 'how-product-schema-powers-ai-citation', title: 'How Product Schema Powers AI Shopping Queries in 2026' },
+  breadcrumb: { slug: 'how-breadcrumb-schema-powers-ai-citation', title: 'How Breadcrumb Schema Powers SERP and AI Hierarchy Understanding' },
+  localbusiness: { slug: 'how-local-business-schema-powers-ai-citation', title: 'How LocalBusiness Schema Powers AI "Near Me" Answers' },
+  video: { slug: 'how-video-schema-powers-ai-citation', title: 'How Video Schema Powers AI Video Discovery in 2026' },
+  howto: { slug: 'how-howto-schema-powers-ai-citation', title: 'How HowTo Schema Powers AI Tutorial Citation in 2026' },
+  article: { slug: 'how-article-schema-powers-ai-citation', title: 'How Article Schema Powers AI Search Citation in 2026' },
+  organization: { slug: 'how-organization-schema-powers-ai-citation', title: 'How Organization Schema Powers AI Brand Attribution' },
+};
+const relatedPost = blogPostMap[schema.id];
 ---
 <BaseLayout title={schema.title} description={schema.metaDescription}>
   <Fragment slot="head">
@@ -165,6 +178,42 @@ const related = Array.from({ length: 4 }, (_, i) => {
             </a>
           </li>
         ))}
+      </ul>
+    </section>
+
+    <section class="related-resources">
+      <h2>Related resources</h2>
+      <ul class="related-resource-list">
+        {relatedPost && (
+          <li>
+            <a href={`/blog/${relatedPost.slug}`}>
+              <span class="resource-tag">Deep dive</span>
+              <strong>{relatedPost.title}</strong>
+              <span>How AI search engines extract from {schema.schemaType} markup, and what to do about it in 2026.</span>
+            </a>
+          </li>
+        )}
+        <li>
+          <a href="/schema-types">
+            <span class="resource-tag">Compare</span>
+            <strong>Schema type comparison matrix</strong>
+            <span>All 13 schema types rated on AI citation value, SERP value, and effort. Decide which to add first.</span>
+          </a>
+        </li>
+        <li>
+          <a href="/cli">
+            <span class="resource-tag">Validate</span>
+            <strong>schemaguardian CLI</strong>
+            <span>Validate the JSON-LD you generate above. Free, MIT-licensed, runs in CI. Catches regressions before they ship.</span>
+          </a>
+        </li>
+        <li>
+          <a href="/blog">
+            <span class="resource-tag">Read</span>
+            <strong>All posts on schema and AI search</strong>
+            <span>Long-form on GEO, AEO, structured data, and the 2026 reality of schema for AI search citation.</span>
+          </a>
+        </li>
       </ul>
     </section>
   </article>
