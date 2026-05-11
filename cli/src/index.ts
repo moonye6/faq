@@ -5,7 +5,7 @@ import { runScan } from '~/commands/scan';
 import { runInit } from '~/commands/init';
 import { runGenerate } from '~/commands/generate';
 
-const VERSION = '0.3.0';
+const VERSION = '0.4.0';
 
 const HELP = `schemaguardian ${VERSION}
 

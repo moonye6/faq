@@ -1,20 +1,33 @@
 {
   "name": "@moonye/schemaguardian",
-  "version": "0.3.0",
-  "description": "Validate JSON-LD structured data on URLs, HTML files, or whole sites via sitemap. CI-friendly. Built for the AI search era.",
+  "version": "0.4.0",
+  "description": "Validate JSON-LD structured data on URLs, HTML files, or whole sites via sitemap. CI-friendly. Built for the AI search era. Now with a programmatic library API.",
   "type": "module",
   "bin": {
     "schemaguardian": "dist/index.js"
   },
-  "main": "dist/index.js",
+  "main": "dist/lib.js",
+  "types": "dist/lib.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/lib.d.ts",
+      "import": "./dist/lib.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
-    "build": "bun build src/index.ts --target=node --outfile=dist/index.js --minify",
+    "build:cli": "bun build src/index.ts --target=node --outfile=dist/index.js --minify",
+    "build:lib": "bun build src/lib.ts --target=node --outfile=dist/lib.js --format=esm --external:node:fs/promises --external:node:fs",
+    "build:types": "tsc -p tsconfig.build.json",
+    "build": "bun run build:cli && bun run build:lib && bun run build:types",
     "dev": "bun run src/index.ts",
     "check:self": "bun run src/index.ts check https://faqjsonld.com/faq-schema-generator",
+    "smoke:lib": "bun run scripts/smoke-lib.ts",
     "prepublishOnly": "bun run build"
   },
   "engines": {

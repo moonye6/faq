@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationMap": false,
+    "outDir": "dist",
+    "rootDir": "src",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "include": ["src/lib.ts", "src/lib/**/*"],
+  "exclude": ["dist", "node_modules", "scripts", "test-fixtures", "src/commands", "src/schemas", "src/index.ts"]
+}
