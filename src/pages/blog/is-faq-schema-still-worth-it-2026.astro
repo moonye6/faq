@@ -1,0 +1,233 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'Is FAQ Schema Still Worth It in 2026? (Direct Answer + Data)';
+const description =
+  'Yes for AI search citation, no for Google rich snippets on most sites. FAQ schema lost its SERP rich result in 2023 but became the highest-cite-rate schema type in AI search. Decision tree + data + what to do.';
+const slug = 'is-faq-schema-still-worth-it-2026';
+const datePublished = '2026-05-09';
+const dateModified = '2026-05-14';
+const readMin = 6;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/blog/${slug}`;
+
+const articleJsonLd = jsonLdEnvelope({
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished,
+  dateModified,
+  url,
+  mainEntityOfPage: url,
+  image: [`${site}/og-default.svg`],
+  author: { '@type': 'Organization', name: 'Schema for AI Search', url: site },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Schema for AI Search',
+    url: site,
+    logo: { '@type': 'ImageObject', url: `${site}/favicon.svg` },
+  },
+});
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}/blog` },
+    { '@type': 'ListItem', position: 3, name: title, item: url },
+  ],
+});
+
+const postFaqs = [
+  {
+    q: 'Is FAQ schema deprecated?',
+    a: 'No. Google deprecated the FAQ rich snippet display for most sites in August 2023 and cut visible rich snippets ~50% further in the March 2026 core update. The FAQPage schema.org type itself is not deprecated and remains indexed by Google. The schema is still valid, still parsed, still used by AI search engines.',
+  },
+  {
+    q: 'Does Google still index FAQ schema?',
+    a: 'Yes. Google indexes FAQPage JSON-LD on every site. Indexing has not changed since 2018. What changed is the visual rich result rendering — that was restricted to government and health authority sites in 2023.',
+  },
+  {
+    q: 'Should I remove FAQ schema from my site?',
+    a: 'No, do not remove it. FAQ schema is the highest-cite-rate schema type in AI search. Removing it would lose AI citation visibility in Perplexity, ChatGPT, Gemini, and AI Overviews — for zero SEO benefit (since the visual rich result is already gone). Keep it.',
+  },
+  {
+    q: 'Will Google bring FAQ rich snippets back?',
+    a: 'Unlikely. The 2023 restriction was framed as "improving search quality" and the March 2026 cut tightened it further. Both moves suggest Google is intentionally reducing SERP visual clutter, not staging a temporary rollback.',
+  },
+  {
+    q: 'What replaced FAQ rich snippets?',
+    a: 'For SERP visuals: nothing. The space FAQ snippets used to occupy is now mostly empty or used for AI Overviews. For the underlying job (getting users to your answer): AI search engines extract from FAQ schema directly and cite the source page, which often produces more attribution value than the old rich snippet did.',
+  },
+  {
+    q: 'Does FAQ schema help with AI Overviews?',
+    a: 'Yes — measurably. Pages with valid FAQPage schema appear in AI Overview source lists at notably higher rates than equivalent pages with prose-only Q&A content. The structured Q&A boundaries give the extractor clean atomic units to cite.',
+  },
+  {
+    q: 'How is FAQPage different from QAPage?',
+    a: 'FAQPage is for pages where the site owner authored both Q and A (typical product FAQ, help center). QAPage is for community Q&A sites like Stack Overflow where users submit answers. Mixing them is a common mistake — use FAQPage for first-party Q&A content.',
+  },
+  {
+    q: 'Where should I put FAQ schema on my site?',
+    a: 'On any page with visible Q&A content. Product detail pages (shipping, returns, sizing FAQ), service pages (pricing, process, what is included FAQ), documentation pages (technical FAQ), and dedicated FAQ pages. Do NOT put it on pages where the FAQ block is not actually rendered — Google de-ranks schema-content mismatches.',
+  },
+];
+
+const postFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: postFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(postFaqJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="/blog">Blog</a>
+    <span aria-hidden="true">›</span>
+    <span>Is FAQ schema still worth it?</span>
+  </nav>
+
+  <article class="blog-post">
+    <header class="schema-hero">
+      <p class="post-meta">Published {datePublished} · ~{readMin} min read</p>
+      <h1>Is FAQ Schema Still Worth It in 2026?</h1>
+      <p class="lede">
+        <strong>Direct answer: yes, but not for what it used to be for.</strong>
+        FAQ schema lost its Google rich snippet for most sites in August
+        2023. The March 2026 core update cut visible rich snippets ~50%
+        further. But the schema is still indexed, and it is now the
+        highest-cite-rate schema type in AI search. Decision tree below.
+      </p>
+    </header>
+
+    <section>
+      <h2>The decision tree</h2>
+      <pre class="install-block"><code>{`Does your site currently HAVE FAQ schema?
+├── YES → Keep it. Validate it. Move on. (Removing it loses AI
+│          citation eligibility for zero SEO benefit.)
+│
+└── NO → Are you adding new FAQ content to your site?
+         ├── YES → Add FAQ schema. The Google rich snippet is gone,
+         │          but AI citation rate is now the bigger prize.
+         │          Generate at /faq-schema-generator
+         │
+         └── NO → Skip. Don't add schema to content that doesn't exist.`}</code></pre>
+    </section>
+
+    <section>
+      <h2>What actually changed in 2023</h2>
+      <p>
+        On August 8, 2023, Google announced that FAQ rich results would
+        only be shown for "well-known authoritative government and health
+        websites." For everyone else — including most ecommerce, SaaS,
+        blogs, documentation sites — the FAQ rich snippet was retired.
+      </p>
+      <p>
+        The schema itself was untouched. FAQPage JSON-LD was still indexed,
+        still parsed, still validated by Google's Rich Results Test. What
+        disappeared was the visual rendering of the Q&amp;A dropdown under
+        your SERP result. The optimization target — the click hook — was
+        gone for most sites.
+      </p>
+    </section>
+
+    <section>
+      <h2>What changed again in March 2026</h2>
+      <p>
+        The March 2026 core update further reduced FAQ rich snippet
+        display across tracked sites (some monitoring services reported a
+        ~50% reduction even on authority sites that previously qualified).
+        At the same time, Google AI Overviews began appearing on a much
+        wider share of SERPs.
+      </p>
+      <p>
+        Net effect: the SERP real estate that FAQ snippets used to occupy
+        is now mostly going to AI Overviews. And AI Overviews use schema
+        markup as a primary signal for what to extract and cite.
+      </p>
+    </section>
+
+    <section>
+      <h2>Why FAQ schema is now the highest-cite-rate type</h2>
+      <p>
+        Three reasons AI search engines disproportionately cite FAQPage
+        content:
+      </p>
+      <ol>
+        <li>
+          <strong>Atomic units.</strong> Each Q&amp;A pair is a
+          self-contained citable block. AI engines extract by block, not
+          by page. FAQ schema gives the extractor explicit boundaries.
+        </li>
+        <li>
+          <strong>Question-form match.</strong> Real user queries are
+          questions. FAQ schema literally pairs questions with answers.
+          The match is structural, not just topical.
+        </li>
+        <li>
+          <strong>Structural clarity.</strong> The acceptedAnswer.text
+          field is unambiguous — no figuring out where the question ends
+          and the answer begins. AI extractors trust unambiguous structure.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>What to do now</h2>
+      <ol>
+        <li>
+          If you have FAQ schema, keep it. Validate it with the
+          <a href="/faq-schema-validator">schema validator</a> — every error
+          ships with a specific fix.
+        </li>
+        <li>
+          If you have FAQ content but no schema, generate it with the
+          <a href="/faq-schema-generator">FAQ schema generator</a>. 30 seconds.
+        </li>
+        <li>
+          Pair FAQ schema with Article schema on blog posts (gives AI engines
+          the attribution they need to cite confidently). See
+          <a href="/article-schema-generator">Article schema generator</a>.
+        </li>
+        <li>
+          Wire <code>npx @moonye/schemaguardian scan https://your-site.com --ci</code>
+          into your build pipeline to catch schema regressions before they
+          ship. See <a href="/cli">CLI docs</a>.
+        </li>
+      </ol>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions</h2>
+      <dl>
+        {postFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section>
+      <h2>Keep reading</h2>
+      <ul>
+        <li><a href="/blog/google-faq-deprecation-2026">The full story of Google FAQ deprecation</a></li>
+        <li><a href="/blog/how-faq-schema-powers-ai-citation">Why FAQ schema is the #1 schema type for AI citation</a></li>
+        <li><a href="/blog/schema-markup-vs-ai-overviews">Schema markup vs AI Overviews</a></li>
+        <li><a href="/blog/answer-engine-optimization-explained">What is AEO? A 2026 field guide</a></li>
+      </ul>
+    </section>
+  </article>
+</BaseLayout>

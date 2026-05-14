@@ -1,0 +1,251 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'What is Answer Engine Optimization (AEO)? A 2026 Field Guide';
+const description =
+  'AEO is the discipline of getting your content cited by AI answer engines (Perplexity, ChatGPT, Gemini, Google AI Overviews). It is not SEO with a new name. Here is what it is, who consumes your content now, and the 7 patterns that move citation rate.';
+const slug = 'answer-engine-optimization-explained';
+const datePublished = '2026-05-05';
+const dateModified = '2026-05-14';
+const readMin = 8;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/blog/${slug}`;
+
+const articleJsonLd = jsonLdEnvelope({
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished,
+  dateModified,
+  url,
+  mainEntityOfPage: url,
+  image: [`${site}/og-default.svg`],
+  author: { '@type': 'Organization', name: 'Schema for AI Search', url: site },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Schema for AI Search',
+    url: site,
+    logo: { '@type': 'ImageObject', url: `${site}/favicon.svg` },
+  },
+});
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}/blog` },
+    { '@type': 'ListItem', position: 3, name: title, item: url },
+  ],
+});
+
+const postFaqs = [
+  {
+    q: 'Is AEO just SEO with a new acronym?',
+    a: 'No. SEO optimizes for a ranking list of blue links. AEO optimizes for being cited inside a generated answer. The mechanics overlap (crawlability, structured data, content quality) but the end state differs — SEO wins traffic, AEO wins attribution.',
+  },
+  {
+    q: 'Which AI engines does AEO target?',
+    a: 'The four major consumers in 2026: Perplexity, ChatGPT (with web search), Gemini (and Google AI Overviews powered by Gemini), and Anthropic Claude (with web tool use). Each has slightly different extraction patterns, but they all reward the same underlying signals: structured data, clear attribution, atomic answers.',
+  },
+  {
+    q: 'Does AEO replace SEO?',
+    a: 'No. SEO traffic still exists in 2026, especially for transactional and commercial queries. AEO is additive — same content can win both, but the optimization tactics for AI citation are slightly stricter than SEO best practice (e.g., sameAs author URLs, atomic FAQ answers).',
+  },
+  {
+    q: 'What is the single most impactful thing for AEO?',
+    a: 'Atomic, citable content blocks. Break your content into self-contained answers (each Q&A pair, each step, each fact) and mark them up with the matching schema.org type. AI engines extract by block, not by page — pages with explicit block boundaries get cited.',
+  },
+  {
+    q: 'Is GEO the same as AEO?',
+    a: 'Mostly. GEO (Generative Engine Optimization) is the broader term used in academic and industry papers; AEO (Answer Engine Optimization) is the more common practitioner term. Both refer to the same discipline. We use AEO here for readability.',
+  },
+  {
+    q: 'How do I measure AEO performance?',
+    a: 'Three signals: (1) brand search demand growth — when users type your brand into Google after seeing a Perplexity/ChatGPT citation, (2) direct referrer traffic from AI engines (Perplexity sends a Referer header; ChatGPT and Gemini sometimes do), (3) cite rate in spot checks — query your target keywords in each AI engine and count whether your URL appears as a source.',
+  },
+  {
+    q: 'How long does AEO take to show results?',
+    a: 'Faster than SEO but still 4-12 weeks for measurable cite rate change after a content/schema improvement. AI engines refresh their indices weekly to monthly; once a page is re-indexed with better structured data, cite eligibility updates within days.',
+  },
+  {
+    q: 'What schema types matter most for AEO?',
+    a: 'In order of citation leverage: FAQPage (highest cite rate, atomic Q&A is ideal extraction unit), Article/BlogPosting (gives author + date + publisher for attribution), HowTo (heavily cited by AI coding assistants), Product (drives AI shopping recommendations), Organization (the foundation that links everything else into an entity graph).',
+  },
+];
+
+const postFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: postFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(postFaqJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="/blog">Blog</a>
+    <span aria-hidden="true">›</span>
+    <span>AEO Explained</span>
+  </nav>
+
+  <article class="blog-post">
+    <header class="schema-hero">
+      <p class="post-meta">Published {datePublished} · ~{readMin} min read</p>
+      <h1>What is Answer Engine Optimization (AEO)?</h1>
+      <p class="lede">
+        <strong>AEO is SEO for AI answer engines — not SEO with a new name.</strong>
+        SEO optimizes for ranking lists. AEO optimizes for being cited inside
+        the generated answer. The mechanics overlap, but the end state and
+        the winning tactics differ. Here is what AEO is in 2026, who consumes
+        your content, and the 7 patterns that actually move citation rate.
+      </p>
+    </header>
+
+    <section>
+      <h2>The shift, in one paragraph</h2>
+      <p>
+        Until 2023, the optimization target for organic content was Google's
+        ranked list of blue links. The user typed a query, Google returned 10
+        results, and you wanted to be in the top 3. Click-through rate was
+        the proxy for success.
+      </p>
+      <p>
+        By 2025, the dominant interaction had moved. Users increasingly type
+        the query into an AI engine and get a generated answer, with citations
+        underneath. The optimization target is no longer "rank #3" — it is
+        "be one of the cited sources in the answer." That target requires
+        slightly different tactics than classical SEO, and that discipline is
+        AEO.
+      </p>
+    </section>
+
+    <section>
+      <h2>Who consumes your content now</h2>
+      <p>
+        In 2026, the four major AI answer engines that crawl the open web and
+        cite sources are:
+      </p>
+      <ul>
+        <li><strong>Perplexity</strong> — clean source attribution per claim, strongest cite quality, ~100M monthly users.</li>
+        <li><strong>Google AI Overviews</strong> — powered by Gemini, sits above standard SERP, biggest reach by far.</li>
+        <li><strong>ChatGPT search</strong> — opt-in web search inside ChatGPT, cite frequency improving with each model update.</li>
+        <li><strong>Anthropic Claude</strong> — web tool use with citations, popular in technical / coding contexts.</li>
+      </ul>
+      <p>
+        All four parse the same web. All four use structured data (when
+        present) as a primary signal for what to extract. None of them rely
+        on a single ranking algorithm — they synthesize from multiple sources
+        per query.
+      </p>
+    </section>
+
+    <section>
+      <h2>The 7 patterns that move AEO citation rate</h2>
+      <ol>
+        <li>
+          <strong>Atomic, citable blocks.</strong> Break content into
+          self-contained units (Q&amp;A pairs, steps, facts, comparison
+          rows). AI engines extract by block, not by page. The atomic block
+          is the unit of citation.
+        </li>
+        <li>
+          <strong>Schema.org structured data.</strong> Generate it with our
+          <a href="/faq-schema-generator">FAQ schema generator</a> or any of the
+          <a href="/">13 schema types</a>. FAQPage is highest leverage,
+          Article is essential for attribution, Organization is the foundation.
+        </li>
+        <li>
+          <strong>Author + publisher attribution.</strong> Article schema with
+          <code>author.sameAs</code> (LinkedIn, Twitter, ORCID) and
+          <code>publisher.logo</code> gives AI engines a verified attribution
+          anchor. Plain author strings lose ~30% of cite eligibility.
+        </li>
+        <li>
+          <strong>Direct-answer lede.</strong> First 1-2 sentences should
+          answer the implied query directly. AI engines often extract from
+          the first 200 characters of visible body text.
+        </li>
+        <li>
+          <strong>Visible content matches schema.</strong> If your FAQPage
+          schema says "How long does shipping take?" → "3-5 days", that exact
+          Q&amp;A must be visible on the page. AI engines (and Google)
+          de-rank schema-content mismatches.
+        </li>
+        <li>
+          <strong>Internal linking by topic, not by frequency.</strong> Link
+          to the most relevant sibling, not the most-popular page. Topical
+          authority is the dominant cite-routing signal; link-equity-style
+          PageRank is less load-bearing for AEO than for classical SEO.
+        </li>
+        <li>
+          <strong>External signals.</strong> Backlinks still matter, but
+          brand-search demand and mentions on community platforms (Reddit,
+          HN, X, GitHub) matter more for AEO than for SEO. AI engines weight
+          "is this entity discussed elsewhere" heavily when deciding cite
+          confidence.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>What AEO is not</h2>
+      <p>
+        Not a magic ritual. Not a fork of SEO. Not "do everything SEO does
+        but also pray to ChatGPT." The honest description: AEO is SEO best
+        practice from 2018-2022 plus three deltas — atomic block structure,
+        stricter schema requirements (especially for attribution), and
+        external-signal weighting beyond classical backlinks.
+      </p>
+      <p>
+        If your site already has clean schema, semantic HTML, and a real
+        editorial voice with named authors, you are 80% of the way to AEO.
+        The remaining 20% is the schema sharpening this site exists to help
+        with.
+      </p>
+    </section>
+
+    <section>
+      <h2>How to start</h2>
+      <ol>
+        <li>Generate FAQPage JSON-LD for your top 3-5 pages with the <a href="/faq-schema-generator">FAQ schema generator</a>.</li>
+        <li>Validate every JSON-LD block with the <a href="/faq-schema-validator">schema validator</a> — every error ships with the specific fix.</li>
+        <li>Pair FAQ schema with Article schema on blog/editorial pages — gives AI engines the attribution they need to cite confidently. See <a href="/article-schema-generator">Article schema generator</a>.</li>
+        <li>Wire <code>npx @moonye/schemaguardian scan https://your-site.com --ci</code> into your build to catch regressions.</li>
+        <li>Measure: spot-check your top 5 target queries in Perplexity / ChatGPT / Gemini weekly. Track whether your URL appears as a cited source.</li>
+      </ol>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions about AEO</h2>
+      <dl>
+        {postFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section>
+      <h2>Keep reading</h2>
+      <ul>
+        <li><a href="/blog/geo-vs-seo-2026">GEO vs SEO: What is the difference in 2026?</a></li>
+        <li><a href="/blog/schema-markup-vs-ai-overviews">Schema markup vs AI Overviews: which one feeds the other?</a></li>
+        <li><a href="/blog/how-ai-search-engines-parse-json-ld">How AI search engines actually parse JSON-LD</a></li>
+        <li><a href="/blog/is-faq-schema-still-worth-it-2026">Is FAQ schema still worth it in 2026?</a></li>
+        <li><a href="/blog/geo-aeo-explained">GEO and AEO Explained: SEO for the AI Search Era</a></li>
+      </ul>
+    </section>
+  </article>
+</BaseLayout>

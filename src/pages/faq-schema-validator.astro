@@ -3,9 +3,9 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import SchemaValidator from '~/components/SchemaValidator';
 import { jsonLdEnvelope } from '~/lib/schema-types';
 
-const title = 'FAQ Schema Validator | Free JSON-LD Validation with Fix Hints';
+const title = 'FAQ Schema Validator: Free JSON-LD Checker with Fix Suggestions (2026)';
 const description =
-  'Free browser-based JSON-LD validator. Paste your FAQPage / Product / Article schema and get instant validation with specific fix suggestions for every error. No signup, runs locally.';
+  'Paste your JSON-LD, get the specific fix for every error. Free, browser-based, no signup. Validates FAQPage, Product, Article, and 10 more schema types against schema.org + 2026 AI-search rules.';
 const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
 const url = `${site}/faq-schema-validator`;
 
@@ -99,10 +99,10 @@ const softwareJsonLd = jsonLdEnvelope({
     <header class="schema-hero">
       <h1>FAQ Schema Validator</h1>
       <p class="lede">
-        Paste your JSON-LD. Get instant validation with the specific fix for
-        every error. Validates 13 schema types against schema.org rules plus
-        the 2026 patterns AI assistants actually reward. Runs entirely in
-        your browser.
+        Paste your JSON-LD. Get the specific fix for every error in seconds.
+        Free, no signup, runs entirely in your browser. Validates 13 schema
+        types against schema.org rules plus the 2026 patterns AI search
+        engines actually reward.
       </p>
       <p class="hint">
         Free · MIT-licensed · No signup · Same engine as the

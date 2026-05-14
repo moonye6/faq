@@ -1,0 +1,251 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'GEO vs SEO in 2026: What is the Difference, Side by Side?';
+const description =
+  'GEO targets AI-generated answers, SEO targets ranked link lists. They overlap on crawlability and schema, diverge on attribution and atomicity. Side-by-side comparison of goals, tactics, and measurement.';
+const slug = 'geo-vs-seo-2026';
+const datePublished = '2026-05-07';
+const dateModified = '2026-05-14';
+const readMin = 7;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/blog/${slug}`;
+
+const articleJsonLd = jsonLdEnvelope({
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished,
+  dateModified,
+  url,
+  mainEntityOfPage: url,
+  image: [`${site}/og-default.svg`],
+  author: { '@type': 'Organization', name: 'Schema for AI Search', url: site },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Schema for AI Search',
+    url: site,
+    logo: { '@type': 'ImageObject', url: `${site}/favicon.svg` },
+  },
+});
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}/blog` },
+    { '@type': 'ListItem', position: 3, name: title, item: url },
+  ],
+});
+
+const postFaqs = [
+  {
+    q: 'Are GEO and AEO the same thing?',
+    a: 'Mostly. GEO (Generative Engine Optimization) is academic / industry-paper terminology. AEO (Answer Engine Optimization) is the practitioner term. Both describe optimizing for AI-generated answers. We use them interchangeably.',
+  },
+  {
+    q: 'Does GEO replace SEO?',
+    a: 'No. SEO still drives traffic for transactional and commercial queries where users click results to take action. GEO is additive — same content can win both. The interesting cases are queries where AI answers cannibalize click-through; for those, GEO is becoming the more important target.',
+  },
+  {
+    q: 'Which tactics work for both SEO and GEO?',
+    a: 'Site speed, crawlability, mobile-friendly, basic on-page structure (H1, headings), and clean URLs are universally good. Both also benefit from schema.org structured data, though GEO is stricter about it.',
+  },
+  {
+    q: 'Which tactics work for one but not the other?',
+    a: 'SEO-only: keyword density tactics, title CTR optimization for SERP clicks, featured snippet hijacking. GEO-only: atomic block structure with explicit schema boundaries, sameAs author URLs for attribution, brand-search demand cultivation, presence in AI training corpora.',
+  },
+  {
+    q: 'Where does backlink building fit?',
+    a: 'Still matters for both, but the weight is different. SEO ranking algorithms heavily weight quantity + quality of backlinks. GEO weights backlinks too, but it weights brand mentions, Reddit discussion, GitHub stars, and HN front-page exposure as comparable or stronger signals because they correlate with entity authority in AI training data.',
+  },
+  {
+    q: 'How do I measure GEO success?',
+    a: 'Three indicators: (1) cite rate — spot-check whether your URL appears as a cited source for target queries in Perplexity / ChatGPT / Gemini, (2) brand-search growth — users typing your brand into Google after seeing a citation, (3) direct referrer from AI engines (Perplexity sends a Referer header reliably; others increasingly do).',
+  },
+  {
+    q: 'Will SEO stop mattering?',
+    a: 'No, but the mix is shifting. As of mid-2026, transactional and navigational queries still go through Google SERP. Informational queries increasingly go through AI engines. Plan for a 5-year arc where the balance continues shifting, but expect both to coexist for a long time.',
+  },
+  {
+    q: 'What should I do first if I am starting from scratch?',
+    a: 'Build for GEO. The schema and atomic-content patterns GEO requires happen to be good SEO too — clean H1, structured FAQ, valid JSON-LD, named authors. You get SEO for free as a byproduct, and you future-proof for AI search at the same time.',
+  },
+];
+
+const postFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: postFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(postFaqJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="/blog">Blog</a>
+    <span aria-hidden="true">›</span>
+    <span>GEO vs SEO</span>
+  </nav>
+
+  <article class="blog-post">
+    <header class="schema-hero">
+      <p class="post-meta">Published {datePublished} · ~{readMin} min read</p>
+      <h1>GEO vs SEO in 2026: What is the Difference?</h1>
+      <p class="lede">
+        <strong>SEO targets a ranked list of blue links. GEO targets being
+        cited inside a generated answer.</strong> They overlap on
+        crawlability and structured data, diverge on attribution and
+        atomicity. Both still matter in 2026. Here is the side-by-side.
+      </p>
+    </header>
+
+    <section>
+      <h2>The one-line definitions</h2>
+      <ul>
+        <li>
+          <strong>SEO (Search Engine Optimization)</strong> — getting your
+          page into the top 3-10 results of a ranked link list, where users
+          click to navigate.
+        </li>
+        <li>
+          <strong>GEO (Generative Engine Optimization)</strong> — getting
+          your page cited as a source inside a generated answer, where
+          users read the answer and may or may not click through.
+        </li>
+      </ul>
+      <p>
+        Both serve the same underlying goal: "be the source the user finds
+        when they ask a question." The interface they target is different.
+      </p>
+    </section>
+
+    <section>
+      <h2>Side-by-side: goal, mechanism, measurement</h2>
+      <pre class="install-block"><code>{`                       SEO                          GEO
+
+GOAL                  Rank top 3 on the SERP        Be cited as a source
+                                                    inside an AI answer
+
+DOMINANT SURFACE      Google SERP                   Perplexity, ChatGPT,
+                                                    Gemini, AI Overviews
+
+PRIMARY METRIC        Click-through rate            Citation rate
+                      Avg position                  Brand-search demand
+                      Organic clicks                AI referrer traffic
+
+WHAT GOOGLE/AI WANTS  Authority + relevance         Atomic facts +
+                      Backlinks                     attribution + schema
+                      Brand recognition             Entity in training data
+
+CONTENT UNIT          Page                          Block (Q&A, step, fact)
+
+ATTRIBUTION NEEDS     "Showing the result"          "Citing the source"
+                      Low bar — link works          High bar — needs
+                                                    author + date + entity
+
+SCHEMA IMPORTANCE     Important for rich results    Critical — primary
+                      Decorative for ranking        extraction signal
+
+DECAY HORIZON         Hours to days                 Weeks to months
+                      (algorithm updates)            (model retraining)`}</code></pre>
+    </section>
+
+    <section>
+      <h2>What overlaps</h2>
+      <p>The good news: if you do SEO well, you already have ~70% of GEO. Specifically:</p>
+      <ul>
+        <li><strong>Crawlability</strong> — both require fast, indexable, well-linked pages.</li>
+        <li><strong>Content quality</strong> — both reward substantive, original, well-edited writing.</li>
+        <li><strong>Schema.org structured data</strong> — both use it, GEO weighs it heavier.</li>
+        <li><strong>Site architecture</strong> — clean URL structure, breadcrumbs, sitemaps.</li>
+        <li><strong>Internal linking</strong> — topical clustering helps both.</li>
+        <li><strong>External signals</strong> — backlinks help both, though GEO also weights mentions/discussion.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>What diverges</h2>
+      <p>Three areas where the tactics genuinely differ:</p>
+
+      <h3>1. Atomicity</h3>
+      <p>
+        SEO rewards a well-organized page. GEO rewards a page where every
+        meaningful claim is in its own structured block — a Q&amp;A pair, a
+        step, a row in a comparison table. AI engines extract by block,
+        not by page. A 2000-word article with 8 atomic FAQ blocks gets
+        cited as 8 separate sources for 8 separate queries.
+      </p>
+
+      <h3>2. Attribution</h3>
+      <p>
+        SEO doesn't care who wrote a page beyond E-E-A-T signals. GEO
+        cares deeply, because the AI engine needs to attribute the citation
+        ("according to {`{author}`} writing in {`{publisher}`} on
+        {`{date}`}"). Article schema with author.sameAs (LinkedIn, Twitter,
+        ORCID) and publisher.logo is high-leverage for GEO, marginal for
+        classical SEO.
+      </p>
+
+      <h3>3. Entity presence</h3>
+      <p>
+        SEO success can be relatively local — a single great post can rank
+        without the brand being widely known. GEO success correlates with
+        whether the brand/entity exists in the AI's training corpus and
+        broader knowledge graph. A new site that does brilliant work but
+        is invisible in AI training data has a structural disadvantage in
+        AEO until that changes — typically through Reddit, HN, GitHub, and
+        community presence.
+      </p>
+    </section>
+
+    <section>
+      <h2>The strategic takeaway</h2>
+      <p>
+        Build for GEO. The schema and atomic-content patterns GEO requires
+        are good SEO too — clean H1, structured FAQ, valid JSON-LD, named
+        authors with verified profiles. You get SEO for free as a byproduct,
+        and you future-proof for the surface where attention is increasingly
+        going.
+      </p>
+      <p>
+        The reverse is not true. Building only for SEO leaves GEO citation
+        leverage on the table — the atomic blocks, the attribution metadata,
+        the entity work — and those gaps compound over time.
+      </p>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions</h2>
+      <dl>
+        {postFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section>
+      <h2>Keep reading</h2>
+      <ul>
+        <li><a href="/blog/answer-engine-optimization-explained">What is AEO? A 2026 Field Guide</a></li>
+        <li><a href="/blog/schema-markup-vs-ai-overviews">Schema markup vs AI Overviews</a></li>
+        <li><a href="/blog/how-ai-search-engines-parse-json-ld">How AI search engines parse JSON-LD</a></li>
+        <li><a href="/blog/is-faq-schema-still-worth-it-2026">Is FAQ schema still worth it in 2026?</a></li>
+        <li><a href="/blog/geo-aeo-explained">GEO and AEO Explained</a></li>
+      </ul>
+    </section>
+  </article>
+</BaseLayout>
