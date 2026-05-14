@@ -7,6 +7,42 @@ which generates real users (= dwell time, return visits, branded
 searches) — the strongest signal Google uses to decide whether a site
 deserves indexing.
 
+## CRITICAL UPDATE — schemaguardian 0.4.0 just shipped (2026-05-14)
+
+The CLI now has a **programmatic library API** (`import { validate } from '@moonye/schemaguardian'`).
+This is a FRESH news hook — much stronger than re-pitching the v0.3 fix-hints story.
+Update the Show HN angle accordingly:
+
+**Better Show HN title (2026-05-14+):**
+```
+Show HN: Schemaguardian 0.4 – TypeScript library for JSON-LD validation
+```
+or
+```
+Show HN: Validate schema.org JSON-LD as a TypeScript library, not just a CLI
+```
+
+**What to add to the body (insert after the "Run it:" section):**
+
+> NEW in v0.4: programmatic library API. Embed the validator in your build pipeline,
+> Astro/Next.js content collection schema, custom CI tool, or in-browser validator
+> like the one at https://faqjsonld.com/faq-schema-validator (~25KB runtime, zero
+> Node deps, works in browsers + Deno + Bun + Node):
+>
+>     import { validate } from '@moonye/schemaguardian';
+>     const result = validate(jsonLdObject);
+>     // result.issues = [{ severity, code, message, hint }, ...]
+>
+> Same validator that powers the CLI; same fix-hint catalog.
+
+**Better target time (2026-05-14+):** Sunday 2026-05-17 7:30-8:30 AM PT. Don't wait
+longer — every day past 0.4 release dilutes the news hook.
+
+---
+
+## Original drafts below (mostly still valid, just merge in the v0.4 angle above)
+
+
 **Target sequence:**
 1. Show HN — Sunday morning ~8:00 AM PT (peak HN front-page conversion window)
 2. Reddit r/SEO — same day, different audience

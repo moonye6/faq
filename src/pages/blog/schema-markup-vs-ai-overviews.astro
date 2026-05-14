@@ -1,0 +1,257 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'Schema Markup vs AI Overviews: Which One Feeds the Other?';
+const description =
+  'AI Overviews are the consumer of schema markup, not a replacement for it. Here is how Google AI Overviews use structured data to choose citation sources, what schemas matter most, and the 6 patterns that get a page picked up in 2026.';
+const slug = 'schema-markup-vs-ai-overviews';
+const datePublished = '2026-05-13';
+const dateModified = '2026-05-14';
+const readMin = 7;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/blog/${slug}`;
+
+const articleJsonLd = jsonLdEnvelope({
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished,
+  dateModified,
+  url,
+  mainEntityOfPage: url,
+  image: [`${site}/og-default.svg`],
+  author: { '@type': 'Organization', name: 'Schema for AI Search', url: site },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Schema for AI Search',
+    url: site,
+    logo: { '@type': 'ImageObject', url: `${site}/favicon.svg` },
+  },
+});
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${site}/blog` },
+    { '@type': 'ListItem', position: 3, name: title, item: url },
+  ],
+});
+
+const postFaqs = [
+  {
+    q: 'Did AI Overviews replace schema markup?',
+    a: 'No. AI Overviews consume schema markup. The relationship is producer-consumer, not competitor-substitute. If anything, AI Overviews made schema markup more important than it was in 2022 — the structured data is now what determines which pages get cited.',
+  },
+  {
+    q: 'Will AI Overviews replace traditional SERP results?',
+    a: 'Not fully. As of 2026, AI Overviews appear above the standard SERP for many informational queries but not transactional ones. The standard SERP still shows below. Both surfaces use schema markup; the AI Overview surface weighs it more heavily.',
+  },
+  {
+    q: 'Are AI Overviews using my schema directly or just inferring?',
+    a: 'Direct extraction, primarily. Google AI Overviews use the same Googlebot index that powers standard SERP, and they explicitly prefer pages with valid schema.org markup when choosing citation sources. Schema is the structural input; the LLM only synthesizes the narrative wrapper.',
+  },
+  {
+    q: 'Should I still optimize for traditional rich results?',
+    a: 'Yes, where they still exist. Product rich results, Breadcrumb, VideoObject carousels, and Recipe rich results all still render. FAQ and HowTo rich results were largely retired in 2023-2024. The schema markup itself is shared across both surfaces, so optimizing it benefits both.',
+  },
+  {
+    q: 'How is AI Overviews different from featured snippets?',
+    a: 'Featured snippets are a single quote from a single page. AI Overviews are a synthesized answer drawing from multiple pages, with multiple citation sources. The schema patterns that win are similar (atomic Q&A, direct answers), but AI Overviews additionally reward attribution metadata (author, publisher) because they cite multiple sources.',
+  },
+  {
+    q: 'Which schemas feed AI Overviews most?',
+    a: 'In order: FAQPage (atomic Q&A maps to query intent), Article/BlogPosting (provides attribution), HowTo (step-by-step is highly cited for procedural queries), Product (drives shopping AI Overviews), Organization (anchors the entity graph for brand queries).',
+  },
+  {
+    q: 'Do AI Overviews respect dateModified for freshness?',
+    a: 'Yes. For time-sensitive queries (news, recent updates, "X in 2026"), AI Overviews favor pages with recent dateModified. But Google detects auto-bumped dateModified without real content change — that signal is heavily filtered. Update dateModified only when content actually changes.',
+  },
+  {
+    q: 'How fast does AI Overviews reflect schema changes?',
+    a: 'Days to weeks. Googlebot re-crawls and re-indexes the page within hours-to-days; AI Overviews then incorporate the updated schema on its own refresh cadence, typically 1-2 weeks. Plan for ~14-day windows when measuring impact of a schema improvement.',
+  },
+];
+
+const postFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: postFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(postFaqJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <a href="/blog">Blog</a>
+    <span aria-hidden="true">›</span>
+    <span>Schema vs AI Overviews</span>
+  </nav>
+
+  <article class="blog-post">
+    <header class="schema-hero">
+      <p class="post-meta">Published {datePublished} · ~{readMin} min read</p>
+      <h1>Schema Markup vs AI Overviews: Which Feeds Which?</h1>
+      <p class="lede">
+        <strong>AI Overviews consume schema markup. Schema is the producer,
+        AI Overviews are the consumer.</strong>
+        If your content gets cited in an AI Overview, it almost certainly
+        had clean structured data. Here is how Google AI Overviews use
+        schema to pick sources, and the 6 patterns that get a page picked.
+      </p>
+    </header>
+
+    <section>
+      <h2>The relationship, in one paragraph</h2>
+      <p>
+        Some people frame "schema vs AI Overviews" as a competition — like
+        AI Overviews made schema obsolete. The opposite is true. AI Overviews
+        are a new consumer surface that uses schema markup as a primary
+        ranking and extraction signal. The producer (your schema) feeds
+        the consumer (the AI Overview). Take away the schema and your
+        page becomes invisible to that surface.
+      </p>
+    </section>
+
+    <section>
+      <h2>How Google AI Overviews use schema (the pipeline)</h2>
+      <pre class="install-block"><code>{`User query                Googlebot index    AI Overview rendering
+   │                          │                     │
+   ▼                          ▼                     ▼
+ [Topical filter]  ───→  [Schema-aware       ───→  [LLM writes
+                          extraction]              the answer with
+                                                   citations]
+
+The "schema-aware extraction" step is where your
+JSON-LD becomes the difference between cited and skipped.`}</code></pre>
+      <p>
+        When a query triggers an AI Overview, Google's retrieval layer
+        produces ~5-20 candidate pages. The AI Overview renderer extracts
+        from each page using a schema-aware pipeline:
+      </p>
+      <ol>
+        <li>Find all JSON-LD blocks on the page.</li>
+        <li>Parse each block. Skip blocks with parse errors silently.</li>
+        <li>Type-aware extraction: FAQPage → Q&A pairs, Article → headline + author + date, Product → name + price + rating, etc.</li>
+        <li>Rank atomic blocks by query relevance.</li>
+        <li>Compose the answer, citing the top-ranked blocks as sources.</li>
+      </ol>
+      <p>
+        Pages without schema are not excluded entirely — Google can extract
+        from prose too. But pages with clean schema win the citation slot
+        at notably higher rates because the extraction is faster and more
+        reliable.
+      </p>
+    </section>
+
+    <section>
+      <h2>The 6 patterns that get a page cited in AI Overviews</h2>
+      <ol>
+        <li>
+          <strong>FAQPage schema on Q&amp;A content.</strong> Highest cite
+          rate. Each Q&amp;A pair is an atomic citable block. Generate at
+          <a href="/faq-schema-generator">/faq-schema-generator</a>.
+        </li>
+        <li>
+          <strong>Article schema with strong attribution.</strong> Named
+          Person author + sameAs URLs + publisher.logo. AI Overviews need
+          to attribute the citation — Article schema provides the anchor.
+          Generate at <a href="/article-schema-generator">/article-schema-generator</a>.
+        </li>
+        <li>
+          <strong>Direct-answer lede.</strong> The first 1-2 sentences of
+          visible body text should directly answer the implied query.
+          AI Overviews often extract from the first 200 visible characters.
+        </li>
+        <li>
+          <strong>Schema-visible content match.</strong> Every fact in
+          schema must appear in rendered HTML. Mismatch = de-trust =
+          skipped. Test with the <a href="/faq-schema-validator">schema
+          validator</a>.
+        </li>
+        <li>
+          <strong>Specific-subtype schemas.</strong> NewsArticle beats
+          generic Article for news. Restaurant beats LocalBusiness for
+          restaurants. Recipe beats generic CreativeWork for cooking.
+          The more specific the type, the better the extraction.
+        </li>
+        <li>
+          <strong>Entity-graph completeness.</strong> Organization schema
+          on homepage with sameAs to LinkedIn / Wikipedia / Crunchbase.
+          Article publisher.@id pointing back. Brand becomes a verifiable
+          entity in Google's Knowledge Graph; pages from that entity get
+          cite-confidence boosts.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>What does not help</h2>
+      <ul>
+        <li>
+          <strong>Stuffing every page with every schema type.</strong>
+          Quality over quantity. A single clean FAQPage outperforms five
+          half-broken schema blocks.
+        </li>
+        <li>
+          <strong>Schema on pages without matching visible content.</strong>
+          Detected on crawl, treated as deceptive.
+        </li>
+        <li>
+          <strong>Aggressive aggregateRating without real reviews.</strong>
+          The fake-review classifier catches inflated ratings. Demotion is
+          common.
+        </li>
+        <li>
+          <strong>Hidden FAQ content behind a "click to load" gate that
+          doesn't render server-side.</strong> AI Overviews may not see
+          it; counts as schema-content mismatch.
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>The strategic move</h2>
+      <p>
+        Optimize for AI Overviews and standard SERP simultaneously by
+        treating them as one surface served by the same producer:
+        well-structured, validated schema markup paired with high-quality
+        editorial content. There is no separate "AI Overviews SEO" —
+        there is just better-than-2022 schema discipline applied to all
+        pages.
+      </p>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions</h2>
+      <dl>
+        {postFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section>
+      <h2>Keep reading</h2>
+      <ul>
+        <li><a href="/blog/answer-engine-optimization-explained">What is AEO? A 2026 field guide</a></li>
+        <li><a href="/blog/geo-vs-seo-2026">GEO vs SEO: what is the difference?</a></li>
+        <li><a href="/blog/how-ai-search-engines-parse-json-ld">How AI search engines parse JSON-LD (walk-through)</a></li>
+        <li><a href="/blog/is-faq-schema-still-worth-it-2026">Is FAQ schema still worth it in 2026?</a></li>
+      </ul>
+    </section>
+  </article>
+</BaseLayout>

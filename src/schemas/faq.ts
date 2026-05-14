@@ -10,12 +10,12 @@ export const faqSchema: SchemaTypeDef = {
   name: 'FAQ Schema Generator',
   schemaType: 'FAQPage',
 
-  title: 'FAQ Schema Generator | JSON-LD for AI Search Citation',
+  title: 'FAQ Schema Generator (2026): Generate Valid JSON-LD in 30 Seconds',
   metaDescription:
-    'Generate valid FAQPage JSON-LD that AI search engines (Perplexity, ChatGPT, Gemini, Google AI Overviews) actually cite. Free, no signup.',
+    'Yes, FAQ schema still works in 2026 — for AI search, not Google rich snippets. Generate valid FAQPage JSON-LD in 30 seconds. Free, no signup, copy-paste ready.',
   h1: 'FAQ Schema Generator',
   intro:
-    'Paste your questions and answers. Get clean FAQPage JSON-LD ready to drop into your <head>.',
+    'Paste your Q&A. Get valid FAQPage JSON-LD in 30 seconds. Free, no signup. The schema below is the same format AI search engines extract from when citing your page.',
   geoAeoAngle:
     'Google scaled back FAQ rich snippets in 2023 and cut them further in March 2026. But FAQ structured data has one of the highest citation rates in AI search. The point of FAQ schema in 2026 is no longer the SERP dropdown — it is making your answers easy for ChatGPT, Perplexity, Gemini, and Google AI Overviews to extract and cite.',
 
