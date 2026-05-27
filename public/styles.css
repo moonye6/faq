@@ -549,6 +549,293 @@ h2 { font-size: 1.4rem; font-weight: 600; margin: 2.5rem 0 0.75rem; }
   line-height: 1.5;
 }
 
+/* ─── AI Visibility Score ────────────────────────────────────────────── */
+.vscore { margin: 1.5rem 0; }
+.vscore-form {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+@media (max-width: 600px) {
+  .vscore-form { flex-direction: column; }
+}
+.vscore-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-family: ui-monospace, "SF Mono", "JetBrains Mono", Monaco, Consolas, monospace;
+  font-size: 0.95rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--fg);
+}
+.vscore-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(13, 79, 60, 0.1);
+}
+.vscore-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.vscore-loading,
+.vscore-error {
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+}
+.vscore-loading p { margin: 0 0 0.35rem; }
+.vscore-loading-detail { color: var(--muted); font-size: 0.9rem; }
+.vscore-error { border-color: #c0392b; background: #fff5f3; }
+.vscore-error p { margin: 0 0 0.5rem; }
+
+/* Summary header (the big score card) */
+.vscore-summary {
+  margin-top: 1.5rem;
+  padding: 1.5rem 1.75rem;
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2rem;
+  align-items: center;
+  border: 1px solid var(--border);
+  color: var(--fg);
+}
+@media (max-width: 700px) {
+  .vscore-summary {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1.25rem 1.25rem;
+    text-align: center;
+  }
+}
+.vscore-summary-number {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  font-feature-settings: 'tnum' 1;
+}
+.vscore-summary-value {
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.vscore-summary-max {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+.vscore-summary-band {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.vscore-summary-url {
+  margin: 0 0 0.5rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+  word-break: break-all;
+}
+.vscore-summary-url a { color: var(--fg); border-bottom: 1px dashed var(--muted); }
+.vscore-summary-counts {
+  margin: 0 0 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.92rem;
+}
+.vscore-stat-pass { color: #0a8a5a; font-weight: 600; }
+.vscore-stat-warn { color: #b58100; font-weight: 600; }
+.vscore-stat-fail { color: #c0392b; font-weight: 600; }
+.vscore-summary-types {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.vscore-summary-types code {
+  background: rgba(0,0,0,0.05);
+  padding: 0.05rem 0.4rem;
+  border-radius: 3px;
+}
+.vscore-summary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Score bands — color the summary card */
+.vscore-band-critical { background: #fbeae9; border-color: #f0b8b3; }
+.vscore-band-critical .vscore-summary-band { color: #a02822; }
+.vscore-band-critical .vscore-summary-value { color: #a02822; }
+
+.vscore-band-poor { background: #fdf1e6; border-color: #f0c89c; }
+.vscore-band-poor .vscore-summary-band { color: #a26100; }
+.vscore-band-poor .vscore-summary-value { color: #a26100; }
+
+.vscore-band-ok { background: #fff8e6; border-color: #f0d68c; }
+.vscore-band-ok .vscore-summary-band { color: #8a6300; }
+.vscore-band-ok .vscore-summary-value { color: #8a6300; }
+
+.vscore-band-good { background: #ecf7f1; border-color: #b8e0cc; }
+.vscore-band-good .vscore-summary-band { color: #0a3e2f; }
+.vscore-band-good .vscore-summary-value { color: #0a3e2f; }
+
+.vscore-band-excellent { background: linear-gradient(180deg, #ecf7f1 0%, #d4f0e1 100%); border-color: var(--accent); }
+.vscore-band-excellent .vscore-summary-band { color: var(--accent); }
+.vscore-band-excellent .vscore-summary-value { color: var(--accent); }
+
+/* Dimension list */
+.vscore-dimension-list {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.vscore-dimension {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+}
+.vscore-dimension-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto 12rem auto;
+  gap: 0.8rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s;
+}
+.vscore-dimension-header:hover { background: #fafbfa; }
+.vscore-dimension-header:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+@media (max-width: 800px) {
+  .vscore-dimension-header {
+    grid-template-columns: auto 1fr auto auto;
+  }
+  .vscore-dimension-bar,
+  .vscore-dimension-category {
+    display: none;
+  }
+}
+.vscore-status-icon {
+  width: 1.4rem;
+  height: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+.vscore-status-icon-pass { background: #ecf7f1; color: #0a8a5a; }
+.vscore-status-icon-warn { background: #fff8e6; color: #b58100; }
+.vscore-status-icon-fail { background: #fbeae9; color: #c0392b; }
+.vscore-dimension-name { font-weight: 600; font-size: 0.98rem; }
+.vscore-dimension-category {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  background: rgba(0,0,0,0.04);
+}
+.vscore-dimension-points {
+  font-family: ui-monospace, "SF Mono", Monaco, Consolas, monospace;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--fg);
+  text-align: right;
+  min-width: 3.5rem;
+}
+.vscore-dimension-points-max { color: var(--muted); font-weight: 400; }
+.vscore-dimension-bar {
+  height: 0.5rem;
+  width: 100%;
+  background: #eef0ee;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+.vscore-dimension-bar-fill {
+  display: block;
+  height: 100%;
+  transition: width 0.3s;
+}
+.vscore-status-bar-pass { background: #0a8a5a; }
+.vscore-status-bar-warn { background: #d4a017; }
+.vscore-status-bar-fail { background: #c0392b; }
+.vscore-dimension-toggle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--muted);
+  width: 1.5rem;
+  text-align: center;
+}
+.vscore-dimension-summary {
+  padding: 0 1rem 0.85rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.vscore-dimension-detail {
+  border-top: 1px solid var(--border);
+  padding: 0.85rem 1rem 1rem;
+  background: #fafbfa;
+}
+.vscore-signal-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.85rem;
+  display: grid;
+  gap: 0.35rem;
+}
+.vscore-signal-list li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.6rem;
+  align-items: baseline;
+  font-size: 0.88rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px dashed var(--border);
+}
+.vscore-signal-list li:last-child { border-bottom: none; }
+.vscore-signal-ok { color: var(--fg); }
+.vscore-signal-bad { color: var(--fg); }
+.vscore-signal-ok .vscore-signal-icon { color: #0a8a5a; font-weight: 700; }
+.vscore-signal-bad .vscore-signal-icon { color: #c0392b; font-weight: 700; }
+.vscore-signal-label { color: var(--fg); }
+.vscore-signal-value {
+  font-family: ui-monospace, "SF Mono", Monaco, Consolas, monospace;
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-align: right;
+}
+.vscore-fix {
+  margin-top: 0.5rem;
+  padding: 0.7rem 0.9rem;
+  background: #f0f6f3;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 4px 4px 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.vscore-fix-label {
+  display: inline-block;
+  font-weight: 700;
+  color: var(--accent);
+  margin-right: 0.5rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
 /* ─── Schema Validator (browser-side) ────────────────────────────────── */
 .validator { margin: 1.5rem 0; }
 .validator-toolbar {
@@ -954,6 +1241,18 @@ h2 { font-size: 1.4rem; font-weight: 600; margin: 2.5rem 0 0.75rem; }
   color: var(--accent) !important;
 }
 .nav-cli:hover { background: var(--accent); color: var(--accent-fg) !important; text-decoration: none !important; }
+
+.nav-score {
+  background: var(--accent);
+  color: var(--accent-fg) !important;
+  padding: 0.25rem 0.7rem !important;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.nav-score:hover {
+  background: #0a3e2f;
+  text-decoration: none !important;
+}
 
 /* Schema type comparison matrix */
 .schema-matrix { margin: 2rem 0 3rem; overflow-x: auto; }

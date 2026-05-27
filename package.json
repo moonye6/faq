@@ -14,9 +14,10 @@
     "check": "astro check"
   },
   "dependencies": {
-    "astro": "^6.1.9",
     "@astrojs/preact": "^5.1.2",
     "@astrojs/sitemap": "^3.7.2",
+    "@astrojs/vercel": "^10.0.7",
+    "astro": "^6.1.9",
     "preact": "^10.29.1"
   },
   "devDependencies": {

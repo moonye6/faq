@@ -7,6 +7,182 @@ which generates real users (= dwell time, return visits, branded
 searches) — the strongest signal Google uses to decide whether a site
 deserves indexing.
 
+## CRITICAL UPDATE #2 — AI Visibility Score V1 just shipped (2026-05-27)
+
+A new free tool is live at https://faqjsonld.com/ai-visibility-score that
+scores any URL on 10 dimensions of AI search citation readiness. Same
+engine as schemaguardian CLI, browser-based, no signup.
+
+**This becomes the primary Show HN angle for the SECOND launch wave.**
+Use this for Show HN #2 (target: Sunday 2026-06-13). Use the v0.4 library
+API angle below for Show HN #1 (target: Sunday 2026-05-31) — they are
+sequential, not competing.
+
+### Show HN #2 — AI Visibility Score (target 2026-06-13)
+
+**Submit at:** https://news.ycombinator.com/submit
+**URL field:** `https://faqjsonld.com/ai-visibility-score` (the live tool,
+not GitHub — this submission is about the tool, not the library)
+
+**Title** (under 80 chars):
+```
+Show HN: AI Visibility Score – see how your site scores for ChatGPT citation
+```
+or
+```
+Show HN: Free tool to audit your site's visibility to AI search engines
+```
+
+**Text field:**
+
+```
+Background: I built schemaguardian (CLI for JSON-LD validation, posted
+here a few weeks ago) and kept hitting the same question while testing
+my own site: "I have schema, but how do I know if it's actually working
+for AI citation?"
+
+So I built AI Visibility Score. Paste a URL, get a 0-100 score across
+10 dimensions: schema coverage, atomic answer quality, entity clarity,
+author attribution, chunkability, citation readiness, AI bot
+accessibility, canonical + basic SEO, OG/social meta, technical
+basics. Every dimension expands to show exactly which sub-signals
+passed or failed. No black box.
+
+The single thing it does that's different from other "SEO score" tools:
+it weights robots.txt at 15 points, because a lot of sites unknowingly
+block GPTBot / ClaudeBot / Google-Extended / PerplexityBot via
+Cloudflare's "AI Bot Management" feature. If those are blocked, no
+schema optimization matters — you're invisible to those engines no
+matter what. I caught my own site doing this. The score caught it the
+moment I scored myself.
+
+Same engine ships as the schemaguardian npm library if you want to run
+it in CI:
+
+  import { fetchAndScore } from '@moonye/schemaguardian/lib';
+  const result = await fetchAndScore('https://your-site.com');
+
+Try it: https://faqjsonld.com/ai-visibility-score
+Source: https://github.com/moonye6/faq (open under MIT)
+
+The score is diagnostic, not predictive. It measures structural
+readiness — the patterns that correlate with AI citation — not actual
+cite rate, which depends on authority and topic match. Happy to
+discuss methodology, dimension weighting, or why robots.txt is the
+load-bearing dimension that most tools ignore.
+```
+
+**Tips:**
+- The "I caught my own site doing this" angle is the hook. Stay
+  honest about discovering the Cloudflare block while building.
+- If asked "why a score vs just a checklist": deterministic + shareable
+  + visible delta when you improve = behavior loop. Checklists alone
+  don't drive return visits.
+
+### Twitter / X thread (file alongside Show HN #2)
+
+Single thread, 8 tweets. Post 30 min after HN submission so people
+finding it on Twitter also drive HN engagement.
+
+```
+1/  I built a tool that scores any URL on how visible it is to ChatGPT,
+    Perplexity, Gemini, and Google AI Overviews.
+
+    Free. No signup. Same engine ships as an npm library.
+
+    https://faqjsonld.com/ai-visibility-score
+
+2/  Why "visibility" and not "ranking":
+
+    Classical SEO optimizes for being on page 1.
+    AI Visibility optimizes for being cited inside the generated answer.
+
+    Different surface. Different signals.
+
+3/  The score evaluates 10 dimensions:
+
+    • Schema coverage
+    • Atomic answer quality (Q&A length, question form)
+    • Entity clarity (Organization + sameAs)
+    • Author attribution (Person + sameAs)
+    • Chunkability (H2/H3/paragraph length)
+    • Citation readiness (dates + publisher logo)
+    • AI bot accessibility (robots.txt)
+    • Canonical + basic SEO
+    • OG / social meta
+    • Technical basics
+
+4/  Every dimension expands to show exactly which sub-signals failed.
+
+    Each failure ships with the specific fix.
+
+    No black box. No "trust me, your score is 67."
+
+5/  The dimension that surprises everyone:
+
+    robots.txt weight = 15 / 100.
+
+    Why so heavy? Because if you Disallow GPTBot, ClaudeBot,
+    Google-Extended, or PerplexityBot, your perfect schema is
+    invisible. The score catches this immediately.
+
+6/  Most sites don't realize they're blocking AI bots because
+    Cloudflare's "AI Bot Management" feature does it silently behind
+    the scenes — overriding your own robots.txt with their managed
+    block list.
+
+    Scored my own site. Caught my own block.
+
+7/  Same engine in the CLI for CI integration:
+
+      npm i @moonye/schemaguardian
+
+      import { fetchAndScore } from '@moonye/schemaguardian';
+      const r = await fetchAndScore('https://your-site.com');
+
+    Or via CLI:
+      npx @moonye/schemaguardian scan https://your-site.com --ci
+
+8/  Open source under MIT.
+    Source: github.com/moonye6/faq
+    Tool: faqjsonld.com/ai-visibility-score
+
+    Built for the AI search era. Replies welcome — especially if you
+    score your own site and find something surprising.
+```
+
+### dev.to follow-up (publish ~2 days after Show HN #2)
+
+**Title:** `I Built an AI Visibility Score for Websites — Here's What I Learned Scoring 50 Sites`
+
+**Cover image:** screenshot of the score card on a top-tier site (mid score)
+
+**Body outline (write to 1200-1600 words):**
+
+1. The hook — "I scored 50 sites including my own, here's what surprised me"
+2. The methodology — 10 dimensions explained
+3. The cluster of patterns that high-scoring sites share:
+   - Multiple schema types (not just FAQPage in isolation)
+   - Named authors with sameAs verified profiles
+   - Short paragraphs + lots of H2/H3 chunks
+   - Organization with stable @id linking all content
+4. The single most common gap — robots.txt blocking AI bots (Cloudflare default!)
+5. Dimensions that don't matter as much as you think (vs ones that do)
+6. How to use the score: not as a vanity metric, but as a diagnostic
+7. CTA: try it on your own site, share the link if you find something
+
+### Reddit r/SEO (post 24h after Show HN #2)
+
+**Title:**
+```
+I built a free AI Visibility Score tool — scores any URL on 10 dimensions for ChatGPT / Perplexity / Gemini citation readiness
+```
+
+**Body:** trim of the HN text, drop the "Background" framing, lead with
+the tool URL and the robots.txt finding (that's the punchy SEO angle).
+
+---
+
 ## CRITICAL UPDATE — schemaguardian 0.4.0 just shipped (2026-05-14)
 
 The CLI now has a **programmatic library API** (`import { validate } from '@moonye/schemaguardian'`).

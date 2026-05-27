@@ -1,0 +1,189 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import VisibilityScoreApp from '~/components/VisibilityScoreApp';
+import { jsonLdEnvelope } from '~/lib/schema-types';
+
+const title = 'AI Visibility Score — Free Audit for ChatGPT, Perplexity, Gemini Citation Readiness';
+const description =
+  'Free tool. Paste any URL and see how visible your site is to ChatGPT, Perplexity, Gemini, and Google AI Overviews. 10 dimensions, transparent scoring, specific fix for every gap.';
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://faqjsonld.com';
+const url = `${site}/ai-visibility-score`;
+
+const initialUrl = Astro.url.searchParams.get('url') ?? undefined;
+
+const breadcrumbJsonLd = jsonLdEnvelope({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: 'AI Visibility Score', item: url },
+  ],
+});
+
+const pageFaqs = [
+  {
+    q: 'What is AI Visibility Score?',
+    a: 'A 0-100 score measuring how well your page is structured for citation by AI search engines (ChatGPT, Perplexity, Gemini, Google AI Overviews). It evaluates 10 dimensions: schema coverage, atomic answer quality, entity clarity, author attribution, chunkability, citation readiness, AI bot accessibility (robots.txt), canonical + basic SEO, OG / social meta, and technical basics.',
+  },
+  {
+    q: 'How is the score calculated?',
+    a: 'Deterministic, weighted sum of 10 dimensions. Each dimension has explicit sub-signals (e.g., "FAQPage schema present", "Author has sameAs URLs"). You can expand any dimension to see exactly which signals passed or failed. No black box.',
+  },
+  {
+    q: 'Does this prove my page will get cited by AI?',
+    a: 'No. The score measures structural readiness — the patterns that correlate with AI citation across many sites. Actual cite rate depends on additional factors like authority, brand recognition, and topical relevance to specific queries. A higher score removes structural blockers; it does not guarantee cites.',
+  },
+  {
+    q: 'Why is robots.txt weighted so heavily (15 points)?',
+    a: 'If your robots.txt blocks GPTBot, ClaudeBot, Google-Extended, or PerplexityBot, your page is completely invisible to those AI engines no matter how perfect your schema is. Many sites unknowingly block these (especially behind Cloudflare AI Bot Management). It is the single biggest "schema optimization is wasted" risk.',
+  },
+  {
+    q: 'Does this send my URL to a third party?',
+    a: 'No. Our server fetches the URL directly using a public web request, the same way Googlebot or any other crawler would. We do not store the URL, the HTML, or the result. The request lives only long enough to compute the score and return it to you.',
+  },
+  {
+    q: 'How is this different from /faq-schema-validator?',
+    a: 'The validator checks one JSON-LD block at a time for schema.org spec compliance. Visibility Score checks an entire page across all dimensions that affect AI citation — schema is one of 10. Use the validator when fixing a specific block; use Visibility Score when auditing a whole page or new site.',
+  },
+  {
+    q: 'What URL formats work?',
+    a: 'Any public HTTPS URL. Single pages (https://example.com/about), homepages, blog posts, product pages all work. The tool does not crawl the rest of your site — score one URL at a time. For full-site audits, run the schemaguardian CLI.',
+  },
+  {
+    q: 'Can I get this in CI / programmatically?',
+    a: 'Yes. The same scoring engine is in the @moonye/schemaguardian npm library (v0.4+). You can run it as part of your build pipeline to track score drift over time. See /cli for setup.',
+  },
+];
+
+const pageFaqJsonLd = jsonLdEnvelope({
+  '@type': 'FAQPage',
+  mainEntity: pageFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+
+const softwareJsonLd = jsonLdEnvelope({
+  '@type': 'WebApplication',
+  name: 'AI Visibility Score',
+  url,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any (browser-based)',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  description,
+  featureList: [
+    '10-dimension AI visibility scoring',
+    'Transparent sub-signals per dimension',
+    'Specific fix recommendations',
+    'Shareable report URL',
+    'Free, no signup',
+    'Open source — same engine as @moonye/schemaguardian',
+  ],
+});
+---
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(pageFaqJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(softwareJsonLd)} />
+  </Fragment>
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a>
+    <span aria-hidden="true">›</span>
+    <span>AI Visibility Score</span>
+  </nav>
+
+  <article class="schema-tool">
+    <header class="schema-hero">
+      <p class="hero-eyebrow">Free · No signup · Open source</p>
+      <h1>AI Visibility Score</h1>
+      <p class="lede">
+        Paste any URL. See how visible your page is to ChatGPT, Perplexity,
+        Gemini, and Google AI Overviews. 10 dimensions, transparent scoring,
+        specific fix for every gap. Takes 5 seconds.
+      </p>
+    </header>
+
+    <VisibilityScoreApp client:load initialUrl={initialUrl} />
+
+    <section class="why">
+      <h2>Why "visibility" is the right frame in 2026</h2>
+      <p>
+        Classical SEO optimizes for ranking in a list of blue links. AI
+        Visibility optimizes for being cited inside the generated answer.
+        Different consumer surface, different winning signals.
+      </p>
+      <p>
+        AI engines do not rank pages, they extract atomic facts from them
+        and synthesize an answer with citations. Pages with clean structure,
+        explicit schema, named authors, and accessible bots get cited.
+        Pages without those signals get skipped, no matter how well they
+        rank in Google.
+      </p>
+      <p>
+        This score measures the patterns that move citation rate. It is
+        not predictive of any single query outcome, but it is diagnostic
+        of how structurally ready your page is.
+      </p>
+    </section>
+
+    <section class="schema-grid" id="related-tools">
+      <h2>Related tools</h2>
+      <ul class="schema-list">
+        <li>
+          <a href="/faq-schema-validator">
+            <strong>FAQ Schema Validator</strong>
+            <span>Validate a single JSON-LD block against schema.org + 2026 AI-search rules with fix suggestions.</span>
+          </a>
+        </li>
+        <li>
+          <a href="/faq-schema-generator">
+            <strong>FAQ Schema Generator</strong>
+            <span>Generate FAQPage JSON-LD that AI search engines cite at the highest rate.</span>
+          </a>
+        </li>
+        <li>
+          <a href="/cli">
+            <strong>schemaguardian CLI</strong>
+            <span>Run the same engine in CI. Scan an entire sitemap and catch regressions before they ship.</span>
+          </a>
+        </li>
+        <li>
+          <a href="/schema-types">
+            <strong>Schema type comparison</strong>
+            <span>13 schema types rated on AI citation + SERP value. Pick which to add first.</span>
+          </a>
+        </li>
+        <li>
+          <a href="/blog/answer-engine-optimization-explained">
+            <strong>What is AEO?</strong>
+            <span>The discipline of getting cited by AI answer engines. 2026 field guide.</span>
+          </a>
+        </li>
+        <li>
+          <a href="/blog/how-ai-search-engines-parse-json-ld">
+            <strong>How AI engines parse JSON-LD</strong>
+            <span>The retrieval-extraction-cite pipeline walked through end to end.</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section class="page-faq">
+      <h2>Common questions</h2>
+      <dl>
+        {pageFaqs.map((f) => (
+          <div class="faq-item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  </article>
+</BaseLayout>
